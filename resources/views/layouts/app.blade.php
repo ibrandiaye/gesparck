@@ -109,7 +109,13 @@
                     </li>
 
                     <!-- Menu déroulant Rapports -->
-                    <li class="nav-item dropdown">
+                     <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('reports.*') ? 'active' : '' }}"
+                           href="{{ route('reports.index') }}">
+                            <i class="fas fa-chart-bar me-1"></i>Rapports
+                        </a>
+                    </li>
+                   {{--  <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle {{ request()->routeIs('reports.*') ? 'active' : '' }}"
                            href="#" id="reportsDropdown" role="button" data-bs-toggle="dropdown">
                             <i class="fas fa-chart-bar me-1"></i>Rapports
@@ -132,7 +138,7 @@
                                 </a>
                             </li>
                         </ul>
-                    </li>
+                    </li> --}}
                 </ul>
 
                 <!-- Menu utilisateur -->

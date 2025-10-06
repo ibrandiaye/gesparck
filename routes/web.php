@@ -3,6 +3,7 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FuelEntryController;
 use App\Http\Controllers\RepairLogController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\VehicleController;
 use Illuminate\Support\Facades\Route;
 
@@ -36,6 +37,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard/vehicle-chart/{vehicle}', [DashboardController::class, 'getVehicleDetailedChart'])->name('dashboard.vehicle-chart');
     Route::get('repair-logs/{repairLog}/download-facture', [RepairLogController::class, 'downloadFacture'])
         ->name('repair-logs.download-facture');
+    Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::post('/reports/data', [ReportController::class, 'getReportData'])->name('reports.data');
+    // Rapports
+    Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::post('/reports/data', [ReportController::class, 'getReportData'])->name('reports.data');
+
+    // Exports
+    Route::post('/reports/export/pdf', [ReportController::class, 'exportPdf'])->name('reports.export.pdf');
+    Route::post('/reports/export/excel', [ReportController::class, 'exportExcel'])->name('reports.export.excel');
+        Route::post('/reports/export/csv', [ReportController::class, 'exportCsv'])->name('reports.export.csv');
 
 });
 
