@@ -37,7 +37,7 @@ class VehicleController extends Controller
             'modele' => 'required|max:50',
             'type_vehicule' => 'required|in:voiture,camion,utilitaire,moto',
             'kilometrage_actuel' => 'required|integer|min:0',
-            'date_mise_en_service' => 'required|date|before_or_equal:today',
+          //  'date_mise_en_service' => 'required|date|before_or_equal:today',
             'notes' => 'nullable|string|max:1000'
         ]);
 
@@ -89,7 +89,7 @@ class VehicleController extends Controller
             'type_vehicule' => 'required|in:voiture,camion,utilitaire,moto',
             'kilometrage_actuel' => 'required|integer|min:0',
             'etat' => 'required|in:disponible,en_entretien,hors_service',
-            'date_mise_en_service' => 'required|date|before_or_equal:today',
+           // 'date_mise_en_service' => 'required|date|before_or_equal:today',
             'notes' => 'nullable|string|max:1000'
         ]);
 

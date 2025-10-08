@@ -98,7 +98,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-4">
+                       {{--  <div class="col-md-4">
                             <div class="mb-3">
                                 <label for="date_mise_en_service" class="form-label">Date de Mise en Service *</label>
                                 <input type="date" class="form-control @error('date_mise_en_service') is-invalid @enderror"
@@ -108,7 +108,7 @@
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
 
                     <div class="mb-3">
