@@ -48,6 +48,7 @@ class ReportController extends Controller
         \Log::info('Filtres validés:', $filters);
 
         $dateRange = $this->getDateRange($filters);
+       // dd( $this->getTablesData($dateRange, $filters));
 
         $reportData = [
             'charts' => $this->getChartsData($dateRange, $filters),
@@ -215,6 +216,7 @@ class ReportController extends Controller
 
     private function getTablesData($dateRange, $filters)
     {
+        //dd($this->getDetailedReport($dateRange, $filters));
         return [
             'topVehicles' => $this->getTopVehicles($dateRange),
             'interventionTypes' => $this->getInterventionTypes($dateRange, $filters),
@@ -298,6 +300,7 @@ class ReportController extends Controller
             $repairLogs->where('vehicle_id', $filters['vehicle_id']);
         }
 
+
         $fuelData = $fuelEntries->get()->map(function($entry) {
             return [
                 'date' => $entry->date_remplissage->format('d/m/Y'),
@@ -309,6 +312,7 @@ class ReportController extends Controller
                 'kilometrage' => $entry->kilometrage
             ];
         });
+         //dd($fuelData);
 
         $repairData = $repairLogs->get()->map(function($log) {
             $types = [
@@ -334,9 +338,19 @@ class ReportController extends Controller
             ];
         });
 
-        return $fuelData->merge($repairData)
+
+
+        if(sizeof($fuelData )> 0 )
+        {
+             return $fuelData->merge($repairData)
             ->sortByDesc('date')
             ->values();
+        }
+        else
+        {
+            return $fuelData = $repairData;
+        }
+
     }
     public function exportPdf(Request $request)
 {

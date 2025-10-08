@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CarburantController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FuelEntryController;
 use App\Http\Controllers\RepairLogController;
@@ -28,6 +29,8 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('vehicles', VehicleController::class);
     Route::resource('fuel-entries', FuelEntryController::class);
     Route::resource('repair-logs', RepairLogController::class);
+    Route::resource('carburant', CarburantController::class);
+
     Route::get('/api/vehicle-consumption/{vehicle}', [FuelEntryController::class, 'apiChartData'])
         ->name('api.vehicle.consumption');
     Route::post('/dashboard-charts', [DashboardController::class, 'getChartData']);
@@ -46,7 +49,7 @@ Route::middleware(['auth'])->group(function () {
     // Exports
     Route::post('/reports/export/pdf', [ReportController::class, 'exportPdf'])->name('reports.export.pdf');
     Route::post('/reports/export/excel', [ReportController::class, 'exportExcel'])->name('reports.export.excel');
-        Route::post('/reports/export/csv', [ReportController::class, 'exportCsv'])->name('reports.export.csv');
+    Route::post('/reports/export/csv', [ReportController::class, 'exportCsv'])->name('reports.export.csv');
 
 });
 
