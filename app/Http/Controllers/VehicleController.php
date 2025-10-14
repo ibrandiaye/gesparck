@@ -34,7 +34,7 @@ class VehicleController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'immatriculation' => 'required|unique:vehicles|max:20',
+            'immatriculation' => 'required|unique:vehicles|max:100',
             'marque' => 'required|max:50',
             'modele' => 'required|max:50',
             'type_vehicule' => 'required|in:voiture,camion,utilitaire,moto',
@@ -88,7 +88,7 @@ class VehicleController extends Controller
     public function update(Request $request, Vehicle $vehicle)
     {
         $validated = $request->validate([
-            'immatriculation' => 'required|max:20|unique:vehicles,immatriculation,' . $vehicle->id,
+            'immatriculation' => 'required|max:100|unique:vehicles,immatriculation,' . $vehicle->id,
             'marque' => 'required|max:50',
             'modele' => 'required|max:50',
             'type_vehicule' => 'required|in:voiture,camion,utilitaire,moto',
