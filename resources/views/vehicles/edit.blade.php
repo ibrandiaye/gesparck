@@ -46,7 +46,7 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="mb-3">
                                 <label for="marque" class="form-label">Marque *</label>
                                 <input type="text" class="form-control @error('marque') is-invalid @enderror"
@@ -58,13 +58,28 @@
                             </div>
                         </div>
 
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="mb-3">
                                 <label for="modele" class="form-label">Modèle *</label>
                                 <input type="text" class="form-control @error('modele') is-invalid @enderror"
                                        id="modele" name="modele"
                                        value="{{ old('modele', $vehicle->modele) }}" required>
                                 @error('modele')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                          <div class="col-md-4">
+                             <div class="mb-3">
+                                <label for="categorie" class="form-label">Categorie *</label>
+                                <select class="form-select @error('categorie') is-invalid @enderror"
+                                        id="categorie" name="categorie" required>
+                                    <option value="">Sélectionnez une categrie</option>
+                                    <option value="sedipal-nestle" {{ old('categorie',$vehicle->categorie) == 'sedipal-nestle' ? 'selected' : '' }}>sedipal-nestle</option>
+                                    <option value="cdn-nestle" {{ old('categorie',$vehicle->categorie) == 'cdn-nestle' ? 'selected' : '' }}>cdn-nestle</option>
+                                    <option value="vehicule-livraison-sedipal" {{ old('categorie',$vehicle->categorie) == 'vehicule-livraison-sedipal' ? 'selected' : '' }}>vehicule-livraison-sedipal</option>
+                                </select>
+                                @error('categorie')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -93,6 +108,25 @@
                                     <option value="hors_service" {{ old('etat', $vehicle->etat) == 'hors_service' ? 'selected' : '' }}>Hors Service</option>
                                 </select>
                                 @error('etat')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                         <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="carburant_id" class="form-label">Carburant *</label>
+                                <select class="form-select @error('carburant_id') is-invalid @enderror"
+                                        id="carburant_id" name="carburant_id" required>
+                                    <option value="">Sélectionnez un carburant</option>
+                                    @foreach($carburants as $carburant)
+                                        <option value="{{ $carburant->id }}"
+                                            {{ old('carburant_id',$vehicle->carburant_id) == $carburant->id ? 'selected' : '' }}
+                                           >
+                                            {{ $carburant->libelle }} - {{ $carburant->montant }} XOF
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('carburant_id')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>

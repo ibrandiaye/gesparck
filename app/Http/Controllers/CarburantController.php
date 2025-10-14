@@ -15,7 +15,7 @@ class CarburantController extends Controller
 
     public function index()
     {
-        $carburants = Carburant::get();
+        $carburants = Carburant::paginate(20);;
 
         return view('carburants.index', compact('carburants'));
     }
@@ -77,7 +77,7 @@ class CarburantController extends Controller
 
             DB::commit();
 
-            return redirect()->route('carburants.show', $carburant)
+            return redirect()->route('carburants.index', $carburant)
                 ->with('success', 'Véhicule modifié avec succès!');
 
         } catch (\Exception $e) {

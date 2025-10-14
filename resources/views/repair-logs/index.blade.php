@@ -3,6 +3,12 @@
 @section('title', 'Gestion des Dépannages')
 
 @section('content')
+    <style>
+        svg
+        {
+            height: 20px !important;
+        }
+    </style>
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1><i class="fas fa-tools"></i> Gestion des Dépannages</h1>
     <a href="{{ route('repair-logs.create') }}" class="btn btn-primary">
@@ -186,9 +192,12 @@
         </div>
 
         <!-- Pagination -->
-        <div class="d-flex justify-content-center mt-3">
-            {{ $repairLogs->links() }}
+        <div class="row">
+            <div class="d-flex justify-content-center mt-3">
+                {{ $repairLogs->links() }}
+            </div>
         </div>
+
         @else
         <div class="text-center py-4">
             <i class="fas fa-tools fa-3x text-muted mb-3"></i>
@@ -202,3 +211,6 @@
     </div>
 </div>
 @endsection
+@push('styles')
+
+@endpush

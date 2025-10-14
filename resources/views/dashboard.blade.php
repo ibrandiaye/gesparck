@@ -153,42 +153,7 @@
     </div>
 </div>
 
-<!-- Graphique interactif avancé -->
-@if($vehicles->count() > 0)
-<div class="row mt-4">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0"><i class="fas fa-chart-area"></i> Analyse Détaillée de Consommation</h5>
-                <div class="btn-group">
-                    <button type="button" class="btn btn-sm btn-outline-primary" id="detailedView">
-                        <i class="fas fa-expand"></i> Vue détaillée
-                    </button>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-3">
-                        <div class="list-group" id="vehicleSelector">
-                            @foreach($vehicles as $vehicle)
-                            <button type="button" class="list-group-item list-group-item-action vehicle-selector"
-                                    data-vehicle-id="{{ $vehicle->id }}">
-                                {{ $vehicle->immatriculation }}
-                                <br>
-                                <small class="text-muted">{{ $vehicle->marque }} {{ $vehicle->modele }}</small>
-                            </button>
-                            @endforeach
-                        </div>
-                    </div>
-                    <div class="col-md-9">
-                        <canvas id="detailedChart" height="300"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-@endif
+
 
 <!-- Modal pour la vue détaillée -->
 <div class="modal fade" id="detailedModal" tabindex="-1">
@@ -265,6 +230,42 @@
         </div>
     </div>
 </div>
+<!-- Graphique interactif avancé -->
+@if($vehicles->count() > 0)
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="fas fa-chart-area"></i> Analyse Détaillée de Consommation</h5>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-sm btn-outline-primary" id="detailedView">
+                        <i class="fas fa-expand"></i> Vue détaillée
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="list-group" id="vehicleSelector">
+                            @foreach($vehicles as $vehicle)
+                            <button type="button" class="list-group-item list-group-item-action vehicle-selector"
+                                    data-vehicle-id="{{ $vehicle->id }}">
+                                {{ $vehicle->immatriculation }}
+                                <br>
+                                <small class="text-muted">{{ $vehicle->marque }} {{ $vehicle->modele }}</small>
+                            </button>
+                            @endforeach
+                        </div>
+                    </div>
+                    <div class="col-md-9">
+                        <canvas id="detailedChart" height="300"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
 @endsection
 
 @push('styles')

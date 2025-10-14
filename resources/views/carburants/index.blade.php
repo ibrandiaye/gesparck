@@ -5,7 +5,7 @@
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1><i class="fas fa-gas-pump"></i> Gestion du Carburant</h1>
-    <a href="{{ route('carburant.create') }}" class="btn btn-primary">
+    <a href="{{ route('carburants.create') }}" class="btn btn-primary">
         <i class="fas fa-plus"></i> Nouveau Carburant
     </a>
 </div>
@@ -37,10 +37,10 @@
                         <td>
                             <div class="btn-group btn-group-sm">
 
-                                <a href="{{ route('carburant.edit', $entry) }}" class="btn btn-outline-warning">
+                                <a href="{{ route('carburants.edit', $entry) }}" class="btn btn-outline-warning">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <form action="{{ route('carburant.destroy', $entry) }}" method="POST" class="d-inline">
+                                <form action="{{ route('carburants.destroy', $entry) }}" method="POST" class="d-inline">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-outline-danger"
@@ -64,8 +64,8 @@
         <div class="text-center py-4">
             <i class="fas fa-gas-pump fa-3x text-muted mb-3"></i>
             <h5 class="text-muted">Aucun remplissage enregistré</h5>
-            <p class="text-muted">Commencez par ajouter votre premier remplissage de carburant.</p>
-            <a href="{{ route('carburant.create') }}" class="btn btn-primary">
+            <p class="text-muted">Commencez par ajouter votre premier remplissage de carburants.</p>
+            <a href="{{ route('carburants.create') }}" class="btn btn-primary">
                 <i class="fas fa-plus"></i> Ajouter un Remplissage
             </a>
         </div>

@@ -3,6 +3,8 @@
 @section('title', 'Rapports & Statistiques')
 
 @section('content')
+<link rel="stylesheet" href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.css" />
+
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1><i class="fas fa-chart-bar"></i> Rapports & Statistiques</h1>
     <div class="btn-group">
@@ -297,9 +299,12 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+<script src="https://cdn.datatables.net/2.3.4/js/dataTables.js"></script>
+
 
 <script>
 // Variables globales
+
 let costDistributionChart, monthlyCostsChart;
 let currentFilters = {
     periode: '30',
@@ -449,6 +454,12 @@ async function loadReportData() {
             updateCharts(data.data.charts);
             updateStatistics(data.data.statistics);
             updateTables(data.data.tables);
+             $('#topVehiclesTable').DataTable({
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/2.3.4/i18n/fr-FR.json',
+                },
+
+             });
             showSuccess('Rapport généré avec succès');
         } else {
             throw new Error(data.message || 'Erreur inconnue');

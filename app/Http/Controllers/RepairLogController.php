@@ -35,7 +35,12 @@ class RepairLogController extends Controller
     public function create()
     {
         $vehicles = Vehicle::where('etat', '!=', 'hors_service')->get();
-        return view('repair-logs.create', compact('vehicles'));
+        $thisVehicle = null;
+        if (isset($_GET['vehicle_id'])) {
+            $thisVehicle = Vehicle::find($_GET['vehicle_id']);
+
+        }
+        return view('repair-logs.create', compact('vehicles','thisVehicle'));
     }
 
     public function store(Request $request)

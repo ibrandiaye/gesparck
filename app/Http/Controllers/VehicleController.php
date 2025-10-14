@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Carburant;
 use App\Models\Vehicle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -26,7 +27,8 @@ class VehicleController extends Controller
 
     public function create()
     {
-        return view('vehicles.create');
+        $carburants = Carburant::get();
+        return view('vehicles.create',compact('carburants'));
     }
 
     public function store(Request $request)
@@ -38,7 +40,9 @@ class VehicleController extends Controller
             'type_vehicule' => 'required|in:voiture,camion,utilitaire,moto',
             'kilometrage_actuel' => 'required|integer|min:0',
           //  'date_mise_en_service' => 'required|date|before_or_equal:today',
-            'notes' => 'nullable|string|max:1000'
+             'carburant_id' => 'required|exists:carburants,id',
+            'notes' => 'nullable|string|max:1000',
+            'categorie' => 'string|required|in:sedipal-nestle,cdn-nestle,vehicule-livraison-sedipal',
         ]);
 
         try {
@@ -69,7 +73,7 @@ class VehicleController extends Controller
         },
         'repairLogs' => function($query) {
             $query->orderBy('date_intervention', 'desc');
-        }
+        },
     ]);
 
     return view('vehicles.show', compact('vehicle'));
@@ -77,7 +81,8 @@ class VehicleController extends Controller
 
     public function edit(Vehicle $vehicle)
     {
-        return view('vehicles.edit', compact('vehicle'));
+         $carburants = Carburant::get();
+        return view('vehicles.edit', compact('vehicle','carburants'));
     }
 
     public function update(Request $request, Vehicle $vehicle)
@@ -90,7 +95,9 @@ class VehicleController extends Controller
             'kilometrage_actuel' => 'required|integer|min:0',
             'etat' => 'required|in:disponible,en_entretien,hors_service',
            // 'date_mise_en_service' => 'required|date|before_or_equal:today',
-            'notes' => 'nullable|string|max:1000'
+            'notes' => 'nullable|string|max:1000',
+            'carburant_id' => 'required|exists:carburants,id',
+            'categorie' => 'string|required|in:sedipal-nestle,cdn-nestle,vehicule-livraison-sedipal',
         ]);
 
         try {

@@ -39,6 +39,14 @@
                                     </span>
                                 </td>
                             </tr>
+                             <tr>
+                                <th>Categorie:</th>
+                                <td>
+                                    <span class="badge bg-info text-dark">
+                                        {{ ucfirst($vehicle->categorie) }}
+                                    </span>
+                                </td>
+                            </tr>
                             <tr>
                                 <th>État:</th>
                                 <td>
@@ -54,6 +62,10 @@
                         <h5>Caractéristiques Techniques</h5>
                         <table class="table table-borderless">
                             <tr>
+                                <tr>
+                                    <th>Carburant:</th>
+                                    <td>{{ $vehicle->carburant->libelle ?? null }}</td>
+                                </tr>
                                 <th width="40%">Kilométrage:</th>
                                 <td>
                                     <span class="badge bg-dark">

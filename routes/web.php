@@ -29,7 +29,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('vehicles', VehicleController::class);
     Route::resource('fuel-entries', FuelEntryController::class);
     Route::resource('repair-logs', RepairLogController::class);
-    Route::resource('carburant', CarburantController::class);
+    Route::resource('carburants', CarburantController::class);
 
     Route::get('/api/vehicle-consumption/{vehicle}', [FuelEntryController::class, 'apiChartData'])
         ->name('api.vehicle.consumption');

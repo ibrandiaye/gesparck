@@ -22,7 +22,7 @@
                                     <option value="">Sélectionnez un véhicule</option>
                                     @foreach($vehicles as $vehicle)
                                         <option value="{{ $vehicle->id }}"
-                                            {{ old('vehicle_id') == $vehicle->id ? 'selected' : '' }}
+                                            {{ old('vehicle_id',$thisVehicle->id ?? null) == $vehicle->id ? 'selected' : '' }}
                                             data-kilometrage="{{ $vehicle->kilometrage_actuel }}">
                                             {{ $vehicle->immatriculation }} - {{ $vehicle->marque }} {{ $vehicle->modele }}
                                         </option>
@@ -75,7 +75,7 @@
                                 <label for="kilometrage_vehicule" class="form-label">Kilométrage du Véhicule *</label>
                                 <input type="number" class="form-control @error('kilometrage_vehicule') is-invalid @enderror"
                                        id="kilometrage_vehicule" name="kilometrage_vehicule"
-                                       value="{{ old('kilometrage_vehicule') }}" min="0" required>
+                                       value="{{ old('kilometrage_vehicule',$thisVehicle->kilometrage_actuel ?? null) }}" min="0" required>
                                 @error('kilometrage_vehicule')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -97,7 +97,7 @@
                         @enderror
                     </div>
 
-                    <div class="mb-3">
+                   {{--  <div class="mb-3">
                         <label for="details_travaux" class="form-label">Détails des Travaux</label>
                         <textarea class="form-control @error('details_travaux') is-invalid @enderror"
                                   id="details_travaux" name="details_travaux" rows="3"
@@ -105,9 +105,20 @@
                         @error('details_travaux')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
-                    </div>
+                    </div> --}}
 
                     <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="cout_pieces" class="form-label">Coût Pièces (FCFA) *</label>
+                                <input type="number" step="0.01" class="form-control @error('cout_pieces') is-invalid @enderror"
+                                       id="cout_pieces" name="cout_pieces"
+                                       value="{{ old('cout_pieces', 0) }}" min="0" required>
+                                @error('cout_pieces')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
                         <div class="col-md-4">
                             <div class="mb-3">
                                 <label for="cout_main_oeuvre" class="form-label">Coût Main d'Œuvre (FCFA) *</label>
@@ -120,25 +131,15 @@
                             </div>
                         </div>
 
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <label for="cout_pieces" class="form-label">Coût Pièces (FCFA) *</label>
-                                <input type="number" step="0.01" class="form-control @error('cout_pieces') is-invalid @enderror"
-                                       id="cout_pieces" name="cout_pieces"
-                                       value="{{ old('cout_pieces', 0) }}" min="0" required>
-                                @error('cout_pieces')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
+
 
                         <div class="col-md-4">
                             <div class="mb-3">
                                 <label for="statut" class="form-label">Statut *</label>
                                 <select class="form-select @error('statut') is-invalid @enderror" id="statut" name="statut" required>
+                                     <option value="termine" {{ old('statut') == 'termine' ? 'selected' : '' }}>Terminé</option>
                                     <option value="planifie" {{ old('statut') == 'planifie' ? 'selected' : '' }}>Planifié</option>
                                     <option value="en_cours" {{ old('statut') == 'en_cours' ? 'selected' : '' }}>En Cours</option>
-                                    <option value="termine" {{ old('statut') == 'termine' ? 'selected' : '' }}>Terminé</option>
                                     <option value="annule" {{ old('statut') == 'annule' ? 'selected' : '' }}>Annulé</option>
                                 </select>
                                 @error('statut')
@@ -148,7 +149,7 @@
                         </div>
                     </div>
 
-                    <div class="row">
+                    {{-- <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="garage" class="form-label">Garage/Atelier</label>
@@ -221,7 +222,7 @@
                         @error('notes')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
-                    </div>
+                    </div> --}}
 
                     <!-- Calcul automatique -->
                     <div class="alert alert-info">

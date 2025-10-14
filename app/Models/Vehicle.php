@@ -15,6 +15,8 @@ class Vehicle extends Model
         'type_vehicule',
         'kilometrage_actuel',
         'etat',
+        'carburant_id',
+        'categorie'
 
     ];
 
@@ -32,6 +34,10 @@ class Vehicle extends Model
     public function repairLogs()
     {
         return $this->hasMany(RepairLog::class);
+    }
+    public function carburant()
+    {
+        return $this->belongsTo(Carburant::class);
     }
 
     // Scopes utiles

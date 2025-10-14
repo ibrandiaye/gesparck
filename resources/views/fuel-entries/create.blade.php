@@ -22,8 +22,9 @@
                                     <option value="">Sélectionnez un véhicule</option>
                                     @foreach($vehicles as $vehicle)
                                         <option value="{{ $vehicle->id }}"
-                                            {{ old('vehicle_id') == $vehicle->id ? 'selected' : '' }}
-                                            data-kilometrage="{{ $vehicle->kilometrage_actuel }}">
+                                            {{ old('vehicle_id', $thisVehicle->id ?? null) == $vehicle->id ? 'selected' : '' }}
+                                            data-kilometrage="{{ $vehicle->kilometrage_actuel }}"
+                                            data-carburant="{{ $vehicle->carburant->libelle ?? null }}" data-montant-carburant="{{ $vehicle->carburant->montant ?? null }}">
                                             {{ $vehicle->immatriculation }} - {{ $vehicle->marque }} {{ $vehicle->modele }}
                                         </option>
                                     @endforeach
@@ -77,7 +78,7 @@
                                 <label for="kilometrage" class="form-label">Kilométrage *</label>
                                 <input type="number" class="form-control @error('kilometrage') is-invalid @enderror"
                                        id="kilometrage" name="kilometrage"
-                                       value="{{ old('kilometrage') }}" min="0" required>
+                                       value="{{ old('kilometrage',$thisVehicle->kilometrage_actuel ?? null) }}" min="0" required>
                                 @error('kilometrage')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -107,8 +108,8 @@
                                 <select class="form-select @error('type_carburant') is-invalid @enderror"
                                         id="type_carburant" name="type_carburant" required>
                                     <option value="">Sélectionnez un type</option>
-                                    <option value="diesel" {{ old('type_carburant') == 'diesel' ? 'selected' : '' }}>Diesel</option>
-                                    <option value="essence" {{ old('type_carburant') == 'essence' ? 'selected' : '' }}>Essence</option>
+                                    <option value="Diesel" {{ old('type_carburant') == 'diesel' ? 'selected' : '' }}>Diesel</option>
+                                    <option value="Essence" {{ old('type_carburant') == 'essence' ? 'selected' : '' }}>Essence</option>
                                     <option value="sp95" {{ old('type_carburant') == 'sp95' ? 'selected' : '' }}>SP95</option>
                                     <option value="sp98" {{ old('type_carburant') == 'sp98' ? 'selected' : '' }}>SP98</option>
                                     <option value="gpl" {{ old('type_carburant') == 'gpl' ? 'selected' : '' }}>GPL</option>
@@ -167,6 +168,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const kilometrageInput = document.getElementById('kilometrage');
     const coutTotalSpan = document.getElementById('coutTotal');
     const kmHelp = document.getElementById('kmHelp');
+    const type_carburant = document.getElementById('type_carburant');
+
 
     // Calcul automatique du coût total
     function calculateTotalCost() {
@@ -184,10 +187,23 @@ document.addEventListener('DOMContentLoaded', function() {
     vehicleSelect.addEventListener('change', function() {
         const selectedOption = vehicleSelect.options[vehicleSelect.selectedIndex];
         const kilometrageActuel = selectedOption.getAttribute('data-kilometrage');
+        const prix_carburant = selectedOption.getAttribute('data-montant-carburant');
+        const carburant = selectedOption.getAttribute('data-carburant');
 
         if (kilometrageActuel) {
             kilometrageInput.value = kilometrageActuel;
             kmHelp.textContent = `Kilométrage actuel du véhicule: ${parseInt(kilometrageActuel).toLocaleString('fr-FR')} km`;
+        }
+         if (prix_carburant) {
+            prixLitreInput.value = prix_carburant;
+        }
+         if (carburant) {
+            for (let i = 0; i < type_carburant.options.length; i++) {
+            if (type_carburant.options[i].value === carburant) {
+                type_carburant.selectedIndex = i;
+                break;
+            }
+            }
         }
     });
 

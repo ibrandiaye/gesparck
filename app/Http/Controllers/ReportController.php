@@ -244,7 +244,7 @@ class ReportController extends Controller
                 ];
             })
             ->sortByDesc('total_cost')
-            ->take(5)
+            //->take(5)
             ->values();
     }
 

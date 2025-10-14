@@ -31,8 +31,16 @@ class FuelEntryController extends Controller
 
     public function create()
     {
-        $vehicles = Vehicle::where('etat', 'disponible')->get();
-        return view('fuel-entries.create', compact('vehicles'));
+        $vehicles = Vehicle::with('carburant')->where('etat', 'disponible')->get();
+        //dd($vehicles);
+        $thisVehicle = null;
+        if (isset($_GET['vehicle_id'])) {
+            $thisVehicle = Vehicle::find($_GET['vehicle_id']);
+
+        }
+       // dd($vehicle);
+       // dd($_GET['vehicle_id']);
+        return view('fuel-entries.create', compact('vehicles','thisVehicle'));
     }
 
     public function store(Request $request)
@@ -91,7 +99,7 @@ class FuelEntryController extends Controller
 
     public function edit(FuelEntry $fuelEntry)
     {
-        $vehicles = Vehicle::all();
+        $vehicles = Vehicle::with('carburant')->all();
         return view('fuel-entries.edit', compact('fuelEntry', 'vehicles'));
     }
 

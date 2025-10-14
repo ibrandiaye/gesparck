@@ -97,16 +97,27 @@
                         @enderror
                     </div>
 
-                    <div class="mb-3">
+                    {{-- <div class="mb-3">
                         <label for="details_travaux" class="form-label">Détails des Travaux</label>
                         <textarea class="form-control @error('details_travaux') is-invalid @enderror"
                                   id="details_travaux" name="details_travaux" rows="3">{{ old('details_travaux', $repairLog->details_travaux) }}</textarea>
                         @error('details_travaux')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
-                    </div>
+                    </div> --}}
 
                     <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="cout_pieces" class="form-label">Coût Pièces (FCFA) *</label>
+                                <input type="number" step="0.01" class="form-control @error('cout_pieces') is-invalid @enderror"
+                                       id="cout_pieces" name="cout_pieces"
+                                       value="{{ old('cout_pieces', $repairLog->cout_pieces) }}" min="0" required>
+                                @error('cout_pieces')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
                         <div class="col-md-4">
                             <div class="mb-3">
                                 <label for="cout_main_oeuvre" class="form-label">Coût Main d'Œuvre (FCFA) *</label>
@@ -119,17 +130,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <label for="cout_pieces" class="form-label">Coût Pièces (FCFA) *</label>
-                                <input type="number" step="0.01" class="form-control @error('cout_pieces') is-invalid @enderror"
-                                       id="cout_pieces" name="cout_pieces"
-                                       value="{{ old('cout_pieces', $repairLog->cout_pieces) }}" min="0" required>
-                                @error('cout_pieces')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
+
 
                         <div class="col-md-4">
                             <div class="mb-3">
@@ -147,7 +148,7 @@
                         </div>
                     </div>
 
-                    <div class="row">
+                      {{-- <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="garage" class="form-label">Garage/Atelier</label>
@@ -173,7 +174,7 @@
                         </div>
                     </div>
 
-                    <div class="row">
+                  <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="date_prochaine_revision" class="form-label">Date Prochaine Révision</label>
@@ -224,7 +225,7 @@
                         @error('notes')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
-                    </div>
+                    </div> --}}
 
                     <!-- Calcul automatique -->
                     <div class="alert alert-info">

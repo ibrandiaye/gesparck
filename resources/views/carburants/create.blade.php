@@ -10,7 +10,7 @@
                 <h4><i class="fas fa-gas-pump"></i> Carburant</h4>
             </div>
             <div class="card-body">
-                <form action="{{ route('carburant.store') }}" method="POST" id="fuelForm">
+                <form action="{{ route('carburants.store') }}" method="POST" id="fuelForm">
                     @csrf
 
 
@@ -47,7 +47,7 @@
 
 
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <a href="{{ route('carburant.index') }}" class="btn btn-secondary me-md-2">
+                        <a href="{{ route('carburants.index') }}" class="btn btn-secondary me-md-2">
                             <i class="fas fa-arrow-left"></i> Retour
                         </a>
                         <button type="submit" class="btn btn-primary">
