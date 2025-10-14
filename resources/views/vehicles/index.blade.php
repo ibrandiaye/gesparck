@@ -69,6 +69,7 @@
         @endif
 
     @endforeach
+    <hr>
     <h5>CDN  - NESTLE</h5>
     @foreach($vehicles as $vehicle)
         @if ($vehicle->categorie=="cdn-nestle" )
@@ -122,6 +123,7 @@
         @endif
 
     @endforeach
+    <hr>
     <h5>VEHICULE DE LIVRAISON SEDIPAL</h5>
     @foreach($vehicles as $vehicle)
         @if ($vehicle->categorie=="vehicule-livraison-sedipal")
@@ -175,6 +177,7 @@
         @endif
 
     @endforeach
+    <hr>
     <h5>Autre</h5>
     @foreach($vehicles as $vehicle)
         @if ($vehicle->categorie!="sedipal-nestle" && $vehicle->categorie!="cdn-nestle" && $vehicle->categorie!="vehicule-livraison-sedipal")
