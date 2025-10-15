@@ -140,4 +140,18 @@ class FuelEntry extends Model
 
         return $moisEcoules > 0 ? round($kmTotaux / $moisEcoules) : null;
     }
+
+    public function trips() {
+        return $this->hasMany(Trip::class);
+    }
+
+    // Nombre total de trajets pour ce plein
+    public function getNombreTotalTrajetsAttribute() {
+       // dd($this->trips->sum('nombre_trajets'));
+        $total = 0;
+        foreach ($this->trips as $trip) {
+            $total += $trip->nombre_trajets;
+        }
+       return $total;
+    }
 }

@@ -454,12 +454,15 @@ async function loadReportData() {
             updateCharts(data.data.charts);
             updateStatistics(data.data.statistics);
             updateTables(data.data.tables);
-             $('#topVehiclesTable').DataTable({
-                language: {
-                    url: '//cdn.datatables.net/plug-ins/2.3.4/i18n/fr-FR.json',
-                },
+            if ($.fn.DataTable.isDataTable('#topVehiclesTable')) {
+                $('#topVehiclesTable').DataTable().clear().destroy();
+            }
+            $('#topVehiclesTable').DataTable({
+            language: {
+                url: '//cdn.datatables.net/plug-ins/2.3.4/i18n/fr-FR.json',
+            },
 
-             });
+            });
             showSuccess('Rapport généré avec succès');
         } else {
             throw new Error(data.message || 'Erreur inconnue');

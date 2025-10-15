@@ -82,7 +82,16 @@
                                     {{ number_format($fuelEntry->consommation, 2, ',', ' ') }} L/100km
                                 </td>
                             </tr>
+
                             @endif
+                            <tr>
+                                <th>Nombre de trajet:</th>
+                                <td class="fw-bold text-warning">
+                                    <span class="badge bg-danger">
+                                    <h5>{{ $fuelEntry->nombreTotalTrajets}}</h5>
+                                    </span>
+                                </td>
+                            </tr>
                         </table>
                     </div>
                 </div>

@@ -71,6 +71,7 @@
                         <th>Prix/L</th>
                         <th>Coût Total</th>
                         <th>Km</th>
+                        <th>Nombre de trajets</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -91,6 +92,7 @@
                             </span>
                         </td>
                         <td>{{ number_format($entry->kilometrage, 0, ',', ' ') }} km</td>
+                        <td>{{ $entry->nombreTotalTrajets }}</td>
                         <td>
                             <div class="btn-group btn-group-sm">
                                 <a href="{{ route('fuel-entries.show', $entry) }}" class="btn btn-outline-info">

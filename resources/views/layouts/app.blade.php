@@ -115,6 +115,9 @@
                             <i class="fas fa-chart-bar me-1"></i>Rapports
                         </a>
                     </li>
+                  {{--    <a class="nav-link {{ request()->routeIs('strips.*') ? 'active' : '' }}" href="{{ route('trips.index') }}">
+                        <i class="fas fa-route"></i> Trajets
+                    </a> --}}
                    {{--  <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle {{ request()->routeIs('reports.*') ? 'active' : '' }}"
                            href="#" id="reportsDropdown" role="button" data-bs-toggle="dropdown">

@@ -16,7 +16,20 @@ class FuelEntryController extends Controller
 
     public function index()
     {
-        $fuelEntries = FuelEntry::with('vehicle')
+        $vehicle = $_GET['vehicle'] ?? null;
+        if ($vehicle) {
+            $fuelEntries = FuelEntry::with(['vehicle', 'trips'])
+                ->where('vehicle_id', $vehicle)
+                ->orderBy('date_remplissage', 'desc')
+                ->paginate(20);
+             $stats = [
+            'totalCoutMois' => FuelEntry::where('vehicle_id', $vehicle)->thisMonth()->sum('cout_total'),
+            'totalLitresMois' => FuelEntry::where('vehicle_id', $vehicle)->thisMonth()->sum('litres'),
+            'moyennePrixLitre' => FuelEntry::where('vehicle_id', $vehicle)->thisMonth()->avg('prix_litre')
+        ];
+        }
+        else {
+             $fuelEntries = FuelEntry::with(['vehicle','trips'])
             ->orderBy('date_remplissage', 'desc')
             ->paginate(20);
 
@@ -25,6 +38,10 @@ class FuelEntryController extends Controller
             'totalLitresMois' => FuelEntry::thisMonth()->sum('litres'),
             'moyennePrixLitre' => FuelEntry::thisMonth()->avg('prix_litre')
         ];
+        }
+
+
+        //dd($fuelEntries);
 
         return view('fuel-entries.index', compact('fuelEntries', 'stats'));
     }
@@ -52,7 +69,7 @@ class FuelEntryController extends Controller
             'litres' => 'required|numeric|min:1|max:1000',
             'kilometrage' => 'required|integer|min:0',
             'station' => 'nullable|string|max:100',
-            'type_carburant' => 'required|in:diesel,essence,sp95,sp98,gpl',
+            'type_carburant' => 'required',
             'notes' => 'nullable|string|max:500'
         ]);
 
@@ -99,7 +116,7 @@ class FuelEntryController extends Controller
 
     public function edit(FuelEntry $fuelEntry)
     {
-        $vehicles = Vehicle::with('carburant')->all();
+        $vehicles = Vehicle::with('carburant')->get();
         return view('fuel-entries.edit', compact('fuelEntry', 'vehicles'));
     }
 
