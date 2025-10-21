@@ -17,7 +17,7 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="vehicle_id" class="form-label">Véhicule *</label>
-                                <select class="form-select @error('vehicle_id') is-invalid @enderror"
+                                <select class="form-select select2 @error('vehicle_id') is-invalid @enderror"
                                         id="vehicle_id" name="vehicle_id" required>
                                     <option value="">Sélectionnez un véhicule</option>
                                     @foreach($vehicles as $vehicle)
@@ -51,12 +51,13 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label for="prix_litre" class="form-label">Prix du Litre (FCFA) *</label>
+                                <label for="prix_litre" class="form-label">Prix du Litre (FCFA)  *</label>
                                 <input type="number" step="0.001" class="form-control @error('prix_litre') is-invalid @enderror"
                                        id="prix_litre" name="prix_litre"
-                                       value="{{ old('prix_litre') }}" min="0" max="1000" required>
+                                       value="{{ old('prix_litre',$thisVehicle->carburant->montant ?? null ) }}" min="0" max="1000" required>
                                 @error('prix_litre')
                                     <div class="invalid-feedback">{{ $message }}</div>
+
                                 @enderror
                             </div>
                         </div>
@@ -93,9 +94,15 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="station" class="form-label">Station Service</label>
-                                <input type="text" class="form-control @error('station') is-invalid @enderror"
+                                <select class="form-control"  id="station" name="station" required>
+                                    <option value="">Selectionner</option>
+                                    <option value="Mobile castors" {{ old('station') == "Mobile castors" ? "selected" : " " }}>Mobile castors</option>
+                                    <option value="Total Yarakh"  {{ old('station') == "Total Yarakh" ? "selected" : " " }}>Total Yarakh</option>
+                                     <option value="Autre Station"  {{ old('station') == "Autre Station" ? "selected" : " " }}>Autre Station</option>
+                                </select>
+                               {{--  <input type="text" class="form-control @error('station') is-invalid @enderror"
                                        id="station" name="station"
-                                       value="{{ old('station') }}" placeholder="Ex: Total, Shell, etc.">
+                                       value="{{ old('station') }}" placeholder="Ex: Total, Shell, etc."> --}}
                                 @error('station')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -108,11 +115,11 @@
                                 <select class="form-select @error('type_carburant') is-invalid @enderror"
                                         id="type_carburant" name="type_carburant" required>
                                     <option value="">Sélectionnez un type</option>
-                                    <option value="Diesel" {{ old('type_carburant') == 'diesel' ? 'selected' : '' }}>Diesel</option>
-                                    <option value="Essence" {{ old('type_carburant') == 'essence' ? 'selected' : '' }}>Essence</option>
-                                    <option value="sp95" {{ old('type_carburant') == 'sp95' ? 'selected' : '' }}>SP95</option>
-                                    <option value="sp98" {{ old('type_carburant') == 'sp98' ? 'selected' : '' }}>SP98</option>
-                                    <option value="gpl" {{ old('type_carburant') == 'gpl' ? 'selected' : '' }}>GPL</option>
+                                    <option value="Diesel" {{ old('type_carburant',$thisVehicle->carburant->libelle) == 'diesel' ? 'selected' : '' }}>Diesel</option>
+                                    <option value="Essence" {{ old('type_carburant',$thisVehicle->carburant->libelle) == 'essence' ? 'selected' : '' }}>Essence</option>
+                                    <option value="sp95" {{ old('type_carburant',$thisVehicle->carburant->libelle) == 'sp95' ? 'selected' : '' }}>SP95</option>
+                                    <option value="sp98" {{ old('type_carburant',$thisVehicle->carburant->libelle) == 'sp98' ? 'selected' : '' }}>SP98</option>
+                                    <option value="gpl" {{ old('type_carburant',$thisVehicle->carburant->libelle) == 'gpl' ? 'selected' : '' }}>GPL</option>
                                 </select>
                                 @error('type_carburant')
                                     <div class="invalid-feedback">{{ $message }}</div>

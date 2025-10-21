@@ -36,7 +36,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="vehicle_id">Véhicule *</label>
-                                    <select name="vehicle_id" id="vehicle_id" class="form-control @error('vehicle_id') is-invalid @enderror" required>
+                                    <select name="vehicle_id" id="vehicle_id" class="form-control select2 @error('vehicle_id') is-invalid @enderror" required>
 
                                         <option value="{{ $vehicle->id }}"
                                             {{ old('vehicle_id') == $vehicle->id ? 'selected' : '' }}

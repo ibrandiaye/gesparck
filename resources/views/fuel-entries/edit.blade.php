@@ -93,8 +93,14 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="station" class="form-label">Station Service</label>
-                                <input type="text" class="form-control @error('station') is-invalid @enderror"
-                                       id="station" name="station"
+                                <select class="form-control select2"  id="station" name="station" required>
+                                    <option value="">Selectionner</option>
+                                    <option value="Mobile castors" {{ $fuelEntry->station == "Mobile castors" ? "selected" : " " }}>Mobile castors</option>
+                                    <option value="Total Yarakh"  {{ $fuelEntry->station == "Total Yarakh" ? "selected" : " " }}>Total Yarakh</option>
+                                     <option value="Autre Station"  {{ $fuelEntry->station == "Autre Station" ? "selected" : " " }}>Autre Station</option>
+                                </select>
+                               {{--  <input type="text" class="form-control @error('station') is-invalid @enderror"
+                                       id="station" name="station" --}}
                                        value="{{ old('station', $fuelEntry->station) }}" placeholder="Ex: Total, Shell, etc.">
                                 @error('station')
                                     <div class="invalid-feedback">{{ $message }}</div>

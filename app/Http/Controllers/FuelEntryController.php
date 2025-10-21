@@ -52,7 +52,7 @@ class FuelEntryController extends Controller
         //dd($vehicles);
         $thisVehicle = null;
         if (isset($_GET['vehicle_id'])) {
-            $thisVehicle = Vehicle::find($_GET['vehicle_id']);
+            $thisVehicle = Vehicle::with('carburant')->find($_GET['vehicle_id']);
 
         }
        // dd($vehicle);

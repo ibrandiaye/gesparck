@@ -33,7 +33,8 @@
                             </ul>
                         </div>
                     @endif
-                    <div class="col-lg-6">
+                    <div class="row">
+                         <div class="col-lg-6">
                         <div class="form-group">
                             <label>Nom </label>
                             <input type="text" name="name"  value="{{ old('name') }}" class="form-control"required>
@@ -65,8 +66,11 @@
                                 <option value="user">user</option>
                             </select>
                         </div>
+                    </div>
+
 
                     <div>
+                        <br>
                         <center>
                             <button type="submit" class="btn btn-success btn btn-lg "> ENREGISTRER</button>
                         </center>

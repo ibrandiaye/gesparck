@@ -102,7 +102,7 @@
             </div>
             <div class="col-md-3">
                 <label for="vehicle" class="form-label">Véhicule</label>
-                <select class="form-select" id="vehicle" name="vehicle">
+                <select class="form-select select2" id="vehicle" name="vehicle">
                     <option value="">Tous les véhicules</option>
                     @foreach($vehicles as $vehicle)
                         <option value="{{ $vehicle->id }}" {{ request('vehicle') == $vehicle->id ? 'selected' : '' }}>
