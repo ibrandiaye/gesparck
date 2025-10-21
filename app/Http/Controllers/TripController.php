@@ -51,6 +51,27 @@ class TripController extends Controller
     {
         $fuelEntry = null;
 
+        $motifs =
+            [
+                'livraison' => 'Livraison',
+                'client' => 'Rendez-vous client',
+                'maintenance' => 'Maintenance',
+                'administratif' => 'Démarche administrative',
+                'autre' => 'Autre'
+            ];
+
+        if(isset($_GET['vehicle_id'])  && isset($_GET['entry_id']))
+        {
+            //dd('ok');
+            $entry = FuelEntry::findOrFail($_GET['entry_id']);
+            $vehicle = Vehicle::findOrFail($_GET['vehicle_id']);
+            //dd($entry,$vehicle);
+            return view('trips.create-by-fuel', compact(
+            'vehicle',
+            'entry',
+            'motifs'
+        ));
+        }
         if ($request->has('fuel_entry_id')) {
             $fuelEntry = FuelEntry::findOrFail($request->fuel_entry_id);
         }
@@ -60,13 +81,7 @@ class TripController extends Controller
                               ->orderBy('date_remplissage', 'desc')
                               ->get();
 
-        $motifs = [
-            'livraison' => 'Livraison',
-            'client' => 'Rendez-vous client',
-            'maintenance' => 'Maintenance',
-            'administratif' => 'Démarche administrative',
-            'autre' => 'Autre'
-        ];
+
 
         return view('trips.create', compact(
             'vehicles',
@@ -391,5 +406,12 @@ class TripController extends Controller
                             ->values();
 
         return response()->json($conducteurs);
+    }
+
+    public function getByVehicle(Request $request)
+    {
+        $vehicles = Vehicle::where('etat', 'disponible')->get();
+
+        return response()->json($vehicles);
     }
 }

@@ -52,7 +52,8 @@
                                         <tr>
                                             <td><strong>Nombre de trajets:</strong></td>
                                             <td>
-                                                <span class="badge badge-info badge-pill">
+
+                                                <span class="badge bg-primary">
                                                     {{ $trip->nombre_trajets }}
                                                 </span>
                                             </td>

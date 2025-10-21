@@ -3,7 +3,6 @@
 @section('title', 'Rapports & Statistiques')
 
 @section('content')
-<link rel="stylesheet" href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.css" />
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1><i class="fas fa-chart-bar"></i> Rapports & Statistiques</h1>
@@ -182,6 +181,7 @@
                             <tr>
                                 <th>Véhicule</th>
                                 <th>Coût Carburant</th>
+                                 <th>Nombre Trajets</th>
                                 <th>Coût Entretien</th>
                                 <th>Total</th>
                             </tr>
@@ -459,10 +459,30 @@ async function loadReportData() {
             }
             $('#topVehiclesTable').DataTable({
             language: {
+                url: 'https://cdn.datatables.net/plug-ins/2.3.4/i18n/fr-FR.json',
+            },
+             ordering:false,
+
+            });
+            if ($.fn.DataTable.isDataTable('#detailedReportTable')) {
+                $('#detailedReportTable').DataTable().clear().destroy();
+            }
+            $('#detailedReportTable').DataTable({
+            language: {
+                url: 'https://cdn.datatables.net/plug-ins/2.3.4/i18n/fr-FR.json',
+            },
+            ordering:false,
+
+            });
+          /*  if ($.fn.DataTable.isDataTable('#topVehiclesTable')) {
+                $('#topVehiclesTable').DataTable().clear().destroy();
+            }
+            $('#topVehiclesTable').DataTable({
+            language: {
                 url: '//cdn.datatables.net/plug-ins/2.3.4/i18n/fr-FR.json',
             },
 
-            });
+            });*/
             showSuccess('Rapport généré avec succès');
         } else {
             throw new Error(data.message || 'Erreur inconnue');
@@ -513,6 +533,7 @@ function updateTables(tables) {
         <tr>
             <td>${vehicle.immatriculation}</td>
             <td>${vehicle.fuel_cost.toLocaleString('fr-FR')} FCFA</td>
+            <td>${vehicle.trajets} </td>
             <td>${vehicle.repair_cost.toLocaleString('fr-FR')} FCFA</td>
             <td><strong>${vehicle.total_cost.toLocaleString('fr-FR')} FCFA</strong></td>
         </tr>

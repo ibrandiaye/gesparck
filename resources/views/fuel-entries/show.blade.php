@@ -205,14 +205,16 @@
                        class="btn btn-outline-info btn-sm">
                         <i class="fas fa-truck"></i> Voir le Véhicule
                     </a>
-                    <form action="{{ route('fuel-entries.destroy', $fuelEntry) }}" method="POST" class="d-grid">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-outline-danger btn-sm"
-                                onclick="return confirm('Supprimer ce remplissage?')">
-                            <i class="fas fa-trash"></i> Supprimer
-                        </button>
-                    </form>
+                    @if (Auth::user()->role=="admin")
+                        <form action="{{ route('fuel-entries.destroy', $fuelEntry) }}" method="POST" class="d-grid">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-outline-danger btn-sm"
+                                    onclick="return confirm('Supprimer ce remplissage?')">
+                                <i class="fas fa-trash"></i> Supprimer
+                            </button>
+                        </form>
+                    @endif
                 </div>
             </div>
         </div>

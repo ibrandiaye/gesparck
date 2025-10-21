@@ -124,16 +124,18 @@
                                                class="btn btn-warning" title="Modifier">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <form action="{{ route('trips.destroy', $trip->id) }}"
-                                                  method="POST" class="d-inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger"
-                                                        title="Supprimer"
-                                                        onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce trajet ?')">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </form>
+                                            @if (Auth::user()->role=="admin")
+                                                <form action="{{ route('trips.destroy', $trip->id) }}"
+                                                    method="POST" class="d-inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger"
+                                                            title="Supprimer"
+                                                            onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce trajet ?')">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>

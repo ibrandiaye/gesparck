@@ -165,14 +165,16 @@
                        class="btn btn-outline-info btn-sm">
                         <i class="fas fa-truck"></i> Voir le Véhicule
                     </a>
-                    <form action="{{ route('repair-logs.destroy', $repairLog) }}" method="POST" class="d-grid">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-outline-danger btn-sm"
-                                onclick="return confirm('Supprimer cette intervention?')">
-                            <i class="fas fa-trash"></i> Supprimer
-                        </button>
-                    </form>
+                    @if (Auth::user()->role=="admin")
+                        <form action="{{ route('repair-logs.destroy', $repairLog) }}" method="POST" class="d-grid">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-outline-danger btn-sm"
+                                    onclick="return confirm('Supprimer cette intervention?')">
+                                <i class="fas fa-trash"></i> Supprimer
+                            </button>
+                        </form>
+                    @endif
                 </div>
             </div>
         </div>

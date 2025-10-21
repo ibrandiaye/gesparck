@@ -6,6 +6,7 @@ use App\Http\Controllers\FuelEntryController;
 use App\Http\Controllers\RepairLogController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TripController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\VehicleController;
 use Illuminate\Support\Facades\Route;
 
@@ -26,12 +27,17 @@ Route::get('/', function () {
 
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+   // Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::resource('vehicles', VehicleController::class);
     Route::resource('fuel-entries', FuelEntryController::class);
     Route::resource('repair-logs', RepairLogController::class);
     Route::resource('carburants', CarburantController::class);
+    Route::resource('user', UserController::class);
+
+    Route::get('/modifier/motdepasse',[UserController::class,'modifierMotDePasse'])->name("modifier.motdepasse")->middleware(['auth']);//->middleware(['auth', 'checkMaxSessions']);
+    Route::post('/update/password',[UserController::class,'updatePassword'])->name("user.password.update")->middleware(['auth']);//->middleware(["auth","checkMaxSessions"]);
+
 
     Route::get('/api/vehicle-consumption/{vehicle}', [FuelEntryController::class, 'apiChartData'])
         ->name('api.vehicle.consumption');
@@ -72,9 +78,14 @@ Route::middleware(['auth'])->group(function () {
         Route::get('api/conducteurs', [TripController::class, 'getConducteurs'])
              ->name('trips.api.conducteurs');
 
+
+
+
 });
         Route::get('statistics/strips', [TripController::class, 'statistics'])->name('trips.statistics');
         Route::get('export/strips', [TripController::class, 'export'])->name('trips.export');
+        Route::get('/dashboard', [DashboardController::class, 'monDasboard'])->name('dashboard');
+        Route::post('/dashboard', [DashboardController::class, 'monDasboardFiltre'])->name('dashboard');
 
 });
 

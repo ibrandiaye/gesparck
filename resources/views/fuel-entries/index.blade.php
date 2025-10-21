@@ -66,7 +66,7 @@
                     <tr>
                         <th>Date</th>
                         <th>Véhicule</th>
-                        <th>Station</th>
+                        <th>Type Carburant</th>
                         <th>Litres</th>
                         <th>Prix/L</th>
                         <th>Coût Total</th>
@@ -83,7 +83,7 @@
                             <strong>{{ $entry->vehicle->immatriculation }}</strong><br>
                             <small class="text-muted">{{ $entry->vehicle->marque }} {{ $entry->vehicle->modele }}</small>
                         </td>
-                        <td>{{ $entry->station ?? 'N/A' }}</td>
+                        <td>{{ $entry->type_carburant }}</td>
                         <td>{{ number_format($entry->litres, 1, ',', ' ') }} L</td>
                         <td>{{ number_format($entry->prix_litre, 0, ',', ' ') }} FCFA</td>
                         <td>
@@ -92,23 +92,28 @@
                             </span>
                         </td>
                         <td>{{ number_format($entry->kilometrage, 0, ',', ' ') }} km</td>
-                        <td>{{ $entry->nombreTotalTrajets }}</td>
+                        <td><span class="badge bg-primary">{{ $entry->nombreTotalTrajets }}</span></td>
                         <td>
                             <div class="btn-group btn-group-sm">
+                                 <a href="{{ route('trips.create') }}?vehicle_id={{ $entry->vehicle_id }}&entry_id={{ $entry->id }}" class="btn btn-outline-primary" title="Ajouter Trajet">
+                                    <i class="fas fa-route"></i>
+                                </a>
                                 <a href="{{ route('fuel-entries.show', $entry) }}" class="btn btn-outline-info">
                                     <i class="fas fa-eye"></i>
                                 </a>
                                 <a href="{{ route('fuel-entries.edit', $entry) }}" class="btn btn-outline-warning">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <form action="{{ route('fuel-entries.destroy', $entry) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-outline-danger"
-                                            onclick="return confirm('Supprimer ce remplissage?')">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
+                                @if (Auth::user()->role=="admin")
+                                    <form action="{{ route('fuel-entries.destroy', $entry) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-outline-danger"
+                                                onclick="return confirm('Supprimer ce remplissage?')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                @endif
                             </div>
                         </td>
                     </tr>

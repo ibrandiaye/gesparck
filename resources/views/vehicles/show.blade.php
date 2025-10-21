@@ -73,11 +73,15 @@
                                     </span>
                                 </td>
                             </tr>
-                          {{--   <tr>
-                                <th>Mise en service:</th>
-                                <td>{{ $vehicle->date_mise_en_service->format('d/m/Y') }}</td>
-                            </tr>
                             <tr>
+                                <th>Nombre de trajet:</th>
+                                <td>
+                                    <span class="badge bg-danger">
+                                        {{ $vehicle->nombreTotalTrajets}}
+                                    </span>
+                                </td>
+                            </tr>
+                             {{--<tr>
                                 <th>Âge du véhicule:</th>
                                 <td>
                                     {{ $vehicle->date_mise_en_service->diffInYears(now()) }} ans

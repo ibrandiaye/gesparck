@@ -230,17 +230,22 @@ class ReportController extends Controller
                 $query->whereBetween('date_remplissage', [$dateRange['start'], $dateRange['end']]);
             }, 'repairLogs' => function($query) use ($dateRange) {
                 $query->whereBetween('date_intervention', [$dateRange['start'], $dateRange['end']]);
-            }])
+            },
+            'trips' => function($query) use ($dateRange) {
+                $query->whereBetween('date_trajet', [$dateRange['start'], $dateRange['end']]);
+            },
+            ])
             ->get()
             ->map(function($vehicle) {
                 $fuelCost = $vehicle->fuelEntries->sum('cout_total');
                 $repairCost = $vehicle->repairLogs->sum('cout_total');
-
+                $trajets = $vehicle->trips->sum('nombre_trajets');
                 return [
                     'immatriculation' => $vehicle->immatriculation,
                     'fuel_cost' => $fuelCost,
                     'repair_cost' => $repairCost,
-                    'total_cost' => $fuelCost + $repairCost
+                    'total_cost' => $fuelCost + $repairCost,
+                    'trajets' => $trajets
                 ];
             })
             ->sortByDesc('total_cost')

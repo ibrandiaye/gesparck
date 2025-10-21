@@ -84,14 +84,17 @@
                             <a href="{{ route('vehicles.edit', $vehicle) }}" class="btn btn-sm btn-outline-primary">
                                 <i class="fas fa-edit"></i>
                             </a>
-                            <form action="{{ route('vehicles.destroy', $vehicle) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-outline-danger"
-                                        onclick="return confirm('Supprimer ce véhicule?')">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </form>
+                            @if (Auth::user()->role=="admin")
+                                <form action="{{ route('vehicles.destroy', $vehicle) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-outline-danger"
+                                            onclick="return confirm('Supprimer ce véhicule?')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            @endif
+
                         </div>
                     </div>
                     <div class="card-body">
@@ -101,7 +104,7 @@
                             <strong>Type:</strong> {{ ucfirst($vehicle->type_vehicule) }}<br>
                             <strong>Kilométrage:</strong> {{ number_format($vehicle->kilometrage_actuel, 0, ',', ' ') }} km<br>
                             <strong>Catégorie:</strong> {{ $vehicle->categorie }}
-                        </p>
+
                         @if($vehicle->notes)
                         <p class="card-text"><small class="text-muted">{{ Str::limit($vehicle->notes, 100) }}</small></p>
                         @endif

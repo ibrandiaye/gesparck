@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion de Flotte - @yield('title')</title>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.css" />
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -108,6 +111,12 @@
                         </a>
                     </li>
 
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('strips.*') ? 'active' : '' }}" href="{{ route('trips.index') }}">
+                            <i class="fas fa-route"></i> Trajets
+                        </a>
+                     </li>
+
                     <!-- Menu déroulant Rapports -->
                      <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('reports.*') ? 'active' : '' }}"
@@ -115,9 +124,7 @@
                             <i class="fas fa-chart-bar me-1"></i>Rapports
                         </a>
                     </li>
-                  {{--    <a class="nav-link {{ request()->routeIs('strips.*') ? 'active' : '' }}" href="{{ route('trips.index') }}">
-                        <i class="fas fa-route"></i> Trajets
-                    </a> --}}
+
                    {{--  <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle {{ request()->routeIs('reports.*') ? 'active' : '' }}"
                            href="#" id="reportsDropdown" role="button" data-bs-toggle="dropdown">
@@ -152,11 +159,14 @@
                             <i class="fas fa-user me-1"></i>{{ Auth::user()->name }}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li>
-                                <a class="dropdown-item" href="#">
-                                    <i class="fas fa-user-cog me-2"></i>Mon Profil
+                        @if (Auth::user()->role=="admin")
+                             <li>
+                                <a class="dropdown-item" href="{{ route('user.index') }}">
+                                    <i class="fas fa-user-cog me-2"></i>Utilisateur
                                 </a>
                             </li>
+                        @endif
+
                             <li>
                                 <a class="dropdown-item" href="#">
                                     <i class="fas fa-cog me-2"></i>Paramètres
@@ -215,6 +225,16 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.datatables.net/2.3.4/js/dataTables.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('.select2').select2({
+                 width: 'resolve'
+            });
+        });
+    </script>
     @stack('scripts')
 </body>
 </html>

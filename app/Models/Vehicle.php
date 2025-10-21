@@ -79,5 +79,18 @@ public function getEntretiensEnCoursAttribute()
         ->where('statut', 'en_cours')
         ->count();
 }
+    public function trips() {
+        return $this->hasMany(Trip::class);
+    }
+    public function getNombreTotalTrajetsAttribute() {
+       // dd($this->trips->sum('nombre_trajets'));
+        /*$total = 0;
+        foreach ($this->trips as $trip) {
+            $total += $trip->nombre_trajets;
+        }
+       return $total; */
+       return $this->trips->sum('nombre_trajets');
+
+    }
 
 }

@@ -175,14 +175,16 @@
                                 <a href="{{ route('repair-logs.edit', $log) }}" class="btn btn-outline-warning">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <form action="{{ route('repair-logs.destroy', $log) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-outline-danger"
-                                            onclick="return confirm('Supprimer cette intervention?')">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
+                                @if (Auth::user()->role=="admin")
+                                    <form action="{{ route('repair-logs.destroy', $log) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-outline-danger"
+                                                onclick="return confirm('Supprimer cette intervention?')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                @endif
                             </div>
                         </td>
                     </tr>

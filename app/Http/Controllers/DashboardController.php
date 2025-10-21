@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\RepairLog;
+use App\Models\Trip;
 use App\Models\Vehicle;
 use App\Models\FuelEntry;
 use Illuminate\Http\Request;
@@ -13,64 +14,194 @@ class DashboardController extends Controller
 {
     // ... le haut reste inchangé
 
-public function index()
-{
-    $stats = [
-        'totalVehicles' => Vehicle::count(),
-        'vehiclesDisponibles' => Vehicle::where('etat', 'disponible')->count(),
-        'vehiclesEnEntretien' => Vehicle::where('etat', 'en_entretien')->count(),
-        'coutCarburantMois' => FuelEntry::whereYear('date_remplissage', now()->year)
-            ->whereMonth('date_remplissage', now()->month)
-            ->sum('cout_total') ?? 0,
-        'remplissagesMois' => FuelEntry::whereYear('date_remplissage', now()->year)
-            ->whereMonth('date_remplissage', now()->month)
-            ->count() ?? 0,
-             // Nouvelles statistiques dépannages
-            'interventionsMois' => RepairLog::whereYear('date_intervention', now()->year)
-                ->whereMonth('date_intervention', now()->month)
-                ->count(),
-            'coutEntretienMois' => RepairLog::whereYear('date_intervention', now()->year)
-                ->whereMonth('date_intervention', now()->month)
-                ->sum('cout_total'),
-            'interventionsEnCours' => RepairLog::where('statut', 'en_cours')->count(),
-            'interventionsPlanifiees' => RepairLog::where('statut', 'planifie')->count()
-    ];
+    public function index()
+    {
+        $stats = [
+            'totalVehicles' => Vehicle::count(),
+            'vehiclesDisponibles' => Vehicle::where('etat', 'disponible')->count(),
+            'vehiclesEnEntretien' => Vehicle::where('etat', 'en_entretien')->count(),
+            'coutCarburantMois' => FuelEntry::whereYear('date_remplissage', now()->year)
+                ->whereMonth('date_remplissage', now()->month)
+                ->sum('cout_total') ?? 0,
+            'remplissagesMois' => FuelEntry::whereYear('date_remplissage', now()->year)
+                ->whereMonth('date_remplissage', now()->month)
+                ->count() ?? 0,
+                // Nouvelles statistiques dépannages
+                'interventionsMois' => RepairLog::whereYear('date_intervention', now()->year)
+                    ->whereMonth('date_intervention', now()->month)
+                    ->count(),
+                'coutEntretienMois' => RepairLog::whereYear('date_intervention', now()->year)
+                    ->whereMonth('date_intervention', now()->month)
+                    ->sum('cout_total'),
+                'interventionsEnCours' => RepairLog::where('statut', 'en_cours')->count(),
+                'interventionsPlanifiees' => RepairLog::where('statut', 'planifie')->count()
+        ];
 
-    $vehicles = Vehicle::with(['fuelEntries' => function($query) {
-        $query->orderBy('date_remplissage', 'desc');
-    }])->get();
+        $vehicles = Vehicle::with(['fuelEntries' => function($query) {
+            $query->orderBy('date_remplissage', 'desc');
+        }])->get();
 
-    $recentVehicles = Vehicle::latest()->take(5)->get();
-    $recentFuelEntries = FuelEntry::with(['vehicle' => function($q){
-        $q->withDefault([
-            'immatriculation' => 'Inconnu',
-            'marque' => '',
-            'modele' => ''
-        ]);
-    }])
-        ->orderBy('date_remplissage', 'desc')
-        ->take(5)
-        ->get();
-
-         // Nouvelles données pour les dépannages
-        $recentRepairLogs = RepairLog::with('vehicle')
-            ->orderBy('date_intervention', 'desc')
+        $recentVehicles = Vehicle::latest()->take(5)->get();
+        $recentFuelEntries = FuelEntry::with(['vehicle' => function($q){
+            $q->withDefault([
+                'immatriculation' => 'Inconnu',
+                'marque' => '',
+                'modele' => ''
+            ]);
+        }])
+            ->orderBy('date_remplissage', 'desc')
             ->take(5)
             ->get();
 
-        $interventionsParType = $this->getInterventionsParType();
-        $coutMensuelEntretien = $this->getCoutMensuelEntretien();
+            // Nouvelles données pour les dépannages
+            $recentRepairLogs = RepairLog::with('vehicle')
+                ->orderBy('date_intervention', 'desc')
+                ->take(5)
+                ->get();
 
-    return view('dashboard', compact(
-     'stats',
-            'vehicles',
-            'recentVehicles',
-            'recentFuelEntries',
-            'recentRepairLogs',
-            'interventionsParType',
-            'coutMensuelEntretien'
-    ));
-}
+            $interventionsParType = $this->getInterventionsParType();
+            $coutMensuelEntretien = $this->getCoutMensuelEntretien();
+
+        return view('dashboard', compact(
+        'stats',
+                'vehicles',
+                'recentVehicles',
+                'recentFuelEntries',
+                'recentRepairLogs',
+                'interventionsParType',
+                'coutMensuelEntretien'
+        ));
+    }
+
+    public function monDasboard()
+    {
+      //  dd("ok");
+        $vehicle_id = null;
+        $date_debut = null;
+        $date_fin = null;
+        $vehicles = DB::table('vehicles')->get();
+        $nbVehicules = DB::table('vehicles')->count();
+        $nbEntretiens = DB::table('repair_logs')->whereMonth('date_intervention', now()->month)->count();
+        $nbCarburant = DB::table('fuel_entries')->whereMonth('date_remplissage', now()->month)->count();
+        $nbLitre = DB::table('fuel_entries')->whereMonth('date_remplissage', now()->month)->sum("litres");
+        $nbTrajets = DB::table("trips")->whereMonth('date_trajet', now()->month)->sum("nombre_trajets");
+        $montantEntretien = DB::table('repair_logs')->whereMonth('date_intervention', now()->month)->sum("cout_total");
+        $montantCarburant = DB::table('fuel_entries')->whereMonth('date_remplissage', now()->month)->sum("cout_total");
+        $repairLogs = RepairLog::with("vehicle")->whereMonth('date_intervention', now()->month)->get();
+        $fuelEntries  = FuelEntry::with("trips")->whereMonth('date_remplissage', now()->month)->get();
+        foreach ($vehicles as $key => $vehicle) {
+            $montantRepairLog = 0;
+            $montantFuelEntry = 0;
+            $nbTrajet = 0;
+            foreach ($repairLogs as $key1 => $repairLog) {
+
+                if($vehicle->id==$repairLog->vehicle_id)
+                {
+                    $montantRepairLog += $repairLog->cout_total;
+                }
+            }
+            foreach ($fuelEntries as $key2 => $fuelEntrie) {
+                if($vehicle->id==$fuelEntrie->vehicle_id)
+                {
+                    $montantFuelEntry +=  $fuelEntrie->cout_total;
+                    $nbTrajet += $fuelEntrie->nombreTotalTrajets;
+                }
+
+            }
+            $vehicles[$key]->montantRepairLog = $montantRepairLog;
+            $vehicles[$key]->montantFuelEntry = $montantFuelEntry;
+            $vehicles[$key]->nbTrajet = $nbTrajet;
+        }
+        return view('mondashboard', compact('vehicles', 'nbVehicules', 'nbEntretiens', 'nbCarburant', 'nbLitre', 'nbTrajets',
+        'montantEntretien', 'montantCarburant','vehicle_id','date_debut','date_fin','repairLogs','fuelEntries'));
+    }
+     public function monDasboardFiltre(Request $request)
+    {
+      //  dd("ok");
+        $vehicle_id = null;
+        $date_debut = null;
+        $date_fin = null;
+        $vehicles = DB::table('vehicles')->get();
+        $nbVehicules = DB::table('vehicles')->count();
+
+        $querynbEntretiens = DB::table('repair_logs');
+        $querynbCarburant = DB::table('fuel_entries');
+        $querynbLitre = DB::table('fuel_entries');
+        $querynbTrajets = DB::table("trips");
+        $querymontantEntretien = DB::table('repair_logs');
+        $querymontantCarburant = DB::table('fuel_entries');
+
+        $querylisteEntrentiens = RepairLog::with(["vehicle"]);
+        $querylistesTrips  = FuelEntry::with(["trips",'vehicle']);
+
+        if (isset($request->date_debut) && isset($request->date_fin)) {
+            $dateDebut = Carbon::parse($request->input('date_debut'));
+            $dateFin = Carbon::parse($request->input('date_fin'));
+            //dd($dateDebut,$dateFin );
+
+            $date_debut = $request->input('date_debut');
+            $date_fin = $request->input('date_fin');
+
+            $querynbEntretiens->whereBetween('date_intervention', [$dateDebut, $dateFin]);
+            $querynbCarburant->whereBetween('date_remplissage', [$dateDebut, $dateFin]);
+            $querynbLitre->whereBetween('date_remplissage', [$dateDebut, $dateFin]);
+            $querynbTrajets->whereBetween('date_trajet', [$dateDebut, $dateFin]);
+            $querymontantEntretien->whereBetween('date_intervention', [$dateDebut, $dateFin]);
+            $querymontantCarburant->whereBetween('date_remplissage', [$dateDebut, $dateFin]);
+            $querylisteEntrentiens->whereBetween('date_intervention', [$dateDebut, $dateFin]);;
+            $querylistesTrips->whereBetween('date_remplissage', [$dateDebut, $dateFin]);;
+        }
+        if(isset($request->vehicle_id))
+        {
+            $vehicle_id = $request->vehicle_id;
+            $querynbEntretiens->where('vehicle_id',$request->vehicle_id);
+            $querynbCarburant->where('vehicle_id',$request->vehicle_id);
+            $querynbLitre->where('vehicle_id',$request->vehicle_id);
+            $querynbTrajets->where('vehicle_id',$request->vehicle_id);
+            $querymontantEntretien->where('vehicle_id',$request->vehicle_id);
+            $querymontantCarburant->where('vehicle_id',$request->vehicle_id);
+            $querylisteEntrentiens->where('vehicle_id', $request->vehicle_id);
+            $querylistesTrips->where('vehicle_id', $request->vehicle_id);
+        }
+
+        $nbEntretiens = $querynbEntretiens->count();
+        $nbCarburant =  $querynbCarburant->count();
+        $nbLitre = $querynbLitre->sum("litres");
+        $nbTrajets = $querynbTrajets->sum("nombre_trajets");
+        $montantEntretien =$querymontantEntretien->sum("cout_total");
+        $montantCarburant = $querymontantCarburant->sum("cout_total");
+        $repairLogs = $querylisteEntrentiens->get();
+        $fuelEntries  = $querylistesTrips->get();
+       //dd($repairLogs,$listesCarburants);
+       foreach ($vehicles as $key => $vehicle) {
+            $montantRepairLog = 0;
+            $montantFuelEntry = 0;
+            $nbTrajet = 0;
+            foreach ($repairLogs as $key1 => $repairLog) {
+
+                if($vehicle->id==$repairLog->vehicle_id)
+                {
+                    $montantRepairLog += $repairLog->cout_total;
+                }
+            }
+            foreach ($fuelEntries as $key2 => $fuelEntrie) {
+                if($vehicle->id==$fuelEntrie->vehicle_id)
+                {
+                    $montantFuelEntry +=  $fuelEntrie->cout_total;
+                    $nbTrajet += $fuelEntrie->nombreTotalTrajets;
+                }
+
+            }
+
+            $vehicles[$key]->montantRepairLog = $montantRepairLog;
+            $vehicles[$key]->montantFuelEntry = $montantFuelEntry;
+            $vehicles[$key]->nbTrajet = $nbTrajet;
+        }
+
+
+        return view('mondashboard', compact('vehicles', 'nbVehicules', 'nbEntretiens', 'nbCarburant', 'nbLitre', 'nbTrajets',
+        'montantEntretien', 'montantCarburant','date_debut','date_fin','vehicle_id','repairLogs','fuelEntries'));
+    }
 
    /*  private function calculateStatistics($consumptionData, $monthlyCostData)
     {

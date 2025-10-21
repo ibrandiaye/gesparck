@@ -11,7 +11,7 @@ class FuelEntryController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth')->except(['getByVehicle']);
     }
 
     public function index()
@@ -233,5 +233,11 @@ class FuelEntryController extends Controller
             ->get(['date_remplissage', 'consommation', 'prix_litre', 'cout_total']);
 
         return response()->json($entries);
+    }
+    public function getByVehicle(Request $request)
+    {
+        $vehicleId = $request->input('vehicle_id');
+        $fuelEntries = FuelEntry::where('vehicle_id', $vehicleId)->get();
+        return response()->json($fuelEntries);
     }
 }

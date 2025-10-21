@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FuelEntryController;
 use App\Http\Controllers\ReportController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -23,5 +24,6 @@ Route::middleware(['auth'])->group(function () {
 
 });
  Route::post('/dashboard-charts', [DashboardController::class, 'getChartData']);
-    Route::get('/vehicle-detailed-chart/{vehicle}', [DashboardController::class, 'getVehicleDetailedChart']);
-    Route::post('/reports/export/csv', [ReportController::class, 'exportCsv'])->name('reports.export.csv');
+Route::get('/vehicle-detailed-chart/{vehicle}', [DashboardController::class, 'getVehicleDetailedChart']);
+Route::post('/reports/export/csv', [ReportController::class, 'exportCsv'])->name('reports.export.csv');
+Route::post('/entry/by/vehicle', [FuelEntryController::class, 'getByVehicle'])->name('fuel.by.vehicle');

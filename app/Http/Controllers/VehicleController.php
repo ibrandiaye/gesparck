@@ -73,7 +73,7 @@ class VehicleController extends Controller
         },
         'repairLogs' => function($query) {
             $query->orderBy('date_intervention', 'desc');
-        },
+        }, 'trips'
     ]);
 
     return view('vehicles.show', compact('vehicle'));
