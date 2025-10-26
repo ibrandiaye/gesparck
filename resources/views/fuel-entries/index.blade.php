@@ -80,8 +80,14 @@
 
                 <div class="col-md-2">
                     <label for="station" class="form-label">Station</label>
-                    <input type="text" name="station" id="station" class="form-control"
-                           value="{{ $filters['selectedStation'] }}" placeholder="Nom de station">
+                   {{--  <input type="text" name="station" id="station" class="form-control"
+                           value="{{ $filters['selectedStation'] }}" placeholder="Nom de station"> --}}
+                    <select class="form-control"  id="station" name="station" required>
+                            <option value="">Selectionner</option>
+                            <option value="Mobile castors" {{ $filters['selectedStation']  == "Mobile castors" ? "selected" : " " }}>Mobile castors</option>
+                            <option value="Total Yarakh"  {{$filters['selectedStation'] == "Total Yarakh" ? "selected" : " " }}>Total Yarakh</option>
+                                <option value="Autre Station"  {{ $filters['selectedStation'] == "Autre Station" ? "selected" : " " }}>Autre Station</option>
+                    </select>
                 </div>
 
                 <div class="col-md-2 d-flex align-items-end">
@@ -165,6 +171,7 @@
                         <th>Coût Total</th>
                         <th>Km</th>
                         <th>Nombre de trajets</th>
+                        <th>Station</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -188,6 +195,7 @@
                         </td>
                         <td>{{ number_format($entry->kilometrage, 0, ',', ' ') }} km</td>
                         <td><span class="badge bg-primary">{{ $entry->nombreTotalTrajets }}</span></td>
+                        <td>{{ $entry->station  }}</td>
                         <td>
                             <div class="btn-group btn-group-sm">
                                  <a href="{{ route('trips.create') }}?vehicle_id={{ $entry->vehicle_id }}&entry_id={{ $entry->id }}" class="btn btn-outline-primary" title="Ajouter Trajet">
