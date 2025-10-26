@@ -59,7 +59,7 @@
                                         <option value="{{ $entry->id }}"
                                             {{ old('fuel_entry_id', $trip->fuel_entry_id) == $entry->id ? 'selected' : '' }}>
                                             {{ $entry->vehicle->immatriculation }} -
-                                            {{ $entry->date->format('d/m/Y') }} -
+                                            {{ $entry->date_remplissage->format('d/m/Y') }} -
                                             {{ $entry->litres }}L
                                         </option>
                                         @endforeach
@@ -74,6 +74,23 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
+                                    <label for="client_id">Client (optionnel)</label>
+                                    <select name="client_id" id="client_id" class="form-control @error('client_id') is-invalid @enderror">
+                                        <option value="">Aucun client</option>
+                                        @foreach($clients as $client)
+                                        <option value="{{ $client->id }}"
+                                            {{ old('client_id', $trip->client_id ?? '') == $client->id ? 'selected' : '' }} data-adresse="{{ $client->adresse  ?? null}}">
+                                            {{ $client->nom }} - {{ $client->adresse }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                    @error('client_id')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
                                     <label for="destination">Destination *</label>
                                     <input type="text" name="destination" id="destination"
                                            class="form-control @error('destination') is-invalid @enderror"
@@ -84,7 +101,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="motif">Motif *</label>
                                     <select name="motif" id="motif" class="form-control @error('motif') is-invalid @enderror" required>
@@ -100,7 +117,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="date_trajet">Date du trajet *</label>
                                     <input type="date" name="date_trajet" id="date_trajet"
@@ -114,7 +131,7 @@
                         </div>
 
                         <div class="row">
-                           {{--   <div class="col-md-3">
+                              <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="nombre_trajets">Nombre de trajets *</label>
                                     <input type="number" name="nombre_trajets" id="nombre_trajets"
@@ -127,7 +144,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-3">
+                           {{-- <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="km_depart">KM Départ *</label>
                                     <input type="number" name="km_depart" id="km_depart"
@@ -192,6 +209,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const kmDepartInput = document.getElementById('km_depart');
     const kmArriveeInput = document.getElementById('km_arrivee');
     const distanceCalculee = document.getElementById('distance_calculee');
+    const clientSelect = document.getElementById('client_id');
+    const adresseInput = document.getElementById('destination');
+
+    clientSelect.addEventListener('change', function() {
+        const selectedOption = clientSelect.options[clientSelect.selectedIndex];
+        const adresse = selectedOption.getAttribute('data-adresse');
+        if (adresse) {
+            adresseInput.value = adresse;
+        }
+    });
+
 
     function calculerDistance() {
         const kmDepart = parseInt(kmDepartInput.value) || 0;

@@ -4,11 +4,11 @@
 
 @section('content')
     <style>
-        svg
-        {
+        svg {
             height: 20px !important;
         }
     </style>
+
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1><i class="fas fa-tools"></i> Gestion des Dépannages</h1>
     <a href="{{ route('repair-logs.create') }}" class="btn btn-primary">
@@ -37,7 +37,7 @@
                 <div class="d-flex justify-content-between">
                     <div>
                         <h4>{{ $stats['interventionsMois'] }}</h4>
-                        <p>Ce mois</p>
+                        <p>Interventions</p>
                     </div>
                     <i class="fas fa-calendar fa-2x"></i>
                 </div>
@@ -50,7 +50,7 @@
                 <div class="d-flex justify-content-between">
                     <div>
                         <h4>{{ number_format($stats['coutTotalMois'], 0, ',', ' ') }} FCFA</h4>
-                        <p>Coût ce mois</p>
+                        <p>Coût total</p>
                     </div>
                     <i class="fas fa-money-bill-wave fa-2x"></i>
                 </div>
@@ -79,7 +79,7 @@
     </div>
     <div class="card-body">
         <form method="GET" action="{{ route('repair-logs.index') }}" class="row g-3">
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <label for="statut" class="form-label">Statut</label>
                 <select class="form-select" id="statut" name="statut">
                     <option value="">Tous les statuts</option>
@@ -89,9 +89,10 @@
                     <option value="annule" {{ request('statut') == 'annule' ? 'selected' : '' }}>Annulé</option>
                 </select>
             </div>
-            <div class="col-md-3">
+
+            <div class="col-md-2">
                 <label for="type" class="form-label">Type d'intervention</label>
-                <select class="form-select" id="type" name="type">
+                <select class="form-select " id="type" name="type">
                     <option value="">Tous les types</option>
                     @foreach(['entretien_routine', 'reparation', 'vidange', 'freinage', 'pneumatique', 'electrique', 'mecanique', 'carrosserie', 'autre'] as $type)
                         <option value="{{ $type }}" {{ request('type') == $type ? 'selected' : '' }}>
@@ -100,7 +101,8 @@
                     @endforeach
                 </select>
             </div>
-            <div class="col-md-3">
+
+            <div class="col-md-2">
                 <label for="vehicle" class="form-label">Véhicule</label>
                 <select class="form-select select2" id="vehicle" name="vehicle">
                     <option value="">Tous les véhicules</option>
@@ -111,23 +113,72 @@
                     @endforeach
                 </select>
             </div>
-            <div class="col-md-3">
-                <label class="form-label d-block">&nbsp;</label>
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-search"></i> Filtrer
-                </button>
-                <a href="{{ route('repair-logs.index') }}" class="btn btn-outline-secondary">
-                    <i class="fas fa-undo"></i> Réinitialiser
-                </a>
+
+            <div class="col-md-2">
+                <label for="date_debut" class="form-label">Date de début</label>
+                <input type="date" class="form-control" id="date_debut" name="date_debut"
+                       value="{{ request('date_debut') }}">
+            </div>
+
+            <div class="col-md-2">
+                <label for="date_fin" class="form-label">Date de fin</label>
+                <input type="date" class="form-control" id="date_fin" name="date_fin"
+                       value="{{ request('date_fin') }}">
+            </div>
+
+            <div class="col-md-2 d-flex align-items-end">
+                <div class="btn-group w-100">
+                    <button type="submit" class="btn btn-primary" title="Appliquer les filtres">
+                        <i class="fas fa-search"></i> Filtrer
+                    </button>
+                    <a href="{{ route('repair-logs.index') }}" class="btn btn-outline-secondary" title="Réinitialiser">
+                        <i class="fas fa-undo"></i>
+                    </a>
+                </div>
             </div>
         </form>
+
+        <!-- Indicateur de filtre actif -->
+        @if(request()->anyFilled(['statut', 'type', 'vehicle', 'date_debut', 'date_fin']))
+        <div class="mt-3">
+            <small class="text-muted">
+                <i class="fas fa-info-circle"></i>
+                Filtres actifs :
+                @if(request('statut'))
+                    <span class="badge bg-primary">Statut: {{ ucfirst(request('statut')) }}</span>
+                @endif
+                @if(request('type'))
+                    <span class="badge bg-primary">Type: {{ ucfirst(str_replace('_', ' ', request('type'))) }}</span>
+                @endif
+                @if(request('vehicle'))
+                    @php
+                        $selectedVehicle = $vehicles->firstWhere('id', request('vehicle'));
+                    @endphp
+                    @if($selectedVehicle)
+                        <span class="badge bg-primary">Véhicule: {{ $selectedVehicle->immatriculation }}</span>
+                    @endif
+                @endif
+                @if(request('date_debut') || request('date_fin'))
+                    <span class="badge bg-primary">
+                        Période:
+                        {{ request('date_debut') ? \Carbon\Carbon::parse(request('date_debut'))->format('d/m/Y') : 'Début' }}
+                         -
+                        {{ request('date_fin') ? \Carbon\Carbon::parse(request('date_fin'))->format('d/m/Y') : 'Fin' }}
+                    </span>
+                @endif
+            </small>
+        </div>
+        @endif
     </div>
 </div>
 
 <!-- Tableau des interventions -->
 <div class="card">
-    <div class="card-header">
+    <div class="card-header d-flex justify-content-between align-items-center">
         <h5 class="mb-0"><i class="fas fa-list"></i> Historique des Interventions</h5>
+        <span class="badge bg-primary">
+            {{ $repairLogs->total() }} résultat(s)
+        </span>
     </div>
     <div class="card-body">
         @if($repairLogs->count() > 0)
@@ -194,8 +245,11 @@
         </div>
 
         <!-- Pagination -->
-        <div class="row">
-            <div class="d-flex justify-content-center mt-3">
+        <div class="d-flex justify-content-between align-items-center mt-3">
+            <div class="text-muted">
+                Affichage de {{ $repairLogs->firstItem() }} à {{ $repairLogs->lastItem() }} sur {{ $repairLogs->total() }} résultats
+            </div>
+            <div>
                 {{ $repairLogs->links() }}
             </div>
         </div>
@@ -203,8 +257,11 @@
         @else
         <div class="text-center py-4">
             <i class="fas fa-tools fa-3x text-muted mb-3"></i>
-            <h5 class="text-muted">Aucune intervention enregistrée</h5>
-            <p class="text-muted">Commencez par ajouter votre première intervention.</p>
+            <h5 class="text-muted">Aucune intervention trouvée</h5>
+            <p class="text-muted">Aucun résultat ne correspond à vos critères de recherche.</p>
+            <a href="{{ route('repair-logs.index') }}" class="btn btn-outline-primary me-2">
+                <i class="fas fa-redo"></i> Réinitialiser les filtres
+            </a>
             <a href="{{ route('repair-logs.create') }}" class="btn btn-primary">
                 <i class="fas fa-plus"></i> Ajouter une Intervention
             </a>
@@ -213,6 +270,28 @@
     </div>
 </div>
 @endsection
-@push('styles')
 
+@push('scripts')
+<script>
+    // Définir la date de fin par défaut sur aujourd'hui
+    document.addEventListener('DOMContentLoaded', function() {
+        const dateFin = document.getElementById('date_fin');
+        if (!dateFin.value) {
+            const today = new Date().toISOString().split('T')[0];
+            dateFin.value = today;
+        }
+
+        // Validation : date de début ne peut pas être après date de fin
+        const dateDebut = document.getElementById('date_debut');
+        const form = document.querySelector('form');
+
+        form.addEventListener('submit', function(e) {
+            if (dateDebut.value && dateFin.value && dateDebut.value > dateFin.value) {
+                e.preventDefault();
+                alert('La date de début ne peut pas être après la date de fin.');
+                dateDebut.focus();
+            }
+        });
+    });
+</script>
 @endpush

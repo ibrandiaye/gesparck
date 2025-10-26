@@ -86,7 +86,7 @@
                                 <tr>
                                     <th>Date</th>
                                     <th>Véhicule</th>
-
+                                    <th>Client</th>
                                     <th>Destination</th>
                                     <th>Motif</th>
                                     <th>Nb Trajets</th>
@@ -102,6 +102,13 @@
                                     <td>
                                         <strong>{{ $trip->vehicle->immatriculation }}</strong>
                                         <br><small class="text-muted">{{ $trip->vehicle->modele }}</small>
+                                    </td>
+                                    <td>
+                                        @if($trip->client)
+                                        <strong>{{ $trip->client->nom }}</strong>
+                                        @else
+                                        <span class="text-muted">-</span>
+                                        @endif
                                     </td>
                                     <td>{{ $trip->destination }}</td>
                                     <td>

@@ -10,6 +10,96 @@
     </a>
 </div>
 
+<!-- Filtres -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="fas fa-filter"></i> Filtres</h5>
+    </div>
+    <div class="card-body">
+        <form method="GET" action="{{ route('fuel-entries.index') }}">
+            <div class="row g-3">
+                <div class="col-md-2">
+                    <label for="vehicle" class="form-label">Véhicule</label>
+                    <select name="vehicle" id="vehicle" class="form-select select2">
+                        <option value="">Tous les véhicules</option>
+                        @foreach($filters['vehicles'] as $vehicle)
+                            <option value="{{ $vehicle->id }}" {{ $filters['selectedVehicle'] == $vehicle->id ? 'selected' : '' }}>
+                                {{ $vehicle->immatriculation }} - {{ $vehicle->marque }} {{ $vehicle->modele }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+               <div class="col-md-2">
+                    <label for="type_carburant" class="form-label">Type Carburant</label>
+                    <select name="type_carburant" id="type_carburant" class="form-select">
+                        <option value="">Tous les types</option>
+                        @foreach($filters['typesCarburant'] as $type)
+                            <option value="{{ $type }}" {{ $filters['selectedTypeCarburant'] == $type ? 'selected' : '' }}>
+                                {{ ucfirst($type) }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                 {{-- <div class="col-md-2">
+                    <label for="month" class="form-label">Mois</label>
+                    <select name="month" id="month" class="form-select">
+                        <option value="">Tous les mois</option>
+                        @foreach($filters['months'] as $key => $month)
+                            <option value="{{ $key }}" {{ $filters['selectedMonth'] == $key ? 'selected' : '' }}>
+                                {{ $month }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div> --}}
+                <div class="col-md-2">
+                    <label for="date_debut" class="form-label">Date de début</label>
+                    <input type="date" class="form-control" id="date_debut" name="date_debut"
+                        value="{{ request('date_debut') }}">
+                </div>
+
+                <div class="col-md-2">
+                    <label for="date_fin" class="form-label">Date de fin</label>
+                    <input type="date" class="form-control" id="date_fin" name="date_fin"
+                        value="{{ request('date_fin') }}">
+                </div>
+
+
+              {{--   <div class="col-md-2">
+                    <label for="year" class="form-label">Année</label>
+                    <select name="year" id="year" class="form-select">
+                        <option value="">Toutes les années</option>
+                        @foreach($filters['years'] as $year)
+                            <option value="{{ $year }}" {{ $filters['selectedYear'] == $year ? 'selected' : '' }}>
+                                {{ $year }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div> --}}
+
+                <div class="col-md-2">
+                    <label for="station" class="form-label">Station</label>
+                    <input type="text" name="station" id="station" class="form-control"
+                           value="{{ $filters['selectedStation'] }}" placeholder="Nom de station">
+                </div>
+
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-search"></i> Filtrer
+                    </button>
+                </div>
+
+                <div class="col-md-1 d-flex align-items-end">
+                    <a href="{{ route('fuel-entries.index') }}" class="btn btn-outline-secondary w-100">
+                        <i class="fas fa-redo"></i>
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
 <!-- Cartes de statistiques -->
 <div class="row mb-4">
     <div class="col-md-4">
@@ -18,7 +108,7 @@
                 <div class="d-flex justify-content-between">
                     <div>
                         <h4>{{ number_format($stats['totalCoutMois'], 0, ',', ' ') }} FCFA</h4>
-                        <p>Coût ce mois</p>
+                        <p>Coût total</p>
                     </div>
                     <i class="fas fa-money-bill-wave fa-2x"></i>
                 </div>
@@ -31,7 +121,7 @@
                 <div class="d-flex justify-content-between">
                     <div>
                         <h4>{{ number_format($stats['totalLitresMois'], 1, ',', ' ') }} L</h4>
-                        <p>Litres ce mois</p>
+                        <p>Litres total</p>
                     </div>
                     <i class="fas fa-oil-can fa-2x"></i>
                 </div>
@@ -55,8 +145,11 @@
 
 <!-- Tableau des remplissages -->
 <div class="card">
-    <div class="card-header">
+    <div class="card-header d-flex justify-content-between align-items-center">
         <h5 class="mb-0"><i class="fas fa-history"></i> Historique des Remplissages</h5>
+        <span class="badge bg-primary">
+            {{ $fuelEntries->total() }} résultat(s)
+        </span>
     </div>
     <div class="card-body">
         @if($fuelEntries->count() > 0)
@@ -83,7 +176,9 @@
                             <strong>{{ $entry->vehicle->immatriculation }}</strong><br>
                             <small class="text-muted">{{ $entry->vehicle->marque }} {{ $entry->vehicle->modele }}</small>
                         </td>
-                        <td>{{ $entry->type_carburant }}</td>
+                        <td>
+                            <span class="badge bg-secondary">{{ $entry->type_carburant }}</span>
+                        </td>
                         <td>{{ number_format($entry->litres, 1, ',', ' ') }} L</td>
                         <td>{{ number_format($entry->prix_litre, 0, ',', ' ') }} FCFA</td>
                         <td>
@@ -123,19 +218,63 @@
         </div>
 
         <!-- Pagination -->
-        <div class="d-flex justify-content-center mt-3">
-            {{ $fuelEntries->links() }}
+        <div class="d-flex justify-content-between align-items-center mt-3">
+            <div class="text-muted">
+                Affichage de {{ $fuelEntries->firstItem() }} à {{ $fuelEntries->lastItem() }} sur {{ $fuelEntries->total() }} résultats
+            </div>
+            <div>
+                {{ $fuelEntries->links() }}
+            </div>
         </div>
         @else
         <div class="text-center py-4">
             <i class="fas fa-gas-pump fa-3x text-muted mb-3"></i>
-            <h5 class="text-muted">Aucun remplissage enregistré</h5>
-            <p class="text-muted">Commencez par ajouter votre premier remplissage de carburant.</p>
-            <a href="{{ route('fuel-entries.create') }}" class="btn btn-primary">
-                <i class="fas fa-plus"></i> Ajouter un Remplissage
+            <h5 class="text-muted">Aucun remplissage trouvé</h5>
+            <p class="text-muted">Aucun résultat ne correspond à vos critères de recherche.</p>
+            <a href="{{ route('fuel-entries.index') }}" class="btn btn-outline-primary">
+                <i class="fas fa-redo"></i> Réinitialiser les filtres
             </a>
         </div>
         @endif
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    // Réinitialisation des filtres
+    document.getElementById('resetFilters').addEventListener('click', function() {
+        document.getElementById('vehicle').value = '';
+        document.getElementById('type_carburant').value = '';
+        document.getElementById('month').value = '';
+        document.getElementById('year').value = '';
+        document.getElementById('station').value = '';
+    });
+</script>
+
+@push('scripts')
+<script>
+    // Définir la date de fin par défaut sur aujourd'hui
+    document.addEventListener('DOMContentLoaded', function() {
+        const dateFin = document.getElementById('date_fin');
+        if (!dateFin.value) {
+            const today = new Date().toISOString().split('T')[0];
+            dateFin.value = today;
+        }
+
+        // Validation : date de début ne peut pas être après date de fin
+        const dateDebut = document.getElementById('date_debut');
+        const form = document.querySelector('form');
+
+        form.addEventListener('submit', function(e) {
+            if (dateDebut.value && dateFin.value && dateDebut.value > dateFin.value) {
+                e.preventDefault();
+                alert('La date de début ne peut pas être après la date de fin.');
+                dateDebut.focus();
+            }
+        });
+    });
+</script>
+@endpush
+
+@endpush

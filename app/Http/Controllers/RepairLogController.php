@@ -15,21 +15,59 @@ class RepairLogController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $repairLogs = RepairLog::with('vehicle')
-            ->orderBy('date_intervention', 'desc')
-            ->paginate(20);
+        // Récupérer tous les véhicules pour le filtre
+        $vehicles = Vehicle::orderBy('immatriculation')->get();
+
+        // Commencer la requête avec les relations
+        $query = RepairLog::with('vehicle');
+
+        // Filtre par statut
+        if ($request->has('statut') && $request->statut != '') {
+            $query->where('statut', $request->statut);
+        }
+
+        // Filtre par type d'intervention
+        if ($request->has('type') && $request->type != '') {
+            $query->where('type_intervention', $request->type);
+        }
+
+        // Filtre par véhicule
+        if ($request->has('vehicle') && $request->vehicle != '') {
+            $query->where('vehicle_id', $request->vehicle);
+        }
+
+        // Filtre par période (date de début)
+        if ($request->has('date_debut') && $request->date_debut != '') {
+            $query->whereDate('date_intervention', '>=', $request->date_debut);
+        }
+
+        // Filtre par période (date de fin)
+        if ($request->has('date_fin') && $request->date_fin != '') {
+            $query->whereDate('date_intervention', '<=', $request->date_fin);
+        }
+
+        // Appliquer les filtres pour les statistiques aussi
+        $statsQuery = clone $query;
 
         $stats = [
-            'totalInterventions' => RepairLog::count(),
-            'interventionsMois' => RepairLog::thisMonth()->count(),
-            'coutTotalMois' => RepairLog::thisMonth()->sum('cout_total'),
+            'totalInterventions' => $statsQuery->count(),
+            'interventionsMois' => $statsQuery->when(!$request->has('date_debut') && !$request->has('date_fin'), function($q) {
+                return $q->thisMonth();
+            })->count(),
+            'coutTotalMois' => $statsQuery->when(!$request->has('date_debut') && !$request->has('date_fin'), function($q) {
+                return $q->thisMonth();
+            })->sum('cout_total'),
             'enCours' => RepairLog::where('statut', 'en_cours')->count()
         ];
-        $vehicles = Vehicle::all();
 
-        return view('repair-logs.index', compact('repairLogs', 'stats','vehicles'));
+        // Pagination avec conservation des paramètres de filtre
+        $repairLogs = $query->orderBy('date_intervention', 'desc')
+                            ->paginate(20)
+                            ->appends($request->except('page'));
+
+        return view('repair-logs.index', compact('repairLogs', 'stats', 'vehicles'));
     }
 
     public function create()

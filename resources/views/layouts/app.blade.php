@@ -116,6 +116,11 @@
                             <i class="fas fa-route"></i> Trajets
                         </a>
                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('clients.*') ? 'active' : '' }}" href="{{ route('clients.index') }}">
+                            <i class="fas fa-user"></i> Clients
+                        </a>
+                     </li>
 
                     <!-- Menu déroulant Rapports -->
                      <li class="nav-item">

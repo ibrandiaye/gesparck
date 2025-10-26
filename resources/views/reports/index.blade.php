@@ -44,15 +44,15 @@
                 <input type="date" class="form-control" id="date_fin" name="date_fin">
             </div>
             <div class="col-md-3">
-                <label for="vehicle_id" class="form-label">Véhicule</label>
-                <select class="form-select" id="vehicle_id" name="vehicle_id">
+                <label for="vehicle_id" class="form-label ">Véhicule</label>
+                <select class="form-select select2" id="vehicle_id" name="vehicle_id">
                     <option value="all">Tous les véhicules</option>
                     @foreach($vehicles as $vehicle)
                         <option value="{{ $vehicle->id }}">{{ $vehicle->immatriculation }}</option>
                     @endforeach
                 </select>
             </div>
-            <div class="col-md-3">
+            {{-- <div class="col-md-3">
                 <label for="type_rapport" class="form-label">Type de Rapport</label>
                 <select class="form-select" id="type_rapport" name="type_rapport">
                     <option value="global">Vue globale</option>
@@ -60,7 +60,8 @@
                     <option value="entretien">Entretien uniquement</option>
                     <option value="comparatif">Analyse comparative</option>
                 </select>
-            </div>
+            </div> --}}
+            <input type="hidden" id="type_rapport" name="type_rapport" value="global">
             <div class="col-md-12">
                 <button type="submit" class="btn btn-primary">
                     <i class="fas fa-sync-alt"></i> Générer le Rapport
@@ -415,6 +416,25 @@ function setupEventListeners() {
             loadReportData();
         }
     });
+      document.getElementById('vehicle_id').addEventListener('change', function() {
+        const isCustom = this.value === 'custom';
+        document.getElementById('customDateRange').classList.toggle('d-none', !isCustom);
+        document.getElementById('customDateRangeEnd').classList.toggle('d-none', !isCustom);
+
+        if (!isCustom) {
+            loadReportData();
+        }
+    });
+    document.getElementById('type_rapport').addEventListener('change', function() {
+        const isCustom = this.value === 'custom';
+        document.getElementById('customDateRange').classList.toggle('d-none', !isCustom);
+        document.getElementById('customDateRangeEnd').classList.toggle('d-none', !isCustom);
+
+        if (!isCustom) {
+            loadReportData();
+        }
+    });
+
 
     // Exports
     document.getElementById('generatePdf').addEventListener('click', generatePdf);
@@ -448,41 +468,13 @@ async function loadReportData() {
         });
 
         const data = await response.json();
-        console.log('Réponse reçue:', data);
+        console.log('Réponse reçue:', data.data.tables);
 
         if (data.success) {
             updateCharts(data.data.charts);
             updateStatistics(data.data.statistics);
             updateTables(data.data.tables);
-            if ($.fn.DataTable.isDataTable('#topVehiclesTable')) {
-                $('#topVehiclesTable').DataTable().clear().destroy();
-            }
-            $('#topVehiclesTable').DataTable({
-            language: {
-                url: 'https://cdn.datatables.net/plug-ins/2.3.4/i18n/fr-FR.json',
-            },
-             ordering:false,
-
-            });
-            if ($.fn.DataTable.isDataTable('#detailedReportTable')) {
-                $('#detailedReportTable').DataTable().clear().destroy();
-            }
-            $('#detailedReportTable').DataTable({
-            language: {
-                url: 'https://cdn.datatables.net/plug-ins/2.3.4/i18n/fr-FR.json',
-            },
-            ordering:false,
-
-            });
-          /*  if ($.fn.DataTable.isDataTable('#topVehiclesTable')) {
-                $('#topVehiclesTable').DataTable().clear().destroy();
-            }
-            $('#topVehiclesTable').DataTable({
-            language: {
-                url: '//cdn.datatables.net/plug-ins/2.3.4/i18n/fr-FR.json',
-            },
-
-            });*/
+           /*   */
             showSuccess('Rapport généré avec succès');
         } else {
             throw new Error(data.message || 'Erreur inconnue');
@@ -527,9 +519,39 @@ function updateStatistics(stats) {
 }
 
 function updateTables(tables) {
-    // Top véhicules
-    const topVehiclesBody = document.querySelector('#topVehiclesTable tbody');
-    topVehiclesBody.innerHTML = tables.topVehicles.map(vehicle => `
+    if ($.fn.DataTable.isDataTable('#topVehiclesTable')) {
+                $('#topVehiclesTable').DataTable().clear().destroy();
+            }
+            $('#topVehiclesTable').DataTable({
+            language: {
+                url: 'https://cdn.datatables.net/plug-ins/2.3.4/i18n/fr-FR.json',
+            },
+             ordering:false,
+
+            });
+            if ($.fn.DataTable.isDataTable('#detailedReportTable')) {
+                $('#detailedReportTable').DataTable().clear().destroy();
+            }
+            $('#detailedReportTable').DataTable({
+            language: {
+                url: 'https://cdn.datatables.net/plug-ins/2.3.4/i18n/fr-FR.json',
+            },
+            ordering:false,
+
+            });
+          if ($.fn.DataTable.isDataTable('#interventionTypesTable')) {
+                $('#interventionTypesTable').DataTable().clear().destroy();
+            }
+            $('#interventionTypesTable').DataTable({
+            language: {
+                url: 'https://cdn.datatables.net/plug-ins/2.3.4/i18n/fr-FR.json',
+            },
+
+            });
+        // Top véhicules
+        console.log(tables.topVehicles[0].repair_cost + "ibra");
+        const topVehiclesBody = document.querySelector('#topVehiclesTable tbody');
+        topVehiclesBody.innerHTML = tables.topVehicles.map(vehicle => `
         <tr>
             <td>${vehicle.immatriculation}</td>
             <td>${vehicle.fuel_cost.toLocaleString('fr-FR')} FCFA</td>
@@ -566,6 +588,7 @@ function updateTables(tables) {
             <td>${entry.kilometrage ? entry.kilometrage.toLocaleString('fr-FR') + ' km' : 'N/A'}</td>
         </tr>
     `).join('');
+
 }
 
 function resetFilters() {

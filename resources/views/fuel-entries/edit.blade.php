@@ -100,8 +100,8 @@
                                      <option value="Autre Station"  {{ $fuelEntry->station == "Autre Station" ? "selected" : " " }}>Autre Station</option>
                                 </select>
                                {{--  <input type="text" class="form-control @error('station') is-invalid @enderror"
-                                       id="station" name="station" --}}
-                                       value="{{ old('station', $fuelEntry->station) }}" placeholder="Ex: Total, Shell, etc.">
+                                       id="station" name="station"
+                                       value="{{ old('station', $fuelEntry->station) }}" placeholder="Ex: Total, Shell, etc.">--}}
                                 @error('station')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -188,7 +188,7 @@
 
 @push('scripts')
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+/*document.addEventListener('DOMContentLoaded', function() {
     const vehicleSelect = document.getElementById('vehicle_id');
     const prixLitreInput = document.getElementById('prix_litre');
     const litresInput = document.getElementById('litres');
@@ -225,6 +225,55 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Calcul initial
     calculateTotalCost();
+});*/
+</script>
+<script>
+$(document).ready(function () {
+    $('#vehicle_id').select2();
+
+    function updateVehicleFields() {
+        const selected = $('#vehicle_id option:selected');
+        const km = selected.data('kilometrage');
+        const carburant = selected.data('carburant');
+        const montant = selected.data('montant-carburant');
+        console.log('km' + km);
+
+
+
+        $('#kilometrage').val(km);
+        $('#kmHelp').text(`Kilométrage actuel du véhicule: ${parseInt(km).toLocaleString('fr-FR')} km`);
+
+
+        if (montant) {
+            $('#prix_litre').val(montant);
+        }
+
+        if (carburant) {
+            $('#type_carburant').val(carburant);
+        }
+    }
+
+    function calculateTotalCost() {
+        const prix = parseFloat($('#prix_litre').val()) || 0;
+        const litres = parseFloat($('#litres').val()) || 0;
+        const total = prix * litres;
+        $('#coutTotal').text(total.toLocaleString('fr-FR', { minimumFractionDigits: 0 }) + ' FCFA');
+    }
+
+    $('#vehicle_id').on('change', updateVehicleFields);
+    $('#prix_litre, #litres').on('input', calculateTotalCost);
+    calculateTotalCost();
+
+    $('#fuelForm').on('submit', function (e) {
+        const km = parseInt($('#kilometrage').val());
+        const kmActuel = parseInt($('#vehicle_id option:selected').data('kilometrage'));
+
+        if (km < kmActuel) {
+            e.preventDefault();
+            alert('Le kilométrage ne peut pas être inférieur au kilométrage actuel du véhicule!');
+            $('#kilometrage').focus();
+        }
+    });
 });
 </script>
 @endpush

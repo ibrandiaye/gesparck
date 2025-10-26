@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Client;
 use App\Models\Trip;
 use App\Models\Vehicle;
 use App\Models\FuelEntry;
@@ -82,12 +83,13 @@ class TripController extends Controller
                               ->get();
 
 
-
+        $clients = Client::all();
         return view('trips.create', compact(
             'vehicles',
             'fuelEntries',
             'fuelEntry',
-            'motifs'
+            'motifs',
+            'clients'
         ));
     }
 
@@ -105,7 +107,8 @@ class TripController extends Controller
             'date_trajet' => 'required|date',
             //'km_depart' => 'required|integer|min:0',
            // 'km_arrivee' => 'required|integer|gt:km_depart',
-            'notes' => 'nullable|string|max:1000'
+            'notes' => 'nullable|string|max:1000',
+             'client_id' => 'required|exists:clients,id',
         ]);
 
         // Vérifier la cohérence des kilométrages avec le véhicule
@@ -145,7 +148,7 @@ class TripController extends Controller
      */
     public function show(Trip $trip)
     {
-        $trip->load(['vehicle', 'fuelEntry']);
+        $trip->load(['vehicle', 'fuelEntry','client']);
 
         //dd($trip);
 
@@ -161,7 +164,7 @@ class TripController extends Controller
 
         $vehicles = Vehicle::where('etat','disponible')->get();
         $fuelEntries = FuelEntry::with('vehicle')
-                              ->orderBy('date', 'desc')
+                              ->orderBy('date_remplissage', 'desc')
                               ->get();
 
         $motifs = [
@@ -171,12 +174,14 @@ class TripController extends Controller
             'administratif' => 'Démarche administrative',
             'autre' => 'Autre'
         ];
+         $clients = Client::all();
 
         return view('trips.edit', compact(
             'trip',
             'vehicles',
             'fuelEntries',
-            'motifs'
+            'motifs',
+            'clients'
         ));
     }
 
@@ -194,26 +199,27 @@ class TripController extends Controller
             'date_trajet' => 'required|date',
          //   'km_depart' => 'required|integer|min:0',
           //  'km_arrivee' => 'required|integer|gt:km_depart',
-            'notes' => 'nullable|string|max:1000'
+            'notes' => 'nullable|string|max:1000',
+            'client_id' => 'required|exists:clients,id',
         ]);
 
         DB::beginTransaction();
 
         try {
             // Sauvegarder les anciennes valeurs pour mise à jour du kilométrage
-            $oldKmArrivee = $trip->km_arrivee;
+            //$oldKmArrivee = $trip->km_arrivee;
             $oldVehicleId = $trip->vehicle_id;
 
             // Mettre à jour le trajet
             $trip->update($validated);
 
             // Mettre à jour le kilométrage du véhicule si nécessaire
-            if ($oldVehicleId != $validated['vehicle_id'] || $oldKmArrivee != $validated['km_arrivee']) {
+           /* if ($oldVehicleId != $validated['vehicle_id'] || $oldKmArrivee != $validated['km_arrivee']) {
                 $vehicle = Vehicle::findOrFail($validated['vehicle_id']);
                 $vehicle->kilometrage_actuel = $validated['km_arrivee'];
                 $vehicle->save();
             }
-
+*/
             DB::commit();
 
             return redirect()->route('trips.show', $trip->id)

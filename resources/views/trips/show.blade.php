@@ -35,6 +35,14 @@
                                             <td width="40%"><strong>Date:</strong></td>
                                             <td>{{ $trip->date_trajet->format('d/m/Y') }}</td>
                                         </tr>
+                                         <tr>
+                                            <td><strong>Client:</strong></td>
+                                            <td>@if($trip->client)
+                                                <strong>{{ $trip->client->nom }}</strong>
+                                                @else
+                                                <span class="text-muted">-</span>
+                                                @endif</td>
+                                        </tr>
                                         <tr>
                                             <td><strong>Destination:</strong></td>
                                             <td>{{ $trip->destination }}</td>

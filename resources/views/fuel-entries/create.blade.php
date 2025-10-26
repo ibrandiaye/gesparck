@@ -93,7 +93,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="station" class="form-label">Station Service</label>
+                                <label for="station" class="form-label">Station Service *</label>
                                 <select class="form-control"  id="station" name="station" required>
                                     <option value="">Selectionner</option>
                                     <option value="Mobile castors" {{ old('station') == "Mobile castors" ? "selected" : " " }}>Mobile castors</option>
@@ -115,11 +115,11 @@
                                 <select class="form-select @error('type_carburant') is-invalid @enderror"
                                         id="type_carburant" name="type_carburant" required>
                                     <option value="">Sélectionnez un type</option>
-                                    <option value="Diesel" {{ old('type_carburant',$thisVehicle->carburant->libelle) == 'diesel' ? 'selected' : '' }}>Diesel</option>
-                                    <option value="Essence" {{ old('type_carburant',$thisVehicle->carburant->libelle) == 'essence' ? 'selected' : '' }}>Essence</option>
-                                    <option value="sp95" {{ old('type_carburant',$thisVehicle->carburant->libelle) == 'sp95' ? 'selected' : '' }}>SP95</option>
-                                    <option value="sp98" {{ old('type_carburant',$thisVehicle->carburant->libelle) == 'sp98' ? 'selected' : '' }}>SP98</option>
-                                    <option value="gpl" {{ old('type_carburant',$thisVehicle->carburant->libelle) == 'gpl' ? 'selected' : '' }}>GPL</option>
+                                    <option value="Diesel" {{ old('type_carburant',$thisVehicle->carburant->libelle ?? null) == 'diesel' ? 'selected' : '' }}>Diesel</option>
+                                    <option value="Essence" {{ old('type_carburant',$thisVehicle->carburant->libelle ?? null) == 'essence' ? 'selected' : '' }}>Essence</option>
+                                    <option value="sp95" {{ old('type_carburant',$thisVehicle->carburant->libelle ?? null) == 'sp95' ? 'selected' : '' }}>SP95</option>
+                                    <option value="sp98" {{ old('type_carburant',$thisVehicle->carburant->libelle ?? null) == 'sp98' ? 'selected' : '' }}>SP98</option>
+                                    <option value="gpl" {{ old('type_carburant',$thisVehicle->carburant->libelle ?? null) == 'gpl' ? 'selected' : '' }}>GPL</option>
                                 </select>
                                 @error('type_carburant')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -168,7 +168,7 @@
 
 @push('scripts')
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+/* document.addEventListener('DOMContentLoaded', function() {
     const vehicleSelect = document.getElementById('vehicle_id');
     const prixLitreInput = document.getElementById('prix_litre');
     const litresInput = document.getElementById('litres');
@@ -196,6 +196,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const kilometrageActuel = selectedOption.getAttribute('data-kilometrage');
         const prix_carburant = selectedOption.getAttribute('data-montant-carburant');
         const carburant = selectedOption.getAttribute('data-carburant');
+        console.log('ibra');
 
         if (kilometrageActuel) {
             kilometrageInput.value = kilometrageActuel;
@@ -231,6 +232,56 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             alert('Le kilométrage ne peut pas être inférieur au kilométrage actuel du véhicule!');
             kilometrageInput.focus();
+        }
+    });
+});*/
+</script>
+
+<script>
+$(document).ready(function () {
+    $('#vehicle_id').select2();
+
+    function updateVehicleFields() {
+        const selected = $('#vehicle_id option:selected');
+        const km = selected.data('kilometrage');
+        const carburant = selected.data('carburant');
+        const montant = selected.data('montant-carburant');
+        console.log('km' + km);
+
+
+
+        $('#kilometrage').val(km);
+        $('#kmHelp').text(`Kilométrage actuel du véhicule: ${parseInt(km).toLocaleString('fr-FR')} km`);
+
+
+        if (montant) {
+            $('#prix_litre').val(montant);
+        }
+
+        if (carburant) {
+            $('#type_carburant').val(carburant);
+        }
+    }
+
+    function calculateTotalCost() {
+        const prix = parseFloat($('#prix_litre').val()) || 0;
+        const litres = parseFloat($('#litres').val()) || 0;
+        const total = prix * litres;
+        $('#coutTotal').text(total.toLocaleString('fr-FR', { minimumFractionDigits: 0 }) + ' FCFA');
+    }
+
+    $('#vehicle_id').on('change', updateVehicleFields);
+    $('#prix_litre, #litres').on('input', calculateTotalCost);
+    calculateTotalCost();
+
+    $('#fuelForm').on('submit', function (e) {
+        const km = parseInt($('#kilometrage').val());
+        const kmActuel = parseInt($('#vehicle_id option:selected').data('kilometrage'));
+
+        if (km < kmActuel) {
+            e.preventDefault();
+            alert('Le kilométrage ne peut pas être inférieur au kilométrage actuel du véhicule!');
+            $('#kilometrage').focus();
         }
     });
 });

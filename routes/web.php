@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CarburantController;
+use App\Http\Controllers\ClientController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FuelEntryController;
 use App\Http\Controllers\RepairLogController;
@@ -86,6 +87,25 @@ Route::middleware(['auth'])->group(function () {
         Route::get('export/strips', [TripController::class, 'export'])->name('trips.export');
         Route::get('/dashboard', [DashboardController::class, 'monDasboard'])->name('dashboard');
         Route::post('/dashboard', [DashboardController::class, 'monDasboardFiltre'])->name('dashboard');
+
+
+        // === CLIENTS ROUTES ===
+    Route::prefix('clients')->group(function () {
+        Route::get('/', [ClientController::class, 'index'])->name('clients.index');
+        Route::get('/create', [ClientController::class, 'create'])->name('clients.create');
+        Route::post('/', [ClientController::class, 'store'])->name('clients.store');
+        Route::get('/{client}', [ClientController::class, 'show'])->name('clients.show');
+        Route::get('/{client}/edit', [ClientController::class, 'edit'])->name('clients.edit');
+        Route::put('/{client}', [ClientController::class, 'update'])->name('clients.update');
+        Route::delete('/{client}', [ClientController::class, 'destroy'])->name('clients.destroy');
+
+        // Routes supplémentaires clients
+       /*  Route::post('/{client}/desactiver', [ClientController::class, 'desactiver'])->name('clients.desactiver');
+        Route::post('/{client}/activer', [ClientController::class, 'activer'])->name('clients.activer'); */
+    });
+
+            Route::get('/statistics/clients', [ClientController::class, 'statistics'])->name('clients.statistics');
+
 
 });
 

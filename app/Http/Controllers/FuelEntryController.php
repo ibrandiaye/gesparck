@@ -14,36 +14,90 @@ class FuelEntryController extends Controller
         $this->middleware('auth')->except(['getByVehicle']);
     }
 
-    public function index()
+
+
+    public function index(Request $request)
     {
-        $vehicle = $_GET['vehicle'] ?? null;
-        if ($vehicle) {
-            $fuelEntries = FuelEntry::with(['vehicle', 'trips'])
-                ->where('vehicle_id', $vehicle)
-                ->orderBy('date_remplissage', 'desc')
-                ->paginate(20);
-             $stats = [
-            'totalCoutMois' => FuelEntry::where('vehicle_id', $vehicle)->thisMonth()->sum('cout_total'),
-            'totalLitresMois' => FuelEntry::where('vehicle_id', $vehicle)->thisMonth()->sum('litres'),
-            'moyennePrixLitre' => FuelEntry::where('vehicle_id', $vehicle)->thisMonth()->avg('prix_litre')
-        ];
+        // Récupérer tous les véhicules pour le filtre
+        $vehicles = Vehicle::orderBy('immatriculation')->get();
+
+        // Commencer la requête avec les relations
+        $query = FuelEntry::with(['vehicle', 'trips']);
+
+        // Appliquer les filtres
+        if ($request->has('vehicle') && $request->vehicle != '') {
+            $query->where('vehicle_id', $request->vehicle);
         }
-        else {
-             $fuelEntries = FuelEntry::with(['vehicle','trips'])
-            ->orderBy('date_remplissage', 'desc')
-            ->paginate(20);
+
+        if ($request->has('type_carburant') && $request->type_carburant != '') {
+            $query->where('type_carburant', $request->type_carburant);
+        }
+
+        if ($request->has('month') && $request->month != '') {
+            $query->whereMonth('date_remplissage', $request->month);
+        }
+
+        if ($request->has('year') && $request->year != '') {
+            $query->whereYear('date_remplissage', $request->year);
+        }
+
+        if ($request->has('station') && $request->station != '') {
+            $query->where('station', 'like', '%' . $request->station . '%');
+        }
+        if ($request->has('date_debut') && $request->date_debut) {
+            $query->where('date_remplissage', '>=', $request->date_debut);
+        }
+
+        if ($request->has('date_fin') && $request->date_fin) {
+            $query->where('date_remplissage', '<=', $request->date_fin);
+        }
+
+        // Appliquer les filtres pour les statistiques aussi
+        $statsQuery = clone $query;
 
         $stats = [
-            'totalCoutMois' => FuelEntry::thisMonth()->sum('cout_total'),
-            'totalLitresMois' => FuelEntry::thisMonth()->sum('litres'),
-            'moyennePrixLitre' => FuelEntry::thisMonth()->avg('prix_litre')
+            'totalCoutMois' => $statsQuery->when(!$request->has('month') && !$request->has('year'), function($q) {
+                return $q->thisMonth();
+            })->sum('cout_total'),
+
+            'totalLitresMois' => $statsQuery->when(!$request->has('month') && !$request->has('year'), function($q) {
+                return $q->thisMonth();
+            })->sum('litres'),
+
+            'moyennePrixLitre' => $statsQuery->when(!$request->has('month') && !$request->has('year'), function($q) {
+                return $q->thisMonth();
+            })->avg('prix_litre')
         ];
-        }
 
+        // Pagination avec conservation des paramètres de filtre
+        $fuelEntries = $query->orderBy('date_remplissage', 'desc')
+                            ->paginate(20)
+                            ->appends($request->except('page'));
 
-        //dd($fuelEntries);
+        // Mois en français
+        $frenchMonths = [
+            1 => 'Janvier', 2 => 'Février', 3 => 'Mars', 4 => 'Avril',
+            5 => 'Mai', 6 => 'Juin', 7 => 'Juillet', 8 => 'Août',
+            9 => 'Septembre', 10 => 'Octobre', 11 => 'Novembre', 12 => 'Décembre'
+        ];
 
-        return view('fuel-entries.index', compact('fuelEntries', 'stats'));
+        // Préparer les données pour les filtres
+        $filters = [
+            'vehicles' => $vehicles,
+            'typesCarburant' => FuelEntry::select('type_carburant')->distinct()->pluck('type_carburant'),
+            'years' => FuelEntry::select(DB::raw('YEAR(date_remplissage) as year'))
+                            ->distinct()
+                            ->orderBy('year', 'desc')
+                            ->pluck('year'),
+            'months' => $frenchMonths,
+            'selectedVehicle' => $request->vehicle,
+            'selectedTypeCarburant' => $request->type_carburant,
+            'selectedMonth' => $request->month,
+            'selectedYear' => $request->year,
+            'selectedStation' => $request->station,
+        ];
+
+        return view('fuel-entries.index', compact('fuelEntries', 'stats', 'filters'));
     }
 
     public function create()
