@@ -30,7 +30,7 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <label>Véhicule</label>
-                                <select name="vehicle_id" class="form-control">
+                                <select name="vehicle_id" class="form-control select2">
                                     <option value="">Tous les véhicules</option>
                                     @foreach($vehicles as $vehicle)
                                     <option value="{{ $vehicle->id }}"
