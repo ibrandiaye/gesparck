@@ -58,7 +58,7 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="vehicle_id">Véhicule *</label>
-                                            <select name="vehicle_id" id="vehicle_id" class="form-control " required>
+                                            <select name="vehicle_id" id="vehicle_id" class="form-control select2" required>
                                                 <option value="">Sélectionner un véhicule</option>
                                                 @foreach($vehicles as $vehicle)
                                                 <option value="{{ $vehicle->id }}"
@@ -230,7 +230,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const selectedOption = vehicleSelect.options[vehicleSelect.selectedIndex].value;
         console.log(selectedOption);
 
-        loadFuel(selectedOption);
+       // loadFuel(selectedOption);
      });
 
 
@@ -333,8 +333,11 @@ document.addEventListener('DOMContentLoaded', function() {
     @endif
 });
 
-async function loadFuel(selectedOption) {
-         currentFilters.vehicle_id = selectedOption;
+
+    $(document).ready(function () {
+        async function loadFuel(vehicle_id) {
+
+         currentFilters.vehicle_id = vehicle_id;
         const response = await fetch('{{ route("fuel.by.vehicle") }}', {
         method: 'POST',
         headers: {
@@ -359,5 +362,12 @@ async function loadFuel(selectedOption) {
          $("#fuel_entry_id").append(option);;
         console.log('Données reçues:', data);
     }
+        const selected = $('#vehicle_id option:selected');
+         $('#vehicle_id').on('change', loadFuel);
+          $('#vehicle_id').on('change', function() {
+            loadFuel($(this).val());
+
+        })
+    });
 </script>
 @endpush
