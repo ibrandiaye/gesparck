@@ -75,8 +75,9 @@ class TripController extends Controller
             $query->where('date_trajet', '<=', $request->date_fin);
         }
 
-        $trips = $query->orderBy('vehicle_id', 'desc')
+        $trips = $query
                       ->orderBy('date_trajet', 'desc')
+                      ->orderBy('vehicle_id', 'desc')
                       ->paginate(20);
 
         $vehicles = Vehicle::all();
