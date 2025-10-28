@@ -14,10 +14,10 @@ class Client extends Model
     ];
 
     // Relation avec les trajets
-    public function trips()
+   /* public function trips()
     {
         return $this->hasMany(Trip::class);
-    }
+    }*/
 
 
 
@@ -33,5 +33,10 @@ class Client extends Model
             'dernier_trajet' => $this->trips()->latest('date_trajet')->first()
         ];
     }
-
+        public function trips() {
+        return $this->belongsToMany(Trip::class, 'trip_clients')
+        ->withPivot('ordre_visite', 'notes_livraison')
+                    ->withTimestamps()
+                    ->orderBy('date_trajet', 'desc');
+    }
 }

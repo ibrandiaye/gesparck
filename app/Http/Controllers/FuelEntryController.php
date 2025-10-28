@@ -291,7 +291,7 @@ class FuelEntryController extends Controller
     public function getByVehicle(Request $request)
     {
         $vehicleId = $request->input('vehicle_id');
-        $fuelEntries = FuelEntry::where('vehicle_id', $vehicleId)->get();
+        $fuelEntries = FuelEntry::where('vehicle_id', $vehicleId)->orderBy("id",'desc')->get();
         return response()->json($fuelEntries);
     }
 }

@@ -16,7 +16,7 @@ class Trip extends Model
         'nombre_trajets', // Nouveau champ
         'date_trajet',
         'notes',
-        'client_id'
+       // 'client_id'
     ];
      protected $casts = [
         'date_trajet' => 'date'
@@ -29,8 +29,13 @@ class Trip extends Model
     public function fuelEntry() {
         return $this->belongsTo(FuelEntry::class);
     }
-    public function client() {
+    /*public function client() {
         return $this->belongsTo(Client::class);
+    }*/
+    public function clients() {
+        return $this->belongsToMany(Client::class, 'trip_clients')
+        ->withPivot('ordre_visite', 'notes_livraison')
+                    ->withTimestamps();
     }
     // Accès au conducteur via le véhicule
     public function getConducteurAttribute() {

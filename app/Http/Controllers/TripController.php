@@ -14,7 +14,7 @@ class TripController extends Controller
     /**
      * Afficher la liste des trajets
      */
-    public function index(Request $request)
+  /*  public function index(Request $request)
     {
         $query = Trip::with(['vehicle', 'fuelEntry']);
 
@@ -44,12 +44,82 @@ class TripController extends Controller
         $motifs = ['livraison', 'client', 'maintenance', 'administratif', 'autre'];
 
         return view('trips.index', compact('trips', 'vehicles', 'motifs'));
+    }*/
+
+          public function index(Request $request)
+    {
+        $query = Trip::with(['vehicle', 'fuelEntry', 'clients']);
+
+        // Filtres
+        if ($request->has('vehicle_id') && $request->vehicle_id) {
+            $query->where('vehicle_id', $request->vehicle_id);
+        }
+
+        if ($request->has('motif') && $request->motif) {
+            $query->where('motif', $request->motif);
+        }
+
+        if ($request->has('avec_clients') && $request->avec_clients !== '') {
+            if ($request->avec_clients == '1') {
+                $query->whereHas('clients');
+            } else {
+                $query->whereDoesntHave('clients');
+            }
+        }
+
+        if ($request->has('date_debut') && $request->date_debut) {
+            $query->where('date_trajet', '>=', $request->date_debut);
+        }
+
+        if ($request->has('date_fin') && $request->date_fin) {
+            $query->where('date_trajet', '<=', $request->date_fin);
+        }
+
+        $trips = $query->orderBy('vehicle_id', 'desc')
+                      ->orderBy('created_at', 'desc')
+                      ->paginate(20);
+
+        $vehicles = Vehicle::all();
+        $motifs = ['livraison', 'client', 'maintenance', 'administratif', 'autre'];
+
+        return view('trips.index', compact('trips', 'vehicles', 'motifs'));
     }
+
 
     /**
      * Afficher le formulaire de création
      */
     public function create(Request $request)
+    {
+        $fuelEntry = null;
+
+        if ($request->has('fuel_entry_id')) {
+            $fuelEntry = FuelEntry::findOrFail($request->fuel_entry_id);
+        }
+
+        $vehicles = Vehicle::get();
+        $fuelEntries = FuelEntry::with('vehicle')
+                            ->orderBy('date_remplissage', 'desc')
+                            ->get();
+        $clients = Client::orderBy('nom')->get();
+
+        $motifs = [
+            'livraison' => 'Tournée de livraison',
+            'client' => 'Visites clients',
+            'maintenance' => 'Maintenance',
+            'administratif' => 'Démarche administrative',
+            'autre' => 'Autre'
+        ];
+
+        return view('trips.create', compact(
+            'vehicles',
+            'fuelEntries',
+            'fuelEntry',
+            'clients',
+            'motifs'
+        ));
+    }
+    /*public function create(Request $request)
     {
         $fuelEntry = null;
 
@@ -92,12 +162,12 @@ class TripController extends Controller
             'motifs',
             'clients'
         ));
-    }
+    }*/
 
     /**
      * Enregistrer un nouveau trajet
      */
-    public function store(Request $request)
+   /* public function store(Request $request)
     {
         $validated = $request->validate([
             'vehicle_id' => 'required|exists:vehicles,id',
@@ -118,7 +188,7 @@ class TripController extends Controller
             return back()->withErrors([
                 'km_depart' => 'Le kilométrage de départ semble incohérent avec le kilométrage actuel du véhicule.'
             ])->withInput();
-        }*/
+        }/
 
         DB::beginTransaction();
 
@@ -128,7 +198,7 @@ class TripController extends Controller
 
           /*  // Mettre à jour le kilométrage du véhicule
             $vehicle->kilometrage_actuel = $validated['km_arrivee'];
-            $vehicle->save();*/
+            $vehicle->save();/
 
             DB::commit();
 
@@ -142,6 +212,74 @@ class TripController extends Controller
                 'error' => 'Une erreur est survenue lors de l\'enregistrement du trajet: ' . $e->getMessage()
             ])->withInput();
         }
+    }*/
+
+        public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'vehicle_id' => 'required|exists:vehicles,id',
+            'fuel_entry_id' => 'required|exists:fuel_entries,id',
+            'nom_trajet' => 'nullable|string|max:255',
+            'description' => 'nullable|string|max:1000',
+            'clients' => 'required|array|min:1', // Au moins un client
+            'clients.*.id' => 'required|exists:clients,id',
+           // 'clients.*.ordre' => 'required|integer|min:1',
+           // 'clients.*.notes_livraison' => 'nullable|string|max:500',
+            'destination' => 'required|string|max:255',
+            'motif' => 'required|in:livraison,client,maintenance,administratif,autre',
+            'nombre_trajets' => 'required|integer|min:1|max:50',
+            'date_trajet' => 'required|date',
+           /* 'km_depart' => 'required|integer|min:0',
+            'km_arrivee' => 'required|integer|gt:km_depart',*/
+            'notes' => 'nullable|string|max:1000'
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+            // Créer le trajet
+            $trip = Trip::create([
+                'vehicle_id' => $validated['vehicle_id'],
+                'fuel_entry_id' => $validated['fuel_entry_id'],
+              //  'nom_trajet' => $validated['nom_trajet'],
+               // 'description' => $validated['description'],
+                'destination' => $validated['destination'],
+                'motif' => $validated['motif'],
+                'nombre_trajets' => $validated['nombre_trajets'],
+                'date_trajet' => $validated['date_trajet'],
+              //  'km_depart' => $validated['km_depart'],
+               // 'km_arrivee' => $validated['km_arrivee'],
+              //  'notes' => $validated['notes']
+            ]);
+
+            // Attacher les clients avec leurs ordres et notes
+            $clientsData = [];
+            foreach ($validated['clients'] as $clientData) {
+                $clientsData[$clientData['id']] = [
+                    'ordre_visite' => $clientData['ordre'] ?? null,
+                    'notes_livraison' => $clientData['notes_livraison'] ?? null
+                ];
+            }
+
+            $trip->clients()->attach($clientsData);
+
+            // Mettre à jour le kilométrage du véhicule
+          /*  $vehicle = Vehicle::findOrFail($validated['vehicle_id']);
+            $vehicle->kilometrage_actuel = $validated['km_arrivee'];
+            $vehicle->save();*/
+
+            DB::commit();
+
+            return redirect()->route('trips.show', $trip->id)
+                        ->with('success', 'Trajet avec ' . count($validated['clients']) . ' client(s) créé avec succès!');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return back()->withErrors([
+                'error' => 'Une erreur est survenue lors de la création du trajet: ' . $e->getMessage()
+            ])->withInput();
+        }
     }
 
     /**
@@ -149,7 +287,7 @@ class TripController extends Controller
      */
     public function show(Trip $trip)
     {
-        $trip->load(['vehicle', 'fuelEntry','client']);
+        $trip->load(['vehicle', 'fuelEntry','clients']);
 
         //dd($trip);
 
@@ -161,28 +299,30 @@ class TripController extends Controller
      */
     public function edit(Trip $trip)
     {
-        $trip->load(['vehicle', 'fuelEntry']);
+       // dd($trip);
+        $trip->load(['vehicle', 'fuelEntry', 'clients']);
 
-        $vehicles = Vehicle::where('etat','disponible')->get();
+        $vehicles = Vehicle::get();
         $fuelEntries = FuelEntry::with('vehicle')
                               ->orderBy('date_remplissage', 'desc')
+                              ->where("vehicle_id",$trip->vehicle_id)
                               ->get();
+        $clients = Client::orderBy('nom')->get();
 
         $motifs = [
-            'livraison' => 'Livraison',
-            'client' => 'Rendez-vous client',
+            'livraison' => 'Tournée de livraison',
+            'client' => 'Visites clients',
             'maintenance' => 'Maintenance',
             'administratif' => 'Démarche administrative',
             'autre' => 'Autre'
         ];
-         $clients = Client::all();
 
         return view('trips.edit', compact(
             'trip',
             'vehicles',
             'fuelEntries',
-            'motifs',
-            'clients'
+            'clients',
+            'motifs'
         ));
     }
 
@@ -194,33 +334,60 @@ class TripController extends Controller
         $validated = $request->validate([
             'vehicle_id' => 'required|exists:vehicles,id',
             'fuel_entry_id' => 'required|exists:fuel_entries,id',
+           // 'nom_trajet' => 'nullable|string|max:255',
+           // 'description' => 'nullable|string|max:1000',
+            'clients' => 'required|array|min:1',
+            'clients.*.id' => 'required|exists:clients,id',
+           // 'clients.*.ordre' => 'required|integer|min:1',
+            //'clients.*.notes_livraison' => 'nullable|string|max:500',
             'destination' => 'required|string|max:255',
             'motif' => 'required|in:livraison,client,maintenance,administratif,autre',
             'nombre_trajets' => 'required|integer|min:1|max:50',
             'date_trajet' => 'required|date',
-         //   'km_depart' => 'required|integer|min:0',
-          //  'km_arrivee' => 'required|integer|gt:km_depart',
-            'notes' => 'nullable|string|max:1000',
-            'client_id' => 'required|exists:clients,id',
+
+          //  'notes' => 'nullable|string|max:1000'
         ]);
 
         DB::beginTransaction();
 
         try {
             // Sauvegarder les anciennes valeurs pour mise à jour du kilométrage
-            //$oldKmArrivee = $trip->km_arrivee;
+         //   $oldKmArrivee = $trip->km_arrivee;
             $oldVehicleId = $trip->vehicle_id;
 
             // Mettre à jour le trajet
-            $trip->update($validated);
+            $trip->update([
+                'vehicle_id' => $validated['vehicle_id'],
+                'fuel_entry_id' => $validated['fuel_entry_id'],
+              //  'nom_trajet' => $validated['nom_trajet'],
+             //   'description' => $validated['description'],
+               // 'destination' => $validated['destination'],
+                'motif' => $validated['motif'],
+                'nombre_trajets' => $validated['nombre_trajets'],
+                'date_trajet' => $validated['date_trajet'],
+              //  'km_depart' => $validated['km_depart'],
+               // 'km_arrivee' => $validated['km_arrivee'],
+              //  'notes' => $validated['notes']
+            ]);
+
+            // Synchroniser les clients avec leurs ordres et notes
+            $clientsData = [];
+            foreach ($validated['clients'] as $clientData) {
+                $clientsData[$clientData['id']] = [
+                    'ordre_visite' => $clientData['ordre'],
+                    'notes_livraison' => $clientData['notes_livraison'] ?? null
+                ];
+            }
+
+            $trip->clients()->sync($clientsData);
 
             // Mettre à jour le kilométrage du véhicule si nécessaire
            /* if ($oldVehicleId != $validated['vehicle_id'] || $oldKmArrivee != $validated['km_arrivee']) {
                 $vehicle = Vehicle::findOrFail($validated['vehicle_id']);
                 $vehicle->kilometrage_actuel = $validated['km_arrivee'];
                 $vehicle->save();
-            }
-*/
+            }*/
+
             DB::commit();
 
             return redirect()->route('trips.show', $trip->id)
@@ -243,6 +410,8 @@ class TripController extends Controller
         DB::beginTransaction();
 
         try {
+            // Détacher tous les clients avant suppression
+            $trip->clients()->detach();
             $trip->delete();
 
             DB::commit();
@@ -264,17 +433,17 @@ class TripController extends Controller
      */
     public function byFuelEntry(FuelEntry $fuelEntry)
     {
-        $trips = Trip::with(['vehicle'])
+        $trips = Trip::with(['vehicle', 'clients'])
                     ->where('fuel_entry_id', $fuelEntry->id)
                     ->orderBy('date_trajet', 'desc')
                     ->orderBy('created_at', 'desc')
                     ->get();
 
         $stats = [
-            'total_trajets' => $trips->sum('nombre_trajets'),
-            /*'distance_totale' => $trips->sum(function($trip) {
-                return $trip->distance_totale;
-            }),*/
+            'total_trajets' => $trips->count(),
+            'total_clients' => $trips->sum(function($trip) {
+                return $trip->clients->count();
+            }),
             'consommation_moyenne' => $fuelEntry->efficacite ?? 0
         ];
 
@@ -286,16 +455,13 @@ class TripController extends Controller
      */
     public function statistics()
     {
-        //dd("dff");
         // Statistiques par motif
         $statsByMotif = Trip::selectRaw('motif, COUNT(*) as nombre_trajets, SUM(nombre_trajets) as total_voyages')
             ->groupBy('motif')
             ->get();
 
-        //dd($statsByMotif);
-
         // Top destinations
-        $topDestinations = Trip::selectRaw('destination, COUNT(*) as nombre_visites, SUM(nombre_trajets) as total_trajets')
+        $topDestinations = Trip::selectRaw('destination, COUNT(*) as nombre_visites')
             ->groupBy('destination')
             ->orderByDesc('nombre_visites')
             ->limit(10)
@@ -306,7 +472,8 @@ class TripController extends Controller
                 YEAR(date_trajet) as annee,
                 MONTH(date_trajet) as mois,
                 COUNT(*) as nombre_trajets,
-                SUM(nombre_trajets) as total_voyages
+                SUM(nombre_trajets) as total_voyages,
+                COUNT(DISTINCT vehicle_id) as vehicules_utilises
             ')
             ->where('date_trajet', '>=', now()->subMonths(12))
             ->groupBy('annee', 'mois')
@@ -322,11 +489,27 @@ class TripController extends Controller
             ->limit(10)
             ->get();
 
+        // Statistiques clients
+        $statsClients = [
+            'total_trajets_avec_clients' => Trip::has('clients')->count(),
+            'moyenne_clients_par_trajet' => DB::table('trip_clients')
+                ->selectRaw('COUNT(*) as total_visites, COUNT(DISTINCT trip_id) as total_trajets')
+                ->first(),
+            'clients_plus_visites' => DB::table('trip_clients')
+                ->join('clients', 'trip_clients.client_id', '=', 'clients.id')
+                ->selectRaw('clients.nom, COUNT(*) as nombre_visites')
+                ->groupBy('client_id', 'clients.nom')
+                ->orderByDesc('nombre_visites')
+                ->limit(10)
+                ->get()
+        ];
+
         return view('trips.statistics', compact(
             'statsByMotif',
             'topDestinations',
             'monthlyStats',
-            'topVehicles'
+            'topVehicles',
+            'statsClients'
         ));
     }
 
@@ -335,7 +518,7 @@ class TripController extends Controller
      */
     public function export(Request $request)
     {
-        $trips = Trip::with(['vehicle', 'fuelEntry'])
+        $trips = Trip::with(['vehicle', 'fuelEntry', 'clients'])
                     ->when($request->has('date_debut'), function($query) use ($request) {
                         $query->where('date_trajet', '>=', $request->date_debut);
                     })
@@ -344,6 +527,13 @@ class TripController extends Controller
                     })
                     ->when($request->has('vehicle_id'), function($query) use ($request) {
                         $query->where('vehicle_id', $request->vehicle_id);
+                    })
+                    ->when($request->has('avec_clients'), function($query) use ($request) {
+                        if ($request->avec_clients == '1') {
+                            $query->whereHas('clients');
+                        } elseif ($request->avec_clients == '0') {
+                            $query->whereDoesntHave('clients');
+                        }
                     })
                     ->orderBy('date_trajet', 'desc')
                     ->get();
@@ -361,36 +551,44 @@ class TripController extends Controller
             // En-têtes CSV
             fputcsv($file, [
                 'Date',
+                'Nom du trajet',
                 'Véhicule',
                 'Immatriculation',
-               // 'Conducteur',
+                'Clients visités',
+                'Ordre des clients',
                 'Destination',
                 'Motif',
                 'Nb Trajets',
-                //'KM Départ',
-               // 'KM Arrivée',
-               // 'Distance/Trajet',
-               // 'Distance Total',
+                'KM Départ',
                 'Date Plein',
+                'Litres',
+                'Coût',
                 'Notes'
             ]);
 
             // Données
             foreach ($trips as $trip) {
+                $clientsList = $trip->clients->map(function($client) {
+                    return $client->nom . ' (#'.$client->pivot->ordre_visite.')';
+                })->implode('; ');
+
+                $ordreClients = $trip->clients->sortBy('pivot.ordre_visite')
+                    ->pluck('pivot.ordre_visite')
+                    ->implode(', ');
+
                 fputcsv($file, [
                     $trip->date_trajet->format('d/m/Y'),
+                    $trip->nom_trajet ?? '',
                     $trip->vehicle->modele,
                     $trip->vehicle->immatriculation,
-                  //  $trip->vehicle->conducteur ?? 'Non assigné', // Conducteur depuis le véhicule
+                    $clientsList,
+                    $ordreClients,
                     $trip->destination,
                     $trip->motif,
                     $trip->nombre_trajets,
-                  //  $trip->km_depart,
-                  //  $trip->km_arrivee,
-                   // $trip->distance_moyenne,
-                  //  $trip->distance_totale,
-                    $trip->fuelEntry->date->format('d/m/Y'),
-                    $trip->notes
+                    $trip->fuelEntry->date_remplissage->format('d/m/Y'),
+                    $trip->fuelEntry->litres,
+                    $trip->fuelEntry->cout,
                 ]);
             }
 
@@ -401,24 +599,54 @@ class TripController extends Controller
     }
 
     /**
-     * API pour récupérer les conducteurs disponibles (si besoin)
+     * API pour récupérer les trajets d'un client
      */
-    public function getConducteurs()
+    public function getTripsByClient(Client $client)
     {
-        $conducteurs = Vehicle::whereNotNull('immatriculation')
-                            ->where('immatriculation', '!=', '')
-                            ->distinct()
-                            ->pluck('immatriculation')
-                            ->sort()
-                            ->values();
+        $trips = $client->trips()
+                       ->with(['vehicle', 'fuelEntry'])
+                       ->orderBy('date_trajet', 'desc')
+                       ->paginate(15);
 
-        return response()->json($conducteurs);
+        return response()->json([
+            'client' => $client->only(['id', 'nom', 'ville']),
+            'trips' => $trips->items(),
+            'pagination' => [
+                'current_page' => $trips->currentPage(),
+                'last_page' => $trips->lastPage(),
+                'total' => $trips->total()
+            ]
+        ]);
     }
 
-    public function getByVehicle(Request $request)
+    /**
+     * Recherche de trajets
+     */
+    public function search(Request $request)
     {
-        $vehicles = Vehicle::where('etat', 'disponible')->get();
+        $query = Trip::with(['vehicle', 'clients']);
 
-        return response()->json($vehicles);
+        if ($request->has('q') && $request->q) {
+            $search = $request->q;
+            $query->where(function($q) use ($search) {
+                $q->where('nom_trajet', 'like', "%{$search}%")
+                  ->orWhere('destination', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%")
+                  ->orWhereHas('clients', function($q) use ($search) {
+                      $q->where('nom', 'like', "%{$search}%");
+                  })
+                  ->orWhereHas('vehicle', function($q) use ($search) {
+                      $q->where('immatriculation', 'like', "%{$search}%")
+                        ->orWhere('modele', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        $trips = $query->orderBy('date_trajet', 'desc')
+                      ->limit(20)
+                      ->get();
+
+        return response()->json($trips);
     }
+
 }

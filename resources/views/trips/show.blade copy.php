@@ -1,19 +1,15 @@
 @extends('layouts.app')
 
-@section('title', $trip->nom_trajet ?: 'Détail du Trajet')
+@section('title', 'Détail du Trajet')
 
 @section('content')
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-8 offset-md-2">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h4 class="mb-0">
-                        <i class="fas fa-route"></i>
-                        {{ $trip->nom_trajet ?: 'Détail du Trajet' }}
-                        @if($trip->nom_trajet)
-                        <small class="text-muted">- {{ $trip->date_trajet->format('d/m/Y') }}</small>
-                        @endif
+                        <i class="fas fa-route"></i> Détail du Trajet
                     </h4>
                     <div>
                         <a href="{{ route('trips.edit', $trip->id) }}" class="btn btn-warning">
@@ -35,10 +31,17 @@
                                 </div>
                                 <div class="card-body">
                                     <table class="table table-borderless">
-
                                         <tr>
-                                            <td><strong>Date:</strong></td>
+                                            <td width="40%"><strong>Date:</strong></td>
                                             <td>{{ $trip->date_trajet->format('d/m/Y') }}</td>
+                                        </tr>
+                                         <tr>
+                                            <td><strong>Client:</strong></td>
+                                            <td>@if($trip->client)
+                                                <strong>{{ $trip->client->nom }}</strong>
+                                                @else
+                                                <span class="text-muted">-</span>
+                                                @endif</td>
                                         </tr>
                                         <tr>
                                             <td><strong>Destination:</strong></td>
@@ -57,19 +60,20 @@
                                         <tr>
                                             <td><strong>Nombre de trajets:</strong></td>
                                             <td>
-                                                <span class="badge badge-info badge-pill">
+
+                                                <span class="badge bg-primary">
                                                     {{ $trip->nombre_trajets }}
                                                 </span>
                                             </td>
                                         </tr>
-
-
-                                        @if($trip->description)
-                                        <tr>
-                                            <td><strong>Description:</strong></td>
-                                            <td>{{ $trip->description }}</td>
+                                      {{--   <tr>
+                                            <td><strong>Distance par trajet:</strong></td>
+                                            <td>{{ $trip->distance_moyenne }} km</td>
                                         </tr>
-                                        @endif
+                                        <tr>
+                                            <td><strong>Distance totale:</strong></td>
+                                            <td><strong class="text-primary">{{ $trip->distance_totale }} km</strong></td>
+                                        </tr> --}}
                                     </table>
                                 </div>
                             </div>
@@ -90,8 +94,18 @@
                                                 <small class="text-muted">{{ $trip->vehicle->modele }}</small>
                                             </td>
                                         </tr>
-
-
+                                       {{--   <tr>
+                                            <td><strong>Conducteur:</strong></td>
+                                            <td>{{ $trip->vehicle->conducteur ?? 'Non assigné' }}</td>
+                                        </tr>
+                                       <tr>
+                                            <td><strong>KM Départ:</strong></td>
+                                            <td>{{ number_format($trip->km_depart, 0, ',', ' ') }} km</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>KM Arrivée:</strong></td>
+                                            <td>{{ number_format($trip->km_arrivee, 0, ',', ' ') }} km</td>
+                                        </tr> --}}
                                         <tr>
                                             <td><strong>Plein associé:</strong></td>
                                             <td>
@@ -105,75 +119,11 @@
                         </div>
                     </div>
 
-                    <!-- Liste des clients visités -->
-                    @if($trip->clients->count() > 0)
-                    <div class="card mb-4">
-                        <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0">
-                                Clients Visités ({{ $trip->clients->count() }})
-                            </h5>
-                            <span class="badge badge-light">Ordre de visite</span>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th width="10%">Ordre</th>
-                                            <th>Client</th>
-                                            <th>Adresse</th>
-
-
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach($trip->clients as $client)
-                                        <tr>
-                                            <td>
-                                                <span class="badge bg-primary badge-pill" style="font-size: 1.1em;">
-                                                    {{ $client->pivot->ordre_visite }}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <strong>
-                                                    <a href="{{ route('clients.show', $client->id) }}" class="text-dark">
-                                                        {{ $client->nom }}
-                                                    </a>
-                                                </strong>
-                                                @if($client->ville)
-                                                <br><small class="text-muted">{{ $client->ville }}</small>
-                                                @endif
-                                            </td>
-
-                                            <td>
-                                                @if($client->telephone)
-                                                <div><i class="fas fa-phone text-muted"></i> {{ $client->telephone }}</div>
-                                                @endif
-                                                @if($client->email)
-                                                <div><i class="fas fa-envelope text-muted"></i> {{ $client->email }}</div>
-                                                @endif
-                                            </td>
-                                            <td>
-                                                @if($client->pivot->notes_livraison)
-                                                <span class="text-muted">{{ $client->pivot->notes_livraison }}</span>
-                                                @else
-                                                <span class="text-muted">-</span>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    @endif
-
-                    <!-- Notes générales -->
+                    <!-- Notes -->
                     @if($trip->notes)
-                    <div class="card mb-4">
-                        <div class="card-header bg-warning text-dark">
-                            <h5 class="mb-0">Notes Générales</h5>
+                    <div class="card">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="mb-0">Notes</h5>
                         </div>
                         <div class="card-body">
                             <p class="mb-0">{{ $trip->notes }}</p>
@@ -181,25 +131,29 @@
                     </div>
                     @endif
 
-                    <!-- Statistiques -->
-                    <div class="card">
+                    <!-- Statistiques rapides -->
+                    <div class="card mt-4">
                         <div class="card-header bg-dark text-white">
-                            <h5 class="mb-0">Statistiques du Trajet</h5>
+                            <h5 class="mb-0">Statistiques</h5>
                         </div>
                         <div class="card-body">
-                            <div class="row text-center">
-
-
-                                <div class="col-md-3">
+                            {{-- <div class="row text-center">
+                                <div class="col-md-4">
+                                    <div class="border rounded p-3">
+                                        <h3 class="text-primary">{{ $trip->distance_moyenne }} km</h3>
+                                        <small class="text-muted">Distance moyenne/trajet</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="border rounded p-3">
+                                        <h3 class="text-success">{{ $trip->distance_totale }} km</h3>
+                                        <small class="text-muted">Distance totale</small>
+                                    </div>
+                                </div> --}}
+                                <div class="col-md-4">
                                     <div class="border rounded p-3">
                                         <h3 class="text-info">{{ $trip->nombre_trajets }}</h3>
                                         <small class="text-muted">Nombre de trajets</small>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="border rounded p-3">
-                                        <h3 class="text-warning">{{ $trip->clients->count() }}</h3>
-                                        <small class="text-muted">Clients visités</small>
                                     </div>
                                 </div>
                             </div>

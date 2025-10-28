@@ -46,7 +46,7 @@
                                                 @foreach($statsByMotif as $stat)
                                                 <tr>
                                                     <td>
-                                                        <span class="badge badge-{{ $stat->motif == 'livraison' ? 'primary' :
+                                                        <span class="badge bg-{{ $stat->motif == 'livraison' ? 'primary' :
                                                             ($stat->motif == 'client' ? 'success' :
                                                             ($stat->motif == 'maintenance' ? 'warning' : 'secondary')) }}">
                                                             {{ ucfirst($stat->motif) }}

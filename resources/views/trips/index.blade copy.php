@@ -8,9 +8,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h4 class="mb-0">
-                        <i class="fas fa-route"></i> Liste des Trajets
-                    </h4>
+                    <h4 class="mb-0">Liste des Trajets</h4>
                     <div>
                         <a href="{{ route('trips.create') }}" class="btn btn-primary">
                             <i class="fas fa-plus"></i> Nouveau Trajet
@@ -30,7 +28,7 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <label>Véhicule</label>
-                                <select name="vehicle_id" class="form-control">
+                                <select name="vehicle_id" class="form-control select2">
                                     <option value="">Tous les véhicules</option>
                                     @foreach($vehicles as $vehicle)
                                     <option value="{{ $vehicle->id }}"
@@ -40,7 +38,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <label>Motif</label>
                                 <select name="motif" class="form-control">
                                     <option value="">Tous les motifs</option>
@@ -52,14 +50,6 @@
                                     @endforeach
                                 </select>
                             </div>
-                          {{--   <div class="col-md-2">
-                                <label>Avec clients</label>
-                                <select name="avec_clients" class="form-control">
-                                    <option value="">Tous</option>
-                                    <option value="1" {{ request('avec_clients') == '1' ? 'selected' : '' }}>Avec clients</option>
-                                    <option value="0" {{ request('avec_clients') == '0' ? 'selected' : '' }}>Sans clients</option>
-                                </select>
-                            </div> --}}
                             <div class="col-md-2">
                                 <label>Date début</label>
                                 <input type="date" name="date_debut" class="form-control"
@@ -95,12 +85,13 @@
                             <thead class="thead-dark">
                                 <tr>
                                     <th>Date</th>
-                                    <th>Nom du trajet</th>
                                     <th>Véhicule</th>
-                                    <th>Clients</th>
+                                    <th>Client</th>
                                     <th>Destination</th>
                                     <th>Motif</th>
                                     <th>Nb Trajets</th>
+                                    {{-- <th>Distance/Trajet</th>
+                                    <th>Distance Total</th> --}}
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -109,38 +100,14 @@
                                 <tr>
                                     <td>{{ $trip->date_trajet->format('d/m/Y') }}</td>
                                     <td>
-                                        @if($trip->nom_trajet)
-                                        <strong>{{ $trip->nom_trajet }}</strong>
-                                        @if($trip->description)
-                                        <br><small class="text-muted">{{ Str::limit($trip->description, 30) }}</small>
-                                        @endif
-                                        @else
-                                        <span class="text-muted">-</span>
-                                        @endif
-                                    </td>
-                                    <td>
                                         <strong>{{ $trip->vehicle->immatriculation }}</strong>
                                         <br><small class="text-muted">{{ $trip->vehicle->modele }}</small>
                                     </td>
                                     <td>
-                                        @if($trip->clients->count() > 0)
-                                        <div class="client-list">
-                                            @foreach($trip->clients->take(2) as $client)
-                                            <span class="badge bg-primary mb-1">
-                                                {{ $client->nom }}
-                                                @if($client->pivot->ordre_visite > 1)
-                                                <small>(#{{ $client->pivot->ordre_visite }})</small>
-                                                @endif
-                                            </span>
-                                            @endforeach
-                                            @if($trip->clients->count() > 2)
-                                            <span class="badge bg-secondary">
-                                                +{{ $trip->clients->count() - 2 }} autres
-                                            </span>
-                                            @endif
-                                        </div>
+                                        @if($trip->client)
+                                        <strong>{{ $trip->client->nom }}</strong>
                                         @else
-                                        <span class="text-muted">Aucun client</span>
+                                        <span class="text-muted">-</span>
                                         @endif
                                     </td>
                                     <td>{{ $trip->destination }}</td>
@@ -164,16 +131,18 @@
                                                class="btn btn-warning" title="Modifier">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <form action="{{ route('trips.destroy', $trip->id) }}"
-                                                  method="POST" class="d-inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger"
-                                                        title="Supprimer"
-                                                        onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce trajet ?')">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </form>
+                                            @if (Auth::user()->role=="admin")
+                                                <form action="{{ route('trips.destroy', $trip->id) }}"
+                                                    method="POST" class="d-inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger"
+                                                            title="Supprimer"
+                                                            onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce trajet ?')">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>

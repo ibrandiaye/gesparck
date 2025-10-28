@@ -139,14 +139,14 @@
                                             </td>
                                             <td>{{ $trip->destination }}</td>
                                             <td>
-                                                <span class="badge badge-{{ $trip->motif == 'livraison' ? 'primary' :
+                                                <span class="badge bg-{{ $trip->motif == 'livraison' ? 'primary' :
                                                     ($trip->motif == 'client' ? 'success' :
                                                     ($trip->motif == 'maintenance' ? 'warning' : 'secondary')) }}">
                                                     {{ ucfirst($trip->motif) }}
                                                 </span>
                                             </td>
                                             <td class="text-center">
-                                                <span class="badge badge-info">{{ $trip->nombre_trajets }}</span>
+                                                <span class="badge bg-info">{{ $trip->nombre_trajets }}</span>
                                             </td>
                                             <td>{{ $trip->distance_totale }} km</td>
                                             <td>{{ $trip->vehicle->conducteur ?? 'Non assigné' }}</td>
