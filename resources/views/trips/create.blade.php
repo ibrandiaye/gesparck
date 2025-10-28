@@ -58,7 +58,7 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="vehicle_id">Véhicule *</label>
-                                            <select name="vehicle_id" id="vehicle_id" class="form-control select2" required>
+                                            <select name="vehicle_id" id="vehicle_id" class="form-control " required>
                                                 <option value="">Sélectionner un véhicule</option>
                                                 @foreach($vehicles as $vehicle)
                                                 <option value="{{ $vehicle->id }}"
