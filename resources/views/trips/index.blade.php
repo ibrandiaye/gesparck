@@ -91,7 +91,7 @@
 
                     @if($trips->count() > 0)
                     <div class="table-responsive">
-                        <table class="table table-striped table-hover">
+                        <table class="table table-striped table-hover" id="tripTable">
                             <thead class="thead-dark">
                                 <tr>
                                     <th>Date</th>
@@ -183,9 +183,9 @@
                     </div>
 
                     <!-- Pagination -->
-                    <div class="d-flex justify-content-center mt-4">
+                    {{-- <div class="d-flex justify-content-center mt-4">
                         {{ $trips->links() }}
-                    </div>
+                    </div> --}}
                     @else
                     <div class="alert alert-info text-center">
                         <i class="fas fa-info-circle"></i> Aucun trajet trouvé.
@@ -197,3 +197,15 @@
     </div>
 </div>
 @endsection
+@push('scripts')
+<script>
+$('#tripTable').DataTable({
+        language: {
+            url: 'https://cdn.datatables.net/plug-ins/2.3.4/i18n/fr-FR.json',
+        },
+            ordering:true,
+            order: [[0, 'desc']]
+
+    });
+    </script>
+@endpush

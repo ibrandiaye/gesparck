@@ -78,7 +78,8 @@ class TripController extends Controller
         $trips = $query
                       ->orderBy('date_trajet', 'desc')
                       ->orderBy('vehicle_id', 'desc')
-                      ->paginate(20);
+                      ->limit(1000)
+                      ->get();
 
         $vehicles = Vehicle::all();
         $motifs = ['livraison', 'client', 'maintenance', 'administratif', 'autre'];
