@@ -17,6 +17,28 @@
                         </a>
                     </div>
                 </div>
+                      <!-- Filtres -->
+                <div class="card-body bg-light">
+                    <form method="GET" action="{{ route('trips.statistics') }}">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>Date début</label>
+                                <input type="date" name="date_debut" class="form-control"
+                                    value="{{ request('date_debut') }}">
+                            </div>
+                            <div class="col-md-4">
+                                <label>Date fin</label>
+                                <input type="date" name="date_fin" class="form-control"
+                                    value="{{ request('date_fin') }}">
+                            </div>
+                            <div class="col-md-4 d-flex align-items-end">
+                                <button type="submit" class="btn btn-outline-primary w-100">
+                                    <i class="fas fa-filter"></i> Filtrer
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
 
                 <div class="card-body">
                     <!-- Statistiques par motif -->

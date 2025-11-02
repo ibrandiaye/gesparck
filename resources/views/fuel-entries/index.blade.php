@@ -208,14 +208,14 @@
                                     <i class="fas fa-edit"></i>
                                 </a>
                                 @if (Auth::user()->role=="admin")
-                                    <form action="{{ route('fuel-entries.destroy', $entry) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-outline-danger"
-                                                onclick="return confirm('Supprimer ce remplissage?')">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
+                                            <form action="{{ route('fuel-entries.destroy', $entry) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-outline-danger"
+                                                        onclick="return confirm('Supprimer ce remplissage?')">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
                                 @endif
                             </div>
                         </td>

@@ -80,18 +80,19 @@
     <div class="card-body">
         <form method="GET" action="{{ route('repair-logs.index') }}" class="row g-3">
             <div class="col-md-2">
-                <label for="statut" class="form-label">Statut</label>
-                <select class="form-select" id="statut" name="statut">
-                    <option value="">Tous les statuts</option>
-                    <option value="planifie" {{ request('statut') == 'planifie' ? 'selected' : '' }}>Planifié</option>
-                    <option value="en_cours" {{ request('statut') == 'en_cours' ? 'selected' : '' }}>En Cours</option>
-                    <option value="termine" {{ request('statut') == 'termine' ? 'selected' : '' }}>Terminé</option>
-                    <option value="annule" {{ request('statut') == 'annule' ? 'selected' : '' }}>Annulé</option>
+                <label for="statut" class="form-label">Type</label>
+
+                     <select class="form-select @error('categorie') is-invalid @enderror"
+                        id="categorie" name="categorie" required>
+                    <option value="">Tous les types</option>
+                    <option value="sedipal-nestle" {{ request('categorie') == 'sedipal-nestle' ? 'selected' : '' }}>sedipal-nestle</option>
+                    <option value="cdn-nestle" {{ request('categorie') == 'cdn-nestle' ? 'selected' : '' }}>cdn-nestle</option>
+                    <option value="vehicule-livraison-sedipal" {{ request('categorie') == 'vehicule-livraison-sedipal' ? 'selected' : '' }}>vehicule-livraison-sedipal</option>
                 </select>
             </div>
 
             <div class="col-md-2">
-                <label for="type" class="form-label">Type d'intervention</label>
+                <label for="type" class="form-label">Type Vehicle</label>
                 <select class="form-select " id="type" name="type">
                     <option value="">Tous les types</option>
                     @foreach(['entretien_routine', 'reparation', 'vidange', 'freinage', 'pneumatique', 'electrique', 'mecanique', 'carrosserie', 'autre'] as $type)
@@ -200,8 +201,8 @@
                     <tr>
                         <td>{{ $log->date_intervention->format('d/m/Y') }}</td>
                         <td>
-                            <strong>{{ $log->vehicle->immatriculation }}</strong><br>
-                            <small class="text-muted">{{ $log->vehicle->marque }} {{ $log->vehicle->modele }}</small>
+                            <strong>{{ $log->vehicle->immatriculation ?? null }}</strong><br>
+                            <small class="text-muted">{{ $log->vehicle->marque  ?? null}} {{ $log->vehicle->modele ?? null }}</small>
                         </td>
                         <td>
                             <i class="{{ $log->type_icon }}"></i>

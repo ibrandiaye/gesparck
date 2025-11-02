@@ -55,14 +55,16 @@
                                 <select class="form-select @error('type_intervention') is-invalid @enderror"
                                         id="type_intervention" name="type_intervention" required>
                                     <option value="">Sélectionnez un type</option>
-                                    <option value="entretien_routine" {{ old('type_intervention', $repairLog->type_intervention) == 'entretien_routine' ? 'selected' : '' }}>Entretien Routine</option>
-                                    <option value="reparation" {{ old('type_intervention', $repairLog->type_intervention) == 'reparation' ? 'selected' : '' }}>Réparation</option>
+                                    {{-- <option value="entretien_routine" {{ old('type_intervention', $repairLog->type_intervention) == 'entretien_routine' ? 'selected' : '' }}>Entretien Routine</option> --}}
+                                    <option value="divers-reparation" {{ old('type_intervention', $repairLog->type_intervention) == 'divers-reparation' ? 'selected' : '' }}>Divers Reparation</option>
                                     <option value="vidange" {{ old('type_intervention', $repairLog->type_intervention) == 'vidange' ? 'selected' : '' }}>Vidange</option>
-                                    <option value="freinage" {{ old('type_intervention', $repairLog->type_intervention) == 'freinage' ? 'selected' : '' }}>Freinage</option>
-                                    <option value="pneumatique" {{ old('type_intervention', $repairLog->type_intervention) == 'pneumatique' ? 'selected' : '' }}>Pneumatique</option>
-                                    <option value="electrique" {{ old('type_intervention', $repairLog->type_intervention) == 'electrique' ? 'selected' : '' }}>Électrique</option>
+                                    {{-- <option value="freinage" {{ old('type_intervention', $repairLog->type_intervention) == 'freinage' ? 'selected' : '' }}>Freinage</option> --}}
+                                    <option value="pneu" {{ old('type_intervention', $repairLog->type_intervention) == 'pneu' ? 'selected' : '' }}>Pneu</option>
+                                     <option value="batterie" {{ old('type_intervention', $repairLog->type_intervention) == 'batterie' ? 'selected' : '' }}>batterie</option>
+                                   <option value="disque-plateau" {{ old('type_intervention', $repairLog->type_intervention) == 'disque-plateau' ? 'selected' : '' }}>Disque plateau</option>
+                                  {{--   <option value="electrique" {{ old('type_intervention', $repairLog->type_intervention) == 'electrique' ? 'selected' : '' }}>Électrique</option>
                                     <option value="mecanique" {{ old('type_intervention', $repairLog->type_intervention) == 'mecanique' ? 'selected' : '' }}>Mécanique</option>
-                                    <option value="carrosserie" {{ old('type_intervention', $repairLog->type_intervention) == 'carrosserie' ? 'selected' : '' }}>Carrosserie</option>
+                                    <option value="carrosserie" {{ old('type_intervention', $repairLog->type_intervention) == 'carrosserie' ? 'selected' : '' }}>Carrosserie</option> --}}
                                     <option value="autre" {{ old('type_intervention', $repairLog->type_intervention) == 'autre' ? 'selected' : '' }}>Autre</option>
                                 </select>
                                 @error('type_intervention')
@@ -277,10 +279,21 @@
 
 @push('scripts')
 <script>
+
 document.addEventListener('DOMContentLoaded', function() {
     const mainOeuvreInput = document.getElementById('cout_main_oeuvre');
     const piecesInput = document.getElementById('cout_pieces');
     const coutTotalSpan = document.getElementById('coutTotal');
+
+     $('#vehicle_id').on('change', function(){
+        console.log('iba');
+         const selected = $('#vehicle_id option:selected');
+          const km = selected.data('kilometrage');
+           $('#kilometrage_vehicule').val(km);
+         $('#kmHelp').text(`Kilométrage actuel du véhicule: ${parseInt(km).toLocaleString('fr-FR')} km`);
+
+    });
+
 
     function calculateTotalCost() {
         const mainOeuvre = parseFloat(mainOeuvreInput.value) || 0;

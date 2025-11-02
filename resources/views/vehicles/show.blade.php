@@ -167,8 +167,8 @@
             </div>
             <div class="card-body">
                 @if($vehicle->fuelEntries->count() > 0)
-                <div class="table-responsive">
-                    <table class="table table-sm">
+                <div class="table-responsive " >
+                    <table class="table table-sm" id="fuelEntries">
                         <thead>
                             <tr>
                                 <th>Date</th>
@@ -180,7 +180,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($vehicle->fuelEntries->sortByDesc('date_remplissage')->take(5) as $entry)
+                            @foreach($vehicle->fuelEntries as $entry)
                             <tr>
                                 <td>{{ $entry->date_remplissage->format('d/m/Y') }}</td>
                                 <td>{{ number_format($entry->litres, 1, ',', ' ') }} L</td>
@@ -193,9 +193,25 @@
                                     </a>
                                 </td>
                             </tr>
+
                             @endforeach
                         </tbody>
                     </table>
+                     @php
+                        $coutCarburant = $vehicle->fuelEntries->sum('cout_total');
+                        $nbLitre = $vehicle->fuelEntries->sum('litres');
+
+                @endphp
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Nombre de Litre : {{ number_format($nbLitre,1,',','') }} Litres </h5>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Cout Total : {{ number_format($coutCarburant,1,',','') }} XOF </h5>
+                    </div>
+                </div>
+
+
                 </div>
                 @if($vehicle->fuelEntries->count() > 5)
                 <div class="text-center mt-2">
@@ -221,7 +237,7 @@
             <div class="card-body">
                 @if($vehicle->repairLogs->count() > 0)
                 <div class="table-responsive">
-                    <table class="table table-sm">
+                    <table class="table table-sm " id="repairLogs">
                         <thead>
                             <tr>
                                 <th>Date</th>
@@ -233,7 +249,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($vehicle->repairLogs->sortByDesc('date_intervention')->take(5) as $log)
+                            @foreach($vehicle->repairLogs->sortByDesc('date_intervention') as $log)
                             <tr>
                                 <td>{{ $log->date_intervention->format('d/m/Y') }}</td>
                                 <td>
@@ -257,6 +273,11 @@
                             @endforeach
                         </tbody>
                     </table>
+                      @php
+
+                            $coutEntretien = $vehicle->repairLogs->sum('cout_total');
+                        @endphp
+                        <h5> Cout Total : {{ number_format($coutEntretien,1,',','') }} XOF</h5>
                 </div>
                 @if($vehicle->repairLogs->count() > 5)
                 <div class="text-center mt-2">
@@ -444,6 +465,32 @@
 
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+
+<script>
+
+    $('#repairLogs').DataTable({
+        language: {
+            url: 'https://cdn.datatables.net/plug-ins/2.3.4/i18n/fr-FR.json',
+        },
+            ordering:false,
+
+    });
+    $('#fuelEntries').DataTable({
+        language: {
+            url: 'https://cdn.datatables.net/plug-ins/2.3.4/i18n/fr-FR.json',
+        },
+            ordering:false,
+
+    });
+     $('#vehicles').DataTable({
+        language: {
+            url: 'https://cdn.datatables.net/plug-ins/2.3.4/i18n/fr-FR.json',
+        },
+        order: [[4, 'desc']]
+    });
+</script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Données pour le graphique de consommation

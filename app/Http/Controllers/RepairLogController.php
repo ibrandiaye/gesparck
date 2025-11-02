@@ -21,12 +21,17 @@ class RepairLogController extends Controller
         $vehicles = Vehicle::orderBy('immatriculation')->get();
 
         // Commencer la requête avec les relations
+
         $query = RepairLog::with('vehicle');
 
+
         // Filtre par statut
-        if ($request->has('statut') && $request->statut != '') {
-            $query->where('statut', $request->statut);
+        if ($request->has('categorie') && $request->categorie != '') {
+           $query->whereHas('vehicle', function($q) use ($request) {
+            $q->where('categorie', $request->categorie);
+        });
         }
+
 
         // Filtre par type d'intervention
         if ($request->has('type') && $request->type != '') {
@@ -66,6 +71,8 @@ class RepairLogController extends Controller
         $repairLogs = $query->orderBy('date_intervention', 'desc')
                             ->paginate(20)
                             ->appends($request->except('page'));
+
+       // dd($repairLogs);
 
         return view('repair-logs.index', compact('repairLogs', 'stats', 'vehicles'));
     }

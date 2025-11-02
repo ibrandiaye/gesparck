@@ -54,14 +54,16 @@
                                 <select class="form-select @error('type_intervention') is-invalid @enderror"
                                         id="type_intervention" name="type_intervention" required>
                                     <option value="">Sélectionnez un type</option>
-                                    <option value="entretien_routine" {{ old('type_intervention') == 'entretien_routine' ? 'selected' : '' }}>Entretien Routine</option>
-                                    <option value="reparation" {{ old('type_intervention') == 'reparation' ? 'selected' : '' }}>Réparation</option>
+                                    {{-- <option value="entretien_routine" {{ old('type_intervention') == 'entretien_routine' ? 'selected' : '' }}>Entretien Routine</option> --}}
+                                    <option value="divers-reparation" {{ old('type_intervention') == 'divers-reparation' ? 'selected' : '' }}>Divers Réparation</option>
                                     <option value="vidange" {{ old('type_intervention') == 'vidange' ? 'selected' : '' }}>Vidange</option>
-                                    <option value="freinage" {{ old('type_intervention') == 'freinage' ? 'selected' : '' }}>Freinage</option>
-                                    <option value="pneumatique" {{ old('type_intervention') == 'pneumatique' ? 'selected' : '' }}>Pneumatique</option>
-                                    <option value="electrique" {{ old('type_intervention') == 'electrique' ? 'selected' : '' }}>Électrique</option>
-                                    <option value="mecanique" {{ old('type_intervention') == 'mecanique' ? 'selected' : '' }}>Mécanique</option>
-                                    <option value="carrosserie" {{ old('type_intervention') == 'carrosserie' ? 'selected' : '' }}>Carrosserie</option>
+                                    {{-- <option value="freinage" {{ old('type_intervention') == 'freinage' ? 'selected' : '' }}>Freinage</option> --}}
+                                    <option value="pneu" {{ old('type_intervention') == 'pneu' ? 'selected' : '' }}>Pneu</option>
+                                    {{-- <option value="electrique" {{ old('type_intervention') == 'electrique' ? 'selected' : '' }}>Électrique</option> --}}
+{{--                                     <option value="mecanique" {{ old('type_intervention') == 'mecanique' ? 'selected' : '' }}>Mécanique</option>
+                                    <option value="carrosserie" {{ old('type_intervention') == 'carrosserie' ? 'selected' : '' }}>Carrosserie</option> --}}
+                                    <option value="batterie" {{ old('type_intervention') == 'batterie' ? 'selected' : '' }}>batterie</option>
+                                   <option value="disque-plateau" {{ old('type_intervention') == 'disque-plateau' ? 'selected' : '' }}>Disque plateau</option>
                                     <option value="autre" {{ old('type_intervention') == 'autre' ? 'selected' : '' }}>Autre</option>
                                 </select>
                                 @error('type_intervention')
@@ -273,9 +275,16 @@ document.addEventListener('DOMContentLoaded', function() {
             maximumFractionDigits: 0
         }) + ' FCFA';
     }
+    $('#vehicle_id').on('change', function(){
+        console.log('iba');
+         const selected = $('#vehicle_id option:selected');
+          const km = selected.data('kilometrage');
+           $('#kilometrage_vehicule').val(km);
+         $('#kmHelp').text(`Kilométrage actuel du véhicule: ${parseInt(km).toLocaleString('fr-FR')} km`);
 
+    });
     // Mettre à jour le kilométrage suggéré
-    vehicleSelect.addEventListener('change', function() {
+   /* vehicleSelect.addEventListener('change', function() {
         const selectedOption = vehicleSelect.options[vehicleSelect.selectedIndex];
         const kilometrageActuel = selectedOption.getAttribute('data-kilometrage');
 
@@ -283,7 +292,7 @@ document.addEventListener('DOMContentLoaded', function() {
             kilometrageInput.value = kilometrageActuel;
             kmHelp.textContent = `Kilométrage actuel du véhicule: ${parseInt(kilometrageActuel).toLocaleString('fr-FR')} km`;
         }
-    });
+    });*/
 
     // Écouter les changements de coûts
     mainOeuvreInput.addEventListener('input', calculateTotalCost);
