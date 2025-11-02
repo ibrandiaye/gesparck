@@ -92,10 +92,10 @@
             </div>
 
             <div class="col-md-2">
-                <label for="type" class="form-label">Type Vehicle</label>
+                <label for="type" class="form-label">Type Depannage</label>
                 <select class="form-select " id="type" name="type">
                     <option value="">Tous les types</option>
-                    @foreach(['entretien_routine', 'reparation', 'vidange', 'freinage', 'pneumatique', 'electrique', 'mecanique', 'carrosserie', 'autre'] as $type)
+                    @foreach(['divers-reparation', 'pneu', 'vidange', 'batterie', 'disque-plateau',  'autre'] as $type)
                         <option value="{{ $type }}" {{ request('type') == $type ? 'selected' : '' }}>
                             {{ ucfirst(str_replace('_', ' ', $type)) }}
                         </option>
