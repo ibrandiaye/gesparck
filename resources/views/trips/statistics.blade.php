@@ -116,8 +116,8 @@
                                     <h5 class="mb-0">Top 10 des Destinations</h5>
                                 </div>
                                 <div class="card-body">
-                                    <div class="table-responsive">
-                                        <table class="table table-striped">
+                                    <div class="table-responsive " >
+                                        <table class="table table-striped" id="repairLogs">
                                             <thead>
                                                 <tr>
                                                     <th>Destination</th>
@@ -148,7 +148,7 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="table-responsive">
-                                        <table class="table table-striped">
+                                        <table class="table table-striped " id="fuelEntries">
                                             <thead>
                                                 <tr>
                                                     <th>Véhicule</th>
@@ -222,3 +222,30 @@
     </div>
 </div>
 @endsection
+@push('scripts')
+
+<script>
+
+    $('#repairLogs').DataTable({
+        language: {
+            url: 'https://cdn.datatables.net/plug-ins/2.3.4/i18n/fr-FR.json',
+        },
+            ordering:false,
+
+    });
+    $('#fuelEntries').DataTable({
+        language: {
+            url: 'https://cdn.datatables.net/plug-ins/2.3.4/i18n/fr-FR.json',
+        },
+            ordering:false,
+
+    });
+     $('#vehicles').DataTable({
+        language: {
+            url: 'https://cdn.datatables.net/plug-ins/2.3.4/i18n/fr-FR.json',
+        },
+        order: [[4, 'desc']]
+    });
+</script>
+
+@endpush

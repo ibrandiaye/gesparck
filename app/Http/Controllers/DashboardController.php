@@ -89,6 +89,7 @@ class DashboardController extends Controller
         $montantCarburant = DB::table('fuel_entries')->whereMonth('date_remplissage', now()->month)->sum("cout_total");
         $repairLogs = RepairLog::with("vehicle")->whereMonth('date_intervention', now()->month)->get();
         $fuelEntries  = FuelEntry::with("trips")->whereMonth('date_remplissage', now()->month)->get();
+        //dd($fuelEntries);
         foreach ($vehicles as $key => $vehicle) {
             $montantRepairLog = 0;
             $montantFuelEntry = 0;

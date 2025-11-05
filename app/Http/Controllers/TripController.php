@@ -471,6 +471,12 @@ class TripController extends Controller
 
         // Top destinations
         $topDestinations = Trip::selectRaw('destination, COUNT(*) as nombre_visites')
+         ->when($request->has('date_debut'), function($query) use ($request) {
+                        $query->where('date_trajet', '>=', $request->date_debut);
+                    })
+                    ->when($request->has('date_fin'), function($query) use ($request) {
+                        $query->where('date_trajet', '<=', $request->date_fin);
+                    })
             ->groupBy('destination')
             ->orderByDesc('nombre_visites')
             ->limit(10)
@@ -493,9 +499,15 @@ class TripController extends Controller
         // Véhicules les plus utilisés
         $topVehicles = Trip::with('vehicle')
             ->selectRaw('vehicle_id, COUNT(*) as nombre_trajets, SUM(nombre_trajets) as total_voyages')
+             ->when($request->has('date_debut'), function($query) use ($request) {
+                        $query->where('date_trajet', '>=', $request->date_debut);
+                    })
+                    ->when($request->has('date_fin'), function($query) use ($request) {
+                        $query->where('date_trajet', '<=', $request->date_fin);
+                    })
             ->groupBy('vehicle_id')
             ->orderByDesc('nombre_trajets')
-            ->limit(10)
+            //->limit(10)
             ->get();
 
         // Statistiques clients
