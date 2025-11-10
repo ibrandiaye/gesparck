@@ -93,7 +93,7 @@ class RepairLogController extends Controller
         $validated = $request->validate([
             'vehicle_id' => 'required|exists:vehicles,id',
             'date_intervention' => 'required|date|before_or_equal:today',
-            'type_intervention' => 'required|in:entretien_routine,reparation,vidange,freinage,pneumatique,electrique,mecanique,carrosserie,autre',
+            'type_intervention' => 'required',
             'description' => 'required|string|max:255',
             'details_travaux' => 'nullable|string',
             'cout_main_oeuvre' => 'required|numeric|min:0',
@@ -175,7 +175,7 @@ class RepairLogController extends Controller
         $validated = $request->validate([
             'vehicle_id' => 'required|exists:vehicles,id',
             'date_intervention' => 'required|date|before_or_equal:today',
-            'type_intervention' => 'required|in:entretien_routine,reparation,vidange,freinage,pneumatique,electrique,mecanique,carrosserie,autre',
+            'type_intervention' => 'required',
             'description' => 'required|string|max:255',
             'details_travaux' => 'nullable|string',
             'cout_main_oeuvre' => 'required|numeric|min:0',
