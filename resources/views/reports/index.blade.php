@@ -526,7 +526,7 @@ function updateTables(tables) {
             language: {
                 url: 'https://cdn.datatables.net/plug-ins/2.3.4/i18n/fr-FR.json',
             },
-             ordering:false,
+             ordering:true,
 
             });
             if ($.fn.DataTable.isDataTable('#detailedReportTable')) {
@@ -536,7 +536,7 @@ function updateTables(tables) {
             language: {
                 url: 'https://cdn.datatables.net/plug-ins/2.3.4/i18n/fr-FR.json',
             },
-            ordering:false,
+            ordering:true,
 
             });
           if ($.fn.DataTable.isDataTable('#interventionTypesTable')) {
