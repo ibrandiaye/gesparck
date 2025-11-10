@@ -82,7 +82,7 @@
                     <label for="station" class="form-label">Station</label>
                    {{--  <input type="text" name="station" id="station" class="form-control"
                            value="{{ $filters['selectedStation'] }}" placeholder="Nom de station"> --}}
-                    <select class="form-control"  id="station" name="station" required>
+                    <select class="form-control"  id="station" name="station" >
                             <option value="">Selectionner</option>
                             <option value="Mobile castors" {{ $filters['selectedStation']  == "Mobile castors" ? "selected" : " " }}>Mobile castors</option>
                             <option value="Total Yarakh"  {{$filters['selectedStation'] == "Total Yarakh" ? "selected" : " " }}>Total Yarakh</option>

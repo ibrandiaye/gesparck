@@ -459,6 +459,7 @@ class TripController extends Controller
     {
         //dd($request->all());
         // Statistiques par motif
+        $vehicles  = Vehicle::all();
         $statsByMotif = Trip::selectRaw('motif, COUNT(*) as nombre_trajets, SUM(nombre_trajets) as total_voyages')
          ->when($request->has('date_debut'), function($query) use ($request) {
                         $query->where('date_trajet', '>=', $request->date_debut);
