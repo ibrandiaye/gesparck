@@ -83,7 +83,7 @@
                 <label for="statut" class="form-label">Type</label>
 
                      <select class="form-select @error('categorie') is-invalid @enderror"
-                        id="categorie" name="categorie" required>
+                        id="categorie" name="categorie" >
                     <option value="">Tous les types</option>
                     <option value="sedipal-nestle" {{ request('categorie') == 'sedipal-nestle' ? 'selected' : '' }}>sedipal-nestle</option>
                     <option value="cdn-nestle" {{ request('categorie') == 'cdn-nestle' ? 'selected' : '' }}>cdn-nestle</option>
