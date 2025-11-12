@@ -54,7 +54,7 @@
                                            placeholder="N° facture, client..." value="{{ request('search') }}">
                                     <div class="input-group-append">
                                         <button type="submit" class="btn btn-outline-primary">
-                                            <i class="fas fa-search"></i>
+                                            <i class="fas fa-search"></i> Filtrer
                                         </button>
                                     </div>
                                 </div>
