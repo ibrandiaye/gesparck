@@ -190,6 +190,88 @@
                 </div>
             </div>
         </div>
+        <!-- Factures du client -->
+<div class="card mb-4">
+    <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Factures du Client</h5>
+        <div>
+            <a href="{{ route('suivi-factures.create', ['client_id' => $client->id]) }}"
+               class="btn btn-dark btn-sm">
+                <i class="fas fa-plus"></i> Nouvelle Facture
+            </a>
+            <a href="{{ route('suivi-factures.by-client', $client->id) }}"
+               class="btn btn-outline-dark btn-sm">
+                <i class="fas fa-list"></i> Voir Toutes
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        @php
+            $dernieresFactures = $client->factures()
+                                       ->orderBy('date_livraison', 'desc')
+                                       ->limit(5)
+                                       ->get();
+        @endphp
+
+        @if($dernieresFactures->count() > 0)
+        <div class="table-responsive">
+            <table class="table table-sm table-striped">
+                <thead>
+                    <tr>
+                        <th>N° Facture</th>
+                        <th>Date Livraison</th>
+                        <th>Montant</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($dernieresFactures as $facture)
+                    <tr>
+                        <td>
+                            <strong>{{ $facture->numero_facture }}</strong>
+                        </td>
+                        <td>{{ $facture->date_livraison->format('d/m/Y') }}</td>
+                        <td>
+                            <span class="badge badge-success">
+                                {{ number_format($facture->montant, 2, ',', ' ') }} €
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{{ route('suivi-factures.show', $facture->id) }}"
+                               class="btn btn-info btn-sm">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mt-3 p-3 bg-light rounded">
+            <div class="row text-center">
+                <div class="col-md-6">
+                    <h5 class="text-primary">{{ $statistiques['total_factures'] }}</h5>
+                    <small class="text-muted">Total Factures</small>
+                </div>
+                <div class="col-md-6">
+                    <h5 class="text-success">{{ number_format($statistiques['montant_total_factures'], 2, ',', ' ') }} €</h5>
+                    <small class="text-muted">Montant Total</small>
+                </div>
+            </div>
+        </div>
+        @else
+        <div class="alert alert-info text-center">
+            <i class="fas fa-info-circle"></i> Aucune facture enregistrée pour ce client.
+            <br>
+            <a href="{{ route('suivi-factures.create', ['client_id' => $client->id]) }}"
+               class="btn btn-primary mt-2">
+                <i class="fas fa-plus"></i> Créer la première facture
+            </a>
+        </div>
+        @endif
+    </div>
+</div>
     </div>
 </div>
 @endsection

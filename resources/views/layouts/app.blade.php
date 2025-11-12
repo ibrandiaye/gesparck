@@ -70,7 +70,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
             <a class="navbar-brand" href="{{ route('dashboard') }}">
-                <i class="fas fa-car me-2"></i>Gestion de Flotte
+                <i class="fas fa-car me-2"></i>{{-- Gestion de Flotte --}}
             </a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -127,6 +127,11 @@
                         <a class="nav-link {{ request()->routeIs('reports.*') ? 'active' : '' }}"
                            href="{{ route('reports.index') }}">
                             <i class="fas fa-chart-bar me-1"></i>Rapports
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('suivi-factures.*') ? 'active' : '' }}" href="{{ route('suivi-factures.index') }}">
+                            <i class="fas fa-file-invoice-dollar"></i> Factures
                         </a>
                     </li>
 

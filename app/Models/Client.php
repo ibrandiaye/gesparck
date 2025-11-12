@@ -20,6 +20,10 @@ class Client extends Model
     }*/
 
 
+    public function factures()
+    {
+        return $this->hasMany(SuiviFacture::class);
+    }
 
 
 
@@ -30,7 +34,10 @@ class Client extends Model
             'total_trajets' => $this->trips()->count(),
             'total_voyages' => $this->trips()->sum('nombre_trajets'),
             'distance_totale' => $this->trips()->get()->sum('distance_totale'),
-            'dernier_trajet' => $this->trips()->latest('date_trajet')->first()
+            'dernier_trajet' => $this->trips()->latest('date_trajet')->first(),
+            'frequence_mensuelle' => $this->calculerFrequenceMensuelle(),
+            'total_factures' => $this->factures()->count(),
+            'montant_total_factures' => $this->factures()->sum('montant')
         ];
     }
         public function trips() {
@@ -38,5 +45,18 @@ class Client extends Model
         ->withPivot('ordre_visite', 'notes_livraison')
                     ->withTimestamps()
                     ->orderBy('date_trajet', 'desc');
+    }
+      // AJOUTER CETTE MÉTHODE MANQUANTE
+    public function calculerFrequenceMensuelle()
+    {
+        $totalTrajets = $this->trips()->count();
+        $premierTrajet = $this->trips()->oldest('date_trajet')->first();
+
+        if (!$premierTrajet || $totalTrajets < 2) {
+            return 0;
+        }
+
+        $moisEcoules = $premierTrajet->date_trajet->diffInMonths(now());
+        return $moisEcoules > 0 ? $totalTrajets / $moisEcoules : $totalTrajets;
     }
 }

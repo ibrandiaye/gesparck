@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FuelEntryController;
 use App\Http\Controllers\RepairLogController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\SuiviFactureController;
 use App\Http\Controllers\TripController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VehicleController;
@@ -104,9 +105,22 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/{client}/activer', [ClientController::class, 'activer'])->name('clients.activer'); */
     });
 
-            Route::get('/statistics/clients', [ClientController::class, 'statistics'])->name('clients.statistics');
+    Route::get('/statistics/clients', [ClientController::class, 'statistics'])->name('clients.statistics');
 
+     // === SUIVI FACTURES ROUTES ===
+    Route::prefix('suivi-factures')->group(function () {
+        Route::get('/', [SuiviFactureController::class, 'index'])->name('suivi-factures.index');
+        Route::get('/create', [SuiviFactureController::class, 'create'])->name('suivi-factures.create');
+        Route::post('/', [SuiviFactureController::class, 'store'])->name('suivi-factures.store');
+        Route::get('/{suiviFacture}', [SuiviFactureController::class, 'show'])->name('suivi-factures.show');
+        Route::get('/{suiviFacture}/edit', [SuiviFactureController::class, 'edit'])->name('suivi-factures.edit');
+        Route::put('/{suiviFacture}', [SuiviFactureController::class, 'update'])->name('suivi-factures.update');
+        Route::delete('/{suiviFacture}', [SuiviFactureController::class, 'destroy'])->name('suivi-factures.destroy');
 
+        // Routes supplémentaires
+        Route::get('/client/{client}', [SuiviFactureController::class, 'byClient'])->name('suivi-factures.by-client');
+        Route::get('/statistics/general', [SuiviFactureController::class, 'statistics'])->name('suivi-factures.statistics');
+    });
 });
 
 
