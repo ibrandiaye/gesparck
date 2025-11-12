@@ -89,7 +89,7 @@
             <div class="col-md-3">
                 <label class="form-label d-block">&nbsp;</label>
                 <button type="submit" id="applyFilters" class="btn btn-primary">
-                    <i class="fas fa-sync-alt"></i> Appliquer
+                    <i class="fas fa-sync-alt"></i> Filtrer
                 </button>
                 <button type="button" id="resetFilters" class="btn btn-outline-secondary">
                     <i class="fas fa-undo"></i> Réinitialiser
