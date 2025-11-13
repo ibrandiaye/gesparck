@@ -18,8 +18,8 @@ class VehicleController extends Controller
 
     public function index()
     {
-        $vehicles = Vehicle::withCount(['fuelEntries', 'repairLogs'])
-            ->latest()
+        $vehicles = Vehicle::/*withCount(['fuelEntries', 'repairLogs'])
+            ->*/latest()
             ->get();
 
         return view('vehicles.index', compact('vehicles'));

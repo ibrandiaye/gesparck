@@ -88,7 +88,8 @@ class DashboardController extends Controller
         $montantEntretien = DB::table('repair_logs')->whereMonth('date_intervention', now()->month)->sum("cout_total");
         $montantCarburant = DB::table('fuel_entries')->whereMonth('date_remplissage', now()->month)->sum("cout_total");
         $repairLogs = RepairLog::with("vehicle")->whereMonth('date_intervention', now()->month)->get();
-        $fuelEntries  = FuelEntry::with("trips")->whereMonth('date_remplissage', now()->month)->get();
+        $fuelEntries  = FuelEntry::whereMonth('date_remplissage', now()->month)->get();
+        $trips = Trip::whereMonth("date_trajet",now()->month)->get();
         //dd($fuelEntries);
         foreach ($vehicles as $key => $vehicle) {
             $montantRepairLog = 0;
@@ -105,7 +106,14 @@ class DashboardController extends Controller
                 if($vehicle->id==$fuelEntrie->vehicle_id)
                 {
                     $montantFuelEntry +=  $fuelEntrie->cout_total;
-                    $nbTrajet += $fuelEntrie->nombreTotalTrajets;
+                    //$nbTrajet += $fuelEntrie->nombreTotalTrajets;
+                }
+
+            }
+            foreach ($trips as $key2 => $trip) {
+                if($vehicle->id==$trip->vehicle_id)
+                {
+                    $nbTrajet += $fuelEntrie->nombre_trajets;
                 }
 
             }
@@ -134,6 +142,7 @@ class DashboardController extends Controller
 
         $querylisteEntrentiens = RepairLog::with(["vehicle"]);
         $querylistesTrips  = FuelEntry::with(["trips",'vehicle']);
+        $queryTrajets = DB::table("trips");
 
         if (isset($request->date_debut) && isset($request->date_fin)) {
             $dateDebut = Carbon::parse($request->input('date_debut'));
@@ -149,8 +158,9 @@ class DashboardController extends Controller
             $querynbTrajets->whereBetween('date_trajet', [$dateDebut, $dateFin]);
             $querymontantEntretien->whereBetween('date_intervention', [$dateDebut, $dateFin]);
             $querymontantCarburant->whereBetween('date_remplissage', [$dateDebut, $dateFin]);
-            $querylisteEntrentiens->whereBetween('date_intervention', [$dateDebut, $dateFin]);;
-            $querylistesTrips->whereBetween('date_remplissage', [$dateDebut, $dateFin]);;
+            $querylisteEntrentiens->whereBetween('date_intervention', [$dateDebut, $dateFin]);
+            $querylistesTrips->whereBetween('date_remplissage', [$dateDebut, $dateFin]);
+            $queryTrajets->whereBetween('date_trajet', [$dateDebut, $dateFin]);
         }
         if(isset($request->vehicle_id))
         {
@@ -163,6 +173,7 @@ class DashboardController extends Controller
             $querymontantCarburant->where('vehicle_id',$request->vehicle_id);
             $querylisteEntrentiens->where('vehicle_id', $request->vehicle_id);
             $querylistesTrips->where('vehicle_id', $request->vehicle_id);
+            $queryTrajets->where('vehicle_id', $request->vehicle_id);
         }
 
         $nbEntretiens = $querynbEntretiens->count();
@@ -173,6 +184,7 @@ class DashboardController extends Controller
         $montantCarburant = $querymontantCarburant->sum("cout_total");
         $repairLogs = $querylisteEntrentiens->get();
         $fuelEntries  = $querylistesTrips->get();
+        $trips   = $queryTrajets->get();
        //dd($repairLogs,$listesCarburants);
        foreach ($vehicles as $key => $vehicle) {
             $montantRepairLog = 0;
@@ -189,7 +201,13 @@ class DashboardController extends Controller
                 if($vehicle->id==$fuelEntrie->vehicle_id)
                 {
                     $montantFuelEntry +=  $fuelEntrie->cout_total;
-                    $nbTrajet += $fuelEntrie->nombreTotalTrajets;
+                }
+
+            }
+            foreach ($trips as $key3 => $trip) {
+                if($vehicle->id==$trip->vehicle_id)
+                {
+                    $nbTrajet += $trip->nombre_trajets;
                 }
 
             }
