@@ -55,7 +55,7 @@ class FuelEntryController extends Controller
         // Appliquer les filtres pour les statistiques aussi
         $statsQuery = clone $query;
 
-        $stats = [
+       /* $stats = [
             'totalCoutMois' => $statsQuery->when(!$request->has('month') && !$request->has('year'), function($q) {
                 return $q->thisMonth();
             })->sum('cout_total'),
@@ -68,11 +68,24 @@ class FuelEntryController extends Controller
                 return $q->thisMonth();
             })->avg('prix_litre')
         ];
+        */
+
+         $stats = [
+            'totalCoutMois' => $statsQuery->sum('cout_total'),
+
+            'totalLitresMois' => $statsQuery->sum('litres'),
+
+            'moyennePrixLitre' => $statsQuery->avg('prix_litre')
+        ];
 
         // Pagination avec conservation des paramètres de filtre
-        $fuelEntries = $query->orderBy('date_remplissage', 'desc')
+       /* $fuelEntries = $query->orderBy('date_remplissage', 'desc')
                             ->paginate(20)
-                            ->appends($request->except('page'));
+                            ->appends($request->except('page')); */
+
+        $fuelEntries = $query->orderBy('cout_total', 'desc')
+                            ->limit(3000)
+                            ->get();
 
         // Mois en français
         $frenchMonths = [

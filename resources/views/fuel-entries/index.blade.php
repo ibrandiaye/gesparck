@@ -154,13 +154,15 @@
     <div class="card-header d-flex justify-content-between align-items-center">
         <h5 class="mb-0"><i class="fas fa-history"></i> Historique des Remplissages</h5>
         <span class="badge bg-primary">
-            {{ $fuelEntries->total() }} résultat(s)
+            {{-- {{ $fuelEntries->total() }}  --}}
+
+           {{ count($fuelEntries) }}  résultat(s)
         </span>
     </div>
     <div class="card-body">
         @if($fuelEntries->count() > 0)
         <div class="table-responsive">
-            <table class="table table-striped table-hover">
+            <table class="table table-striped table-hover" id="tab_fuel_entrie">
                 <thead class="table-dark">
                     <tr>
                         <th>Date</th>
@@ -225,7 +227,7 @@
             </table>
         </div>
 
-        <!-- Pagination -->
+      {{--   <!-- Pagination -->
         <div class="d-flex justify-content-between align-items-center mt-3">
             <div class="text-muted">
                 Affichage de {{ $fuelEntries->firstItem() }} à {{ $fuelEntries->lastItem() }} sur {{ $fuelEntries->total() }} résultats
@@ -233,7 +235,7 @@
             <div>
                 {{ $fuelEntries->links() }}
             </div>
-        </div>
+        </div> --}}
         @else
         <div class="text-center py-4">
             <i class="fas fa-gas-pump fa-3x text-muted mb-3"></i>
@@ -260,7 +262,6 @@
     });
 </script>
 
-@push('scripts')
 <script>
     // Définir la date de fin par défaut sur aujourd'hui
     document.addEventListener('DOMContentLoaded', function() {
@@ -282,7 +283,12 @@
             }
         });
     });
+     $('#tab_fuel_entrie').DataTable({
+        language: {
+            url: 'https://cdn.datatables.net/plug-ins/2.3.4/i18n/fr-FR.json',
+        },
+        order: [[0, 'desc']]
+    });
 </script>
 @endpush
 
-@endpush
