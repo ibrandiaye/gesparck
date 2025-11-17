@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CarburantController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\ClientFactureController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FuelEntryController;
 use App\Http\Controllers\RepairLogController;
@@ -120,6 +121,18 @@ Route::middleware(['auth'])->group(function () {
         // Routes supplémentaires
         Route::get('/client/{client}', [SuiviFactureController::class, 'byClient'])->name('suivi-factures.by-client');
         Route::get('/statistics/general', [SuiviFactureController::class, 'statistics'])->name('suivi-factures.statistics');
+    });
+
+    Route::prefix('client-factures')->group(function () {
+        Route::get('/', [ClientFactureController::class, 'index'])->name('clientfactures.index');
+        Route::get('/create', [ClientFactureController::class, 'create'])->name('clientfactures.create');
+        Route::post('/', [ClientFactureController::class, 'store'])->name('clientfactures.store');
+        Route::get('/{client}', [ClientFactureController::class, 'show'])->name('clientfactures.show');
+        Route::get('/{client}/edit', [ClientFactureController::class, 'edit'])->name('clientfactures.edit');
+        Route::put('/{client}', [ClientFactureController::class, 'update'])->name('clientfactures.update');
+        Route::delete('/{client}', [ClientFactureController::class, 'destroy'])->name('clientfactures.destroy');
+
+
     });
 });
 

@@ -14,12 +14,14 @@ class SuiviFacture extends Model
         'numero_facture',
         'date_livraison',
         'montant',
-        'client_id'
+        'client_id',
+        'date_facture'
     ];
 
     protected $casts = [
         'date_livraison' => 'date',
-        'montant' => 'decimal:2'
+        'montant' => 'decimal:2',
+        'date_facture' => 'date'
     ];
 
     /**
@@ -27,7 +29,7 @@ class SuiviFacture extends Model
      */
     public function client()
     {
-        return $this->belongsTo(Client::class);
+        return $this->belongsTo(ClientFacture::class);
     }
 
     /**

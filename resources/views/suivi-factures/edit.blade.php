@@ -5,7 +5,7 @@
 @section('content')
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-8 offset-md-2">
+        <div class="col-md-10 offset-md-1">
             <div class="card">
                 <div class="card-header">
                     <h4 class="mb-0">
@@ -30,7 +30,7 @@
                         @method('PUT')
 
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="numero_facture">Numéro de facture *</label>
                                     <input type="text" name="numero_facture" id="numero_facture"
@@ -42,7 +42,19 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="date_livraison">Date de Facture *</label>
+                                    <input type="date" name="date_facture" id="date_facture"
+                                           class="form-control @error('date_facture') is-invalid @enderror"
+                                           value="{{ old('date_facture', $suiviFacture->date_facture->format('Y-m-d')) }}" required>
+                                    @error('date_facture')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="date_livraison">Date de livraison *</label>
                                     <input type="date" name="date_livraison" id="date_livraison"
@@ -77,7 +89,7 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="montant">Montant (€) *</label>
+                                    <label for="montant">Montant (XOF) *</label>
                                     <input type="number" name="montant" id="montant"
                                            class="form-control @error('montant') is-invalid @enderror"
                                            value="{{ old('montant', $suiviFacture->montant) }}"

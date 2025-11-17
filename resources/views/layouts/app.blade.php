@@ -134,6 +134,11 @@
                             <i class="fas fa-file-invoice-dollar"></i> Factures
                         </a>
                     </li>
+                     <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('client-factures.*') ? 'active' : '' }}" href="{{ route('clientfactures.index') }}">
+                            <i class="fas fa-user"></i> Clients Factures
+                        </a>
+                     </li>
 
                    {{--  <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle {{ request()->routeIs('reports.*') ? 'active' : '' }}"

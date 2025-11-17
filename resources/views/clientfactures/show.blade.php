@@ -15,10 +15,10 @@
                         @endif
                     </h4>
                     <div>
-                        <a href="{{ route('clients.edit', $client->id) }}" class="btn btn-warning">
+                        <a href="{{ route('clientfactures.edit', $client->id) }}" class="btn btn-warning">
                             <i class="fas fa-edit"></i> Modifier
                         </a>
-                        <a href="{{ route('clients.index') }}" class="btn btn-secondary">
+                        <a href="{{ route('clientfactures.index') }}" class="btn btn-secondary">
                             <i class="fas fa-arrow-left"></i> Retour
                         </a>
                     </div>
@@ -49,63 +49,13 @@
                         </div>
 
                         <!-- Statistiques -->
-                        <div class="col-md-6">
-                            <div class="card mb-4">
-                                <div class="card-header bg-success text-white">
-                                    <h5 class="mb-0">Statistiques</h5>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row text-center">
-                                        <div class="col-md-6 mb-3">
-                                            <div class="border rounded p-3 bg-light">
-                                                <h2 class="text-primary mb-0">{{ $statistiques['total_trajets'] }}</h2>
-                                                <small class="text-muted">Trajets effectués</small>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <div class="border rounded p-3 bg-light">
-                                                <h2 class="text-info mb-0">{{ $statistiques['total_voyages'] }}</h2>
-                                                <small class="text-muted">Total voyages</small>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="border rounded p-3 bg-light">
-                                                <h2 class="text-success mb-0">{{ $statistiques['distance_totale'] }} km</h2>
-                                                <small class="text-muted">Distance totale</small>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="border rounded p-3 bg-light">
-                                                <h2 class="text-warning mb-0">
-                                                    @if($statistiques['total_trajets'] > 0)
-                                                    {{ number_format($statistiques['distance_totale'] / $statistiques['total_trajets'], 1) }}
-                                                    @else
-                                                    0
-                                                    @endif km
-                                                </h2>
-                                                <small class="text-muted">Moyenne/trajet</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+
                     </div>
 
-                    <!-- Notes -->
-                    @if($client->notes)
-                    <div class="card mb-4">
-                        <div class="card-header bg-info text-white">
-                            <h5 class="mb-0">Notes</h5>
-                        </div>
-                        <div class="card-body">
-                            <p class="mb-0">{{ $client->notes }}</p>
-                        </div>
-                    </div>
-                    @endif
+
 
                     <!-- Historique des trajets -->
-                    <div class="card">
+                   {{--  <div class="card">
                         <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
                             <h5 class="mb-0">Historique des Trajets</h5>
                             <a href="{{ route('trips.create', ['client_id' => $client->id]) }}"
@@ -177,7 +127,7 @@
                             </div>
                             @endif
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
 
                 <div class="card-footer text-muted">

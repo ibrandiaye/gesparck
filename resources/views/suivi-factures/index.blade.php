@@ -85,6 +85,7 @@
                                 <tr>
                                     <th>N° Facture</th>
                                     <th>Client</th>
+                                    <th>Date Facture</th>
                                     <th>Date Livraison</th>
                                     <th>Montant</th>
                                     <th>Créée le</th>
@@ -105,6 +106,7 @@
                                         <br><small class="text-muted">{{ $facture->client->ville }}</small>
                                         @endif
                                     </td>
+                                    <td>{{ $facture->date_facture->format('d/m/Y') }}</td>
                                     <td>{{ $facture->date_livraison->format('d/m/Y') }}</td>
                                     <td>
                                         <span class="badge bg-success badge-pill" style="font-size: 1em;">

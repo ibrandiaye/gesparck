@@ -39,6 +39,10 @@
                                                 </span>
                                             </td>
                                         </tr>
+                                          <tr>
+                                            <td><strong>Date Facture:</strong></td>
+                                            <td>{{ $suiviFacture->date_facture->format('d/m/Y') }}</td>
+                                        </tr>
                                         <tr>
                                             <td><strong>Date de livraison:</strong></td>
                                             <td>{{ $suiviFacture->date_livraison->format('d/m/Y') }}</td>
@@ -130,12 +134,12 @@
                                 $statsClient = $suiviFacture->client->statistiques;
                             @endphp
                             <div class="row text-center">
-                                <div class="col-md-3">
+                                {{-- <div class="col-md-3">
                                     <div class="border rounded p-3">
                                         <h4 class="text-primary mb-0">{{ $statsClient['total_trajets'] }}</h4>
                                         <small class="text-muted">Trajets effectués</small>
                                     </div>
-                                </div>
+                                </div> --}}
                                 <div class="col-md-3">
                                     <div class="border rounded p-3">
                                         <h4 class="text-success mb-0">{{ $statsClient['total_factures'] }}</h4>

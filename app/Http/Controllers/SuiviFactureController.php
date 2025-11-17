@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Client;
+use App\Models\ClientFacture;
 use App\Models\SuiviFacture;
 use Illuminate\Http\Request;
 
@@ -42,7 +43,7 @@ class SuiviFactureController extends Controller
                          ->orderBy('created_at', 'desc')
                          ->paginate(20);
 
-        $clients = Client::orderBy('nom')->get();
+        $clients = ClientFacture::orderBy('nom')->get();
 
         return view('suivi-factures.index', compact('factures', 'clients'));
     }
@@ -52,7 +53,7 @@ class SuiviFactureController extends Controller
      */
     public function create()
     {
-        $clients = Client::orderBy('nom')->get();
+        $clients = ClientFacture::orderBy('nom')->get();
         return view('suivi-factures.create', compact('clients'));
     }
 
@@ -65,7 +66,8 @@ class SuiviFactureController extends Controller
             'numero_facture' => 'required|string|max:50|unique:suivi_factures',
             'date_livraison' => 'required|date',
             'montant' => 'required|numeric|min:0',
-            'client_id' => 'required|exists:clients,id'
+            'client_id' => 'required|exists:clients,id',
+            'date_facture' =>  'required|date',
         ]);
 
         try {
@@ -95,7 +97,7 @@ class SuiviFactureController extends Controller
      */
     public function edit(SuiviFacture $suiviFacture)
     {
-        $clients = Client::orderBy('nom')->get();
+        $clients = ClientFacture::orderBy('nom')->get();
         return view('suivi-factures.edit', compact('suiviFacture', 'clients'));
     }
 
@@ -108,7 +110,8 @@ class SuiviFactureController extends Controller
             'numero_facture' => 'required|string|max:50|unique:suivi_factures,numero_facture,' . $suiviFacture->id,
             'date_livraison' => 'required|date',
             'montant' => 'required|numeric|min:0',
-            'client_id' => 'required|exists:clients,id'
+            'client_id' => 'required|exists:clients,id',
+            'date_facture' =>  'required|date',
         ]);
 
         try {
