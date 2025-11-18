@@ -45,7 +45,7 @@
                                         </tr>
                                         <tr>
                                             <td><strong>Date de livraison:</strong></td>
-                                            <td>{{ $suiviFacture->date_livraison->format('d/m/Y') }}</td>
+                                            <td>{{  $suiviFacture->date_livraison ? $suiviFacture->date_livraison->format('d/m/Y') : '' }}</td>
                                         </tr>
                                         <tr>
                                             <td><strong>Montant:</strong></td>

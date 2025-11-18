@@ -121,6 +121,11 @@ Route::middleware(['auth'])->group(function () {
         // Routes supplémentaires
         Route::get('/client/{client}', [SuiviFactureController::class, 'byClient'])->name('suivi-factures.by-client');
         Route::get('/statistics/general', [SuiviFactureController::class, 'statistics'])->name('suivi-factures.statistics');
+
+         Route::post('/{suiviFacture}/update-etat', [SuiviFactureController::class, 'updateEtat'])->name('suivi-factures.update-etat');
+        Route::post('/{suiviFacture}/marquer-livre', [SuiviFactureController::class, 'marquerLivre'])->name('suivi-factures.marquer-livre');
+        Route::post('/{suiviFacture}/marquer-non-livre', [SuiviFactureController::class, 'marquerNonLivre'])->name('suivi-factures.marquer-non-livre');
+
     });
 
     Route::prefix('client-factures')->group(function () {
@@ -131,6 +136,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/{client}/edit', [ClientFactureController::class, 'edit'])->name('clientfactures.edit');
         Route::put('/{client}', [ClientFactureController::class, 'update'])->name('clientfactures.update');
         Route::delete('/{client}', [ClientFactureController::class, 'destroy'])->name('clientfactures.destroy');
+
+
 
 
     });

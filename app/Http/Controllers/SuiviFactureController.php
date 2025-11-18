@@ -15,18 +15,26 @@ class SuiviFactureController extends Controller
     public function index(Request $request)
     {
         $query = SuiviFacture::with('client');
+        $filtre = false;
 
         // Filtres
         if ($request->has('client_id') && $request->client_id) {
             $query->where('client_id', $request->client_id);
+            $filtre = true;
         }
 
         if ($request->has('date_debut') && $request->date_debut) {
             $query->where('date_livraison', '>=', $request->date_debut);
+            $filtre = true;
         }
 
         if ($request->has('date_fin') && $request->date_fin) {
             $query->where('date_livraison', '<=', $request->date_fin);
+            $filtre = true;
+        }
+        if ($request->has('etat') && $request->etat) {
+            $query->where('etat', $request->etat);
+            $filtre = true;
         }
 
         if ($request->has('search') && $request->search) {
@@ -37,11 +45,22 @@ class SuiviFactureController extends Controller
                       $q->where('nom', 'like', "%{$search}%");
                   });
             });
+            $filtre = true;
+        }
+        if($filtre==true)
+        {
+             $factures = $query->orderBy('date_facture', 'desc')
+                         ->orderBy('created_at', 'desc')
+                         ->get();
+        }
+        else{
+            $factures = $query->orderBy('date_facture', 'desc')
+                         ->orderBy('created_at', 'desc')
+                         ->limit(5000)
+                         ->get();
         }
 
-        $factures = $query->orderBy('date_livraison', 'desc')
-                         ->orderBy('created_at', 'desc')
-                         ->paginate(20);
+
 
         $clients = ClientFacture::orderBy('nom')->get();
 
@@ -64,7 +83,7 @@ class SuiviFactureController extends Controller
     {
         $validated = $request->validate([
             'numero_facture' => 'required|string|max:50|unique:suivi_factures',
-            'date_livraison' => 'required|date',
+            //'date_livraison' => 'required|date',
             'montant' => 'required|numeric|min:0',
             'client_id' => 'required|exists:clients,id',
             'date_facture' =>  'required|date',
@@ -108,7 +127,7 @@ class SuiviFactureController extends Controller
     {
         $validated = $request->validate([
             'numero_facture' => 'required|string|max:50|unique:suivi_factures,numero_facture,' . $suiviFacture->id,
-            'date_livraison' => 'required|date',
+            //'date_livraison' => 'required|date',
             'montant' => 'required|numeric|min:0',
             'client_id' => 'required|exists:clients,id',
             'date_facture' =>  'required|date',
@@ -186,6 +205,72 @@ class SuiviFactureController extends Controller
                           ->paginate(20);
 
         return view('suivi-factures.by-client', compact('client', 'factures'));
+    }
+
+     public function updateEtat(Request $request, SuiviFacture $suiviFacture)
+    {
+        $request->validate([
+            'etat' => 'required|in:livré,non livré',
+            'date_livraison' => 'nullable|date|required_if:etat,livré'
+        ]);
+
+        try {
+            $suiviFacture->update([
+                'etat' => $request->etat,
+                'date_livraison' => $request->etat === 'livré' ? $request->date_livraison : null
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'État de livraison mis à jour avec succès',
+                'facture' => [
+                    'id' => $suiviFacture->id,
+                    'etat' => $suiviFacture->etat,
+                    'date_livraison' => $suiviFacture->date_livraison ? $suiviFacture->date_livraison->format('d/m/Y') : null,
+                    'etat_badge' => $suiviFacture->etat === 'livré' ? 'success' : 'warning'
+                ]
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur lors de la mise à jour: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Marquer comme livré (action rapide)
+     */
+    public function marquerLivre(SuiviFacture $suiviFacture)
+    {
+        try {
+            $suiviFacture->marquerCommeLivre();
+
+            return back()->with('success', 'Facture marquée comme livrée avec succès!');
+
+        } catch (\Exception $e) {
+            return back()->withErrors([
+                'error' => 'Erreur lors de la mise à jour: ' . $e->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * Marquer comme non livré (action rapide)
+     */
+    public function marquerNonLivre(SuiviFacture $suiviFacture)
+    {
+        try {
+            $suiviFacture->marquerCommeNonLivre();
+
+            return back()->with('success', 'Facture marquée comme non livrée avec succès!');
+
+        } catch (\Exception $e) {
+            return back()->withErrors([
+                'error' => 'Erreur lors de la mise à jour: ' . $e->getMessage()
+            ]);
+        }
     }
 
 }

@@ -15,7 +15,8 @@ class SuiviFacture extends Model
         'date_livraison',
         'montant',
         'client_id',
-        'date_facture'
+        'date_facture',
+        'etat' // Nouveau
     ];
 
     protected $casts = [
@@ -53,6 +54,43 @@ class SuiviFacture extends Model
      */
     public function getMoisLivraisonAttribute()
     {
-        return $this->date_livraison->format('F Y');
+        if($this->date_livraison)
+            return $this->date_livraison->format('F Y');
+        else
+            return null;
     }
+
+     /**
+     * Scope pour les factures non livrées
+     */
+    public function scopeNonLivrees($query)
+    {
+        return $query->where('etat', 'non livré');
+    }
+
+
+    /**
+     * Méthode pour marquer comme livré
+     */
+    public function marquerCommeLivre($dateLivraison = null)
+    {
+        $this->update([
+            'etat' => 'livré',
+            'date_livraison' => $dateLivraison ?? now()
+        ]);
+    }
+
+    /**
+     * Méthode pour marquer comme non livré
+     */
+    public function marquerCommeNonLivre()
+    {
+        $this->update([
+            'etat' => 'non livré',
+            'date_livraison' => null
+        ]);
+    }
+
+
+
 }

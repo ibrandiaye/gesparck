@@ -28,7 +28,7 @@
                         @csrf
 
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="numero_facture">Numéro de facture *</label>
                                     <input type="text" name="numero_facture" id="numero_facture"
@@ -40,7 +40,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="date_livraison">Date de Facture *</label>
                                     <input type="date" name="date_facture" id="date_facture"
@@ -51,7 +51,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            {{-- <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="date_livraison">Date de livraison *</label>
                                     <input type="date" name="date_livraison" id="date_livraison"
@@ -61,7 +61,7 @@
                                     <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
 
                         <div class="row">
