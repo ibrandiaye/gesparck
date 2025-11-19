@@ -122,7 +122,7 @@
                                                                  aria-valuenow="{{ $percentage }}"
                                                                  aria-valuemin="0"
                                                                  aria-valuemax="100">
-                                                                {{ number_format($percentage, 1) }}%
+                                                               <div class="text-danger">{{ number_format($percentage, 1) }}%</div>
                                                             </div>
                                                         </div>
                                                         @else
