@@ -105,7 +105,7 @@
                                         <option value="{{ $carburant->id }}"
                                             {{ old('carburant_id') == $carburant->id ? 'selected' : '' }}
                                            >
-                                            {{ $carburant->libelle }} - {{ $carburant->montant }} XOF
+                                            {{ $carburant->libelle }} - {{ $carburant->montant }} CFA
                                         </option>
                                     @endforeach
                                 </select>

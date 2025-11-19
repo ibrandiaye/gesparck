@@ -233,7 +233,7 @@
                         <td>{{ $facture->date_livraison->format('d/m/Y') }}</td>
                         <td>
                             <span class="badge badge-success">
-                                {{ number_format($facture->montant, 2, ',', ' ') }} XOF
+                                {{ number_format($facture->montant, 2, ',', ' ') }} CFA
                             </span>
                         </td>
                         <td>
@@ -255,7 +255,7 @@
                     <small class="text-muted">Total Factures</small>
                 </div>
                 <div class="col-md-6">
-                    <h5 class="text-success">{{ number_format($statistiques['montant_total_factures'], 2, ',', ' ') }} XOF</h5>
+                    <h5 class="text-success">{{ number_format($statistiques['montant_total_factures'], 2, ',', ' ') }} CFA</h5>
                     <small class="text-muted">Montant Total</small>
                 </div>
             </div>

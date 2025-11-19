@@ -120,7 +120,7 @@
 
                                     <td>
                                         <span class="badge bg-success badge-pill" style="font-size: 1em;">
-                                            {{ number_format($facture->montant, 2, ',', ' ') }} XOF
+                                            {{ number_format($facture->montant, 2, ',', ' ') }} CFA
                                         </span>
                                     </td>
                                     <td>
@@ -206,7 +206,7 @@
                         </div>
                         <div class="col-md-3">
                             <h5 class="mb-0 text-success">
-                                {{ number_format($factures->sum('montant'), 2, ',', ' ') }} XOF
+                                {{ number_format($factures->sum('montant'), 2, ',', ' ') }} CFA
                             </h5>
                             <small>Montant Total</small>
                         </div>

@@ -207,7 +207,7 @@
                         <h5>Nombre de Litre : {{ number_format($nbLitre,1,',','') }} Litres </h5>
                     </div>
                     <div class="col-md-6">
-                        <h5>Cout Total : {{ number_format($coutCarburant,1,',','') }} XOF </h5>
+                        <h5>Cout Total : {{ number_format($coutCarburant,1,',','') }} CFA </h5>
                     </div>
                 </div>
 
@@ -277,7 +277,7 @@
 
                             $coutEntretien = $vehicle->repairLogs->sum('cout_total');
                         @endphp
-                        <h5> Cout Total : {{ number_format($coutEntretien,1,',','') }} XOF</h5>
+                        <h5> Cout Total : {{ number_format($coutEntretien,1,',','') }} CFA</h5>
                 </div>
                 @if($vehicle->repairLogs->count() > 5)
                 <div class="text-center mt-2">

@@ -89,7 +89,7 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="montant">Montant (XOF) *</label>
+                                    <label for="montant">Montant (CFA) *</label>
                                     <input type="number" name="montant" id="montant"
                                            class="form-control @error('montant') is-invalid @enderror"
                                            value="{{ old('montant', $suiviFacture->montant) }}"
