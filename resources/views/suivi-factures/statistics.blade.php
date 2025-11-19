@@ -83,7 +83,7 @@
                                                 @foreach($stats['top_clients'] as $index => $client)
                                                 <tr>
                                                     <td>
-                                                        <span class="badge badge-{{ $index < 3 ? 'warning' : 'secondary' }}">
+                                                        <span class="badge bg-{{ $index < 3 ? 'warning' : 'secondary' }}">
                                                             {{ $index + 1 }}
                                                         </span>
                                                     </td>
@@ -98,7 +98,7 @@
                                                         @endif
                                                     </td>
                                                     <td class="text-center">
-                                                        <span class="badge badge-primary badge-pill">{{ $client->nombre_factures }}</span>
+                                                        <span class="badge bg-primary badge-pill">{{ $client->nombre_factures }}</span>
                                                     </td>
                                                     <td>
                                                         <strong class="text-success">
