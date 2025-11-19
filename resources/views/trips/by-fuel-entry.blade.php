@@ -38,7 +38,7 @@
                                     </div>
                                     <div class="col-md-3">
                                         <strong>Coût:</strong><br>
-                                        {{ number_format($fuelEntry->cout, 2, ',', ' ') }} CFA
+                                        {{ number_format($fuelEntry->cout, 0, ',', ' ') }} CFA
                                     </div>
                                     <div class="col-md-3">
                                         <strong>KM au plein:</strong><br>

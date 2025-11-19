@@ -65,7 +65,7 @@ class FuelEntriesExport implements FromCollection, WithHeadings, WithMapping, Wi
             number_format($entry->litres, 1, ',', ' '),
             number_format($entry->cout_total, 0, ',', ' '),
             number_format($entry->kilometrage, 0, ',', ' '),
-            $entry->consommation ? number_format($entry->consommation, 2, ',', ' ') . ' L/100km' : 'N/A'
+            $entry->consommation ? number_format($entry->consommation, 0, ',', ' ') . ' L/100km' : 'N/A'
         ];
     }
 

@@ -65,7 +65,7 @@ class GlobalReportExport implements FromCollection, WithHeadings, WithMapping, W
             number_format($totalCost, 0, ',', ' '),
             $vehicle->fuelEntries->count(),
             $vehicle->repairLogs->count(),
-            $vehicle->consommation_moyenne ? number_format($vehicle->consommation_moyenne, 2, ',', ' ') : 'N/A'
+            $vehicle->consommation_moyenne ? number_format($vehicle->consommation_moyenne, 0, ',', ' ') : 'N/A'
         ];
     }
 

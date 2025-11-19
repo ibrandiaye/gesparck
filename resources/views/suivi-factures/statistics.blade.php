@@ -32,7 +32,7 @@
                         <div class="col-md-3 col-6 mb-3">
                             <div class="card bg-success text-white text-center">
                                 <div class="card-body py-3">
-                                    <h3 class="mb-0">{{ number_format($stats['montant_total'], 2, ',', ' ') }} CFA</h3>
+                                    <h3 class="mb-0">{{ number_format($stats['montant_total'], 0, ',', ' ') }} CFA</h3>
                                     <small>Montant Total</small>
                                 </div>
                             </div>
@@ -40,7 +40,7 @@
                         <div class="col-md-3 col-6 mb-3">
                             <div class="card bg-info text-white text-center">
                                 <div class="card-body py-3">
-                                    <h3 class="mb-0">{{ number_format($stats['moyenne_montant'], 2, ',', ' ') }} CFA</h3>
+                                    <h3 class="mb-0">{{ number_format($stats['moyenne_montant'], 0, ',', ' ') }} CFA</h3>
                                     <small>Moyenne/Facture</small>
                                 </div>
                             </div>
@@ -102,12 +102,12 @@
                                                     </td>
                                                     <td>
                                                         <strong class="text-success">
-                                                            {{ number_format($client->montant_total, 2, ',', ' ') }} CFA
+                                                            {{ number_format($client->montant_total, 0, ',', ' ') }} CFA
                                                         </strong>
                                                     </td>
                                                     <td>
                                                         <span class="text-info">
-                                                            {{ number_format($client->montant_total / $client->nombre_factures, 2, ',', ' ') }} CFA
+                                                            {{ number_format($client->montant_total / $client->nombre_factures, 0, ',', ' ') }} CFA
                                                         </span>
                                                     </td>
                                                     <td width="25%">
@@ -179,12 +179,12 @@
                                                     </td>
                                                     <td>
                                                         <span class="text-success">
-                                                            {{ number_format($stat->montant_total, 2, ',', ' ') }} CFA
+                                                            {{ number_format($stat->montant_total, 0, ',', ' ') }} CFA
                                                         </span>
                                                     </td>
                                                     <td>
                                                         <span class="text-info">
-                                                            {{ number_format($moyenne, 2, ',', ' ') }} CFA
+                                                            {{ number_format($moyenne, 0, ',', ' ') }} CFA
                                                         </span>
                                                     </td>
                                                     <td>

@@ -51,7 +51,7 @@
                                             <td><strong>Montant:</strong></td>
                                             <td>
                                                 <h4 class="text-success mb-0">
-                                                    {{ number_format($suiviFacture->montant, 2, ',', ' ') }} CFA
+                                                    {{ number_format($suiviFacture->montant, 0, ',', ' ') }} CFA
                                                 </h4>
                                             </td>
                                         </tr>
@@ -149,7 +149,7 @@
                                 <div class="col-md-3">
                                     <div class="border rounded p-3">
                                         <h4 class="text-warning mb-0">
-                                            {{ number_format($statsClient['montant_total_factures'], 2, ',', ' ') }} CFA
+                                            {{ number_format($statsClient['montant_total_factures'], 0, ',', ' ') }} CFA
                                         </h4>
                                         <small class="text-muted">Montant total</small>
                                     </div>
@@ -158,7 +158,7 @@
                                     <div class="border rounded p-3">
                                         <h4 class="text-info mb-0">
                                             @if($statsClient['total_factures'] > 0)
-                                            {{ number_format($statsClient['montant_total_factures'] / $statsClient['total_factures'], 2, ',', ' ') }} CFA
+                                            {{ number_format($statsClient['montant_total_factures'] / $statsClient['total_factures'], 0, ',', ' ') }} CFA
                                             @else
                                             0,00 CFA
                                             @endif

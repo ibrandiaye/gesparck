@@ -79,7 +79,7 @@
                             <tr>
                                 <th>Consommation:</th>
                                 <td class="fw-bold text-warning">
-                                    {{ number_format($fuelEntry->consommation, 2, ',', ' ') }} L/100km
+                                    {{ number_format($fuelEntry->consommation, 0, ',', ' ') }} L/100km
                                 </td>
                             </tr>
 
@@ -132,7 +132,7 @@
                     <div class="list-group-item d-flex justify-content-between align-items-center">
                         <span>Consommation moyenne:</span>
                         <strong class="text-primary">
-                            {{ number_format($vehicleStats['consommation_moyenne'], 2, ',', ' ') }} L/100km
+                            {{ number_format($vehicleStats['consommation_moyenne'], 0, ',', ' ') }} L/100km
                         </strong>
                     </div>
                     <div class="list-group-item d-flex justify-content-between align-items-center">
