@@ -71,7 +71,7 @@
                                     <td>{{ $facture->date_livraison->format('d/m/Y') }}</td>
                                     <td>
                                         <span class="badge bg-success badge-pill" style="font-size: 1em;">
-                                            {{ number_format($facture->montant, 2, ',', ' ') }} CFA
+                                            {{ number_format($facture->montant) }} CFA
                                         </span>
                                     </td>
                                     <td>
