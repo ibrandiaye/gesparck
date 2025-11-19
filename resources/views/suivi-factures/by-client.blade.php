@@ -41,7 +41,7 @@
                                     </div>
                                     <div class="col-md-3">
                                         <strong>Montant total:</strong><br>
-                                        <span class=" text-danger">
+                                        <span class=" badge bg-danger">
                                             <h4>{{ number_format($factures->sum('montant'), 0, ',', ' ') }} CFA </h4>
                                         </span>
                                     </div>
