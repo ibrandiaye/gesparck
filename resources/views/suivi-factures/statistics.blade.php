@@ -175,7 +175,7 @@
                                                         <strong>{{ $date->locale('fr')->monthName }} {{ $stat->annee }}</strong>
                                                     </td>
                                                     <td class="text-center">
-                                                        <span class="badge badge-primary badge-pill">{{ $stat->nombre_factures }}</span>
+                                                        <span class="badge bg-primary badge-pill">{{ $stat->nombre_factures }}</span>
                                                     </td>
                                                     <td>
                                                         <span class="text-success">

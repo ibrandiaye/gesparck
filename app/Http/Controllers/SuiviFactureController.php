@@ -188,7 +188,7 @@ class SuiviFactureController extends Controller
                 ->selectRaw('client_id, COUNT(*) as nombre_factures, SUM(montant) as montant_total')
                 ->groupBy('client_id')
                 ->orderByDesc('montant_total')
-                ->limit(10)
+
                 ->get()
         ];
 
