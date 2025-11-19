@@ -287,7 +287,7 @@
         language: {
             url: 'https://cdn.datatables.net/plug-ins/2.3.4/i18n/fr-FR.json',
         },
-        order: [[0, 'desc']],
+        order: [[0, 'asc']],
          lengthMenu: [10, 25, 50, 100, 200,500,1000]
     });
 </script>
