@@ -83,7 +83,7 @@ class FuelEntryController extends Controller
                             ->paginate(20)
                             ->appends($request->except('page')); */
 
-        $fuelEntries = $query->orderBy('cout_total', 'desc')
+        $fuelEntries = $query->orderBy('date_remplissage', 'desc')
                             ->limit(3000)
                             ->get();
 
