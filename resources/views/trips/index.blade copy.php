@@ -61,7 +61,7 @@
                                     value="{{ request('date_fin') }}">
                             </div>
                             <div class="col-md-2 d-flex align-items-end">
-                                <button type="submit" class="btn btn-outline-primary w-100">
+                                <button type="submit" class="btn btn-primary w-100">
                                     <i class="fas fa-filter"></i> Filtrer
                                 </button>
                             </div>

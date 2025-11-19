@@ -110,7 +110,7 @@
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="mb-0"><i class="fas fa-chart-line"></i> Consommation Moyenne par Véhicule</h5>
                 <div class="btn-group">
-                    <button type="button" class="btn btn-sm btn-outline-primary" id="exportConsumption">
+                    <button type="button" class="btn btn-sm btn-primary" id="exportConsumption">
                         <i class="fas fa-download"></i> Exporter
                     </button>
                     <button type="button" class="btn btn-sm btn-outline-info" id="toggleConsumptionView">
@@ -135,7 +135,7 @@
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="mb-0"><i class="fas fa-money-bill-wave"></i> Coût Carburant Mensuel</h5>
                 <div class="btn-group">
-                    <button type="button" class="btn btn-sm btn-outline-primary" id="exportCost">
+                    <button type="button" class="btn btn-sm btn-primary" id="exportCost">
                         <i class="fas fa-download"></i> Exporter
                     </button>
                     <button type="button" class="btn btn-sm btn-outline-success" id="toggleTrendLine">
@@ -238,7 +238,7 @@
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="mb-0"><i class="fas fa-chart-area"></i> Analyse Détaillée de Consommation</h5>
                 <div class="btn-group">
-                    <button type="button" class="btn btn-sm btn-outline-primary" id="detailedView">
+                    <button type="button" class="btn btn-sm btn-primary" id="detailedView">
                         <i class="fas fa-expand"></i> Vue détaillée
                     </button>
                 </div>

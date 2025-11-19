@@ -7,7 +7,7 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1><i class="fas fa-chart-bar"></i> Rapports & Statistiques</h1>
     <div class="btn-group">
-        <button class="btn btn-outline-primary" id="exportPdf">
+        <button class="btn btn-primary" id="exportPdf">
             <i class="fas fa-file-pdf"></i> Export PDF
         </button>
         <button class="btn btn-outline-success" id="exportExcel">
@@ -138,7 +138,7 @@
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="mb-0"><i class="fas fa-chart-pie"></i> Répartition des Coûts</h5>
                 <div class="btn-group">
-                    <button class="btn btn-sm btn-outline-primary" onclick="toggleChartType('costDistribution')">
+                    <button class="btn btn-sm btn-primary" onclick="toggleChartType('costDistribution')">
                         <i class="fas fa-exchange-alt"></i>
                     </button>
                 </div>
@@ -155,7 +155,7 @@
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="mb-0"><i class="fas fa-chart-line"></i> Évolution des Coûts Mensuels</h5>
                 <div class="btn-group">
-                    <button class="btn btn-sm btn-outline-primary" onclick="toggleChartView('monthlyCosts')">
+                    <button class="btn btn-sm btn-primary" onclick="toggleChartView('monthlyCosts')">
                         <i class="fas fa-exchange-alt"></i>
                     </button>
                 </div>
@@ -262,7 +262,7 @@
                         <i class="fas fa-file-pdf fa-3x text-primary mb-3"></i>
                         <h5>Rapport PDF</h5>
                         <p class="text-muted">Rapport complet avec graphiques</p>
-                        <button class="btn btn-outline-primary w-100" id="generatePdf">
+                        <button class="btn btn-primary w-100" id="generatePdf">
                             <i class="fas fa-download me-2"></i>Générer PDF
                         </button>
                     </div>

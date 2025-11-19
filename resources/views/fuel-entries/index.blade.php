@@ -200,7 +200,7 @@
                         <td>{{ $entry->station  }}</td>
                         <td>
                             <div class="btn-group btn-group-sm">
-                                 <a href="{{ route('trips.create') }}?vehicle_id={{ $entry->vehicle_id }}&entry_id={{ $entry->id }}" class="btn btn-outline-primary" title="Ajouter Trajet">
+                                 <a href="{{ route('trips.create') }}?vehicle_id={{ $entry->vehicle_id }}&entry_id={{ $entry->id }}" class="btn btn-primary" title="Ajouter Trajet">
                                     <i class="fas fa-route"></i>
                                 </a>
                                 <a href="{{ route('fuel-entries.show', $entry) }}" class="btn btn-outline-info">
@@ -241,7 +241,7 @@
             <i class="fas fa-gas-pump fa-3x text-muted mb-3"></i>
             <h5 class="text-muted">Aucun remplissage trouvé</h5>
             <p class="text-muted">Aucun résultat ne correspond à vos critères de recherche.</p>
-            <a href="{{ route('fuel-entries.index') }}" class="btn btn-outline-primary">
+            <a href="{{ route('fuel-entries.index') }}" class="btn btn-primary">
                 <i class="fas fa-redo"></i> Réinitialiser les filtres
             </a>
         </div>

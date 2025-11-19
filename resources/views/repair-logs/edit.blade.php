@@ -213,7 +213,7 @@
                         @if($repairLog->facture)
                         <div class="mt-2">
                             <small class="text-muted">Facture actuelle: </small>
-                            <a href="{{ route('repair-logs.download-facture', $repairLog) }}" class="btn btn-sm btn-outline-primary">
+                            <a href="{{ route('repair-logs.download-facture', $repairLog) }}" class="btn btn-sm btn-primary">
                                 <i class="fas fa-download"></i> Télécharger
                             </a>
                         </div>

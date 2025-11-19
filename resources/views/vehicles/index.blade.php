@@ -27,7 +27,7 @@
                             {{ ucfirst($vehicle->etat) }}
                         </span>
                         <div>
-                            <a href="{{ route('vehicles.edit', $vehicle) }}" class="btn btn-sm btn-outline-primary">
+                            <a href="{{ route('vehicles.edit', $vehicle) }}" class="btn btn-sm btn-primary">
                                 <i class="fas fa-edit"></i>
                             </a>
                             <form action="{{ route('vehicles.destroy', $vehicle) }}" method="POST" class="d-inline">
@@ -57,7 +57,7 @@
                             <i class="fas fa-eye"></i> Détails
                         </a>
                          <a href="{{ route('fuel-entries.create') }}?vehicle_id={{ $vehicle->id }}"
-                       class="btn btn-outline-primary btn-sm">
+                       class="btn btn-primary btn-sm">
                         <i class="fas fa-gas-pump"></i> {{-- <i class="fas fa-plus"></i>  --}} Ajouter Carburant
                     </a>
                     <a href="{{ route('repair-logs.create') }}?vehicle_id={{ $vehicle->id }}"
@@ -81,7 +81,7 @@
                             {{ ucfirst($vehicle->etat) }}
                         </span>
                         <div>
-                            <a href="{{ route('vehicles.edit', $vehicle) }}" class="btn btn-sm btn-outline-primary">
+                            <a href="{{ route('vehicles.edit', $vehicle) }}" class="btn btn-sm btn-primary">
                                 <i class="fas fa-edit"></i>
                             </a>
                             @if (Auth::user()->role=="admin")
@@ -114,7 +114,7 @@
                             <i class="fas fa-eye"></i> Détails
                         </a>
                          <a href="{{ route('fuel-entries.create') }}?vehicle_id={{ $vehicle->id }}"
-                       class="btn btn-outline-primary btn-sm">
+                       class="btn btn-primary btn-sm">
                         <i class="fas fa-gas-pump"></i> {{-- <i class="fas fa-plus"></i>  --}} Ajouter Carburant
                     </a>
                     <a href="{{ route('repair-logs.create') }}?vehicle_id={{ $vehicle->id }}"
@@ -138,7 +138,7 @@
                             {{ ucfirst($vehicle->etat) }}
                         </span>
                         <div>
-                            <a href="{{ route('vehicles.edit', $vehicle) }}" class="btn btn-sm btn-outline-primary">
+                            <a href="{{ route('vehicles.edit', $vehicle) }}" class="btn btn-sm btn-primary">
                                 <i class="fas fa-edit"></i>
                             </a>
                             <form action="{{ route('vehicles.destroy', $vehicle) }}" method="POST" class="d-inline">
@@ -168,7 +168,7 @@
                             <i class="fas fa-eye"></i> Détails
                         </a>
                          <a href="{{ route('fuel-entries.create') }}?vehicle_id={{ $vehicle->id }}"
-                       class="btn btn-outline-primary btn-sm">
+                       class="btn btn-primary btn-sm">
                         <i class="fas fa-gas-pump"></i> {{-- <i class="fas fa-plus"></i>  --}} Ajouter Carburant
                     </a>
                     <a href="{{ route('repair-logs.create') }}?vehicle_id={{ $vehicle->id }}"
@@ -193,7 +193,7 @@
                             {{ ucfirst($vehicle->etat) }}
                         </span>
                         <div>
-                            <a href="{{ route('vehicles.edit', $vehicle) }}" class="btn btn-sm btn-outline-primary">
+                            <a href="{{ route('vehicles.edit', $vehicle) }}" class="btn btn-sm btn-primary">
                                 <i class="fas fa-edit"></i>
                             </a>
                             <form action="{{ route('vehicles.destroy', $vehicle) }}" method="POST" class="d-inline">
@@ -223,7 +223,7 @@
                             <i class="fas fa-eye"></i> Détails
                         </a>
                          <a href="{{ route('fuel-entries.create') }}?vehicle_id={{ $vehicle->id }}"
-                       class="btn btn-outline-primary btn-sm">
+                       class="btn btn-primary btn-sm">
                         <i class="fas fa-gas-pump"></i>  {{-- <i class="fas fa-plus"></i>  --}}  Carburant
                     </a>
                     <a href="{{ route('repair-logs.create') }}?vehicle_id={{ $vehicle->id }}"

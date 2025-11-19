@@ -215,7 +215,7 @@
                 </div>
                 @if($vehicle->fuelEntries->count() > 5)
                 <div class="text-center mt-2">
-                    <a href="{{ route('fuel-entries.index') }}?vehicle={{ $vehicle->id }}" class="btn btn-sm btn-outline-primary">
+                    <a href="{{ route('fuel-entries.index') }}?vehicle={{ $vehicle->id }}" class="btn btn-sm btn-primary">
                         Voir tout l'historique
                     </a>
                 </div>
@@ -281,7 +281,7 @@
                 </div>
                 @if($vehicle->repairLogs->count() > 5)
                 <div class="text-center mt-2">
-                    <a href="{{ route('repair-logs.index') }}?vehicle={{ $vehicle->id }}" class="btn btn-sm btn-outline-primary">
+                    <a href="{{ route('repair-logs.index') }}?vehicle={{ $vehicle->id }}" class="btn btn-sm btn-primary">
                         Voir tout l'historique
                     </a>
                 </div>
@@ -302,7 +302,7 @@
             <div class="card-body">
                 <div class="d-grid gap-2">
                     <a href="{{ route('fuel-entries.create') }}?vehicle_id={{ $vehicle->id }}"
-                       class="btn btn-outline-primary btn-sm">
+                       class="btn btn-primary btn-sm">
                         <i class="fas fa-gas-pump"></i> Ajouter Carburant
                     </a>
                     <a href="{{ route('repair-logs.create') }}?vehicle_id={{ $vehicle->id }}"

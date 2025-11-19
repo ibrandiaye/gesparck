@@ -260,7 +260,7 @@
             <i class="fas fa-tools fa-3x text-muted mb-3"></i>
             <h5 class="text-muted">Aucune intervention trouvée</h5>
             <p class="text-muted">Aucun résultat ne correspond à vos critères de recherche.</p>
-            <a href="{{ route('repair-logs.index') }}" class="btn btn-outline-primary me-2">
+            <a href="{{ route('repair-logs.index') }}" class="btn btn-primary me-2">
                 <i class="fas fa-redo"></i> Réinitialiser les filtres
             </a>
             <a href="{{ route('repair-logs.create') }}" class="btn btn-primary">

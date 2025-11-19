@@ -39,14 +39,14 @@
                                     <input type="text" name="search" class="form-control"
                                            placeholder="Nom, ..." value="{{ request('search') }}">
                                     {{-- <div class="input-group-append">
-                                        <button type="submit" class="btn btn-outline-primary">
+                                        <button type="submit" class="btn btn-primary">
                                             <i class="fas fa-search"></i> Filtrer
                                         </button>
                                     </div> --}}
                                 </div>
                             </div>
                             <div class="col-md-2 d-flex align-items-end">
-                                <button type="submit" class="btn btn-outline-primary w-100">
+                                <button type="submit" class="btn btn-primary w-100">
                                     <i class="fas fa-search"></i> Filtrer
                                 </button>
                             </div>

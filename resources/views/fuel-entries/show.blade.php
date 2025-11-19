@@ -198,7 +198,7 @@
             <div class="card-body">
                 <div class="d-grid gap-2">
                     <a href="{{ route('fuel-entries.create') }}?vehicle_id={{ $fuelEntry->vehicle_id }}"
-                       class="btn btn-outline-primary btn-sm">
+                       class="btn btn-primary btn-sm">
                         <i class="fas fa-plus"></i> Nouveau Remplissage
                     </a>
                     <a href="{{ route('vehicles.show', $fuelEntry->vehicle) }}"

@@ -139,7 +139,7 @@
                 <div class="row mt-3">
                     <div class="col-12">
                         <h5>Facture</h5>
-                        <a href="{{ route('repair-logs.download-facture', $repairLog) }}" class="btn btn-outline-primary">
+                        <a href="{{ route('repair-logs.download-facture', $repairLog) }}" class="btn btn-primary">
                             <i class="fas fa-download"></i> Télécharger la Facture
                         </a>
                     </div>
@@ -158,7 +158,7 @@
             <div class="card-body">
                 <div class="d-grid gap-2">
                     <a href="{{ route('repair-logs.create') }}?vehicle_id={{ $repairLog->vehicle_id }}"
-                       class="btn btn-outline-primary btn-sm">
+                       class="btn btn-primary btn-sm">
                         <i class="fas fa-plus"></i> Nouvelle Intervention
                     </a>
                     <a href="{{ route('vehicles.show', $repairLog->vehicle) }}"

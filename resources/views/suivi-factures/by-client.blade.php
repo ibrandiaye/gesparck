@@ -90,7 +90,7 @@
                                                     <i class="fas fa-clock"></i> Non livré
                                                 </span>
                                             @endif
-                                            <button class="btn btn-sm btn-outline-primary changer-etat"
+                                            <button class="btn btn-sm btn-primary changer-etat"
                                                     data-toggle="tooltip"
                                                     title="Changer l'état">
                                                 <i class="fas fa-edit"></i>
