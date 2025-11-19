@@ -116,13 +116,13 @@
                                                             $percentage = ($client->montant_total / $totalCA) * 100;
                                                         @endphp
                                                         <div class="progress" style="height: 20px;">
-                                                            <div class="progress-bar bg-success"
+                                                            <div class="progress-bar bg-warning"
                                                                  role="progressbar"
                                                                  style="width: {{ $percentage }}%"
                                                                  aria-valuenow="{{ $percentage }}"
                                                                  aria-valuemin="0"
                                                                  aria-valuemax="100">
-                                                               <div class="text-danger">{{ number_format($percentage, 1) }}%</div>
+                                                               <div style="color: #000000;">{{ number_format($percentage, 1) }}%</div>
                                                             </div>
                                                         </div>
                                                         @else
