@@ -110,7 +110,7 @@
                                         <strong>{{ $facture->numero_facture }}</strong>
                                     </td>
                                     <td>
-                                        <a href="{{ route('clients.show', $facture->client->id) }}" class="text-dark">
+                                        <a href="{{ route('suivi-factures.by-client', $facture->client) }}" class="text-dark">
                                             {{ $facture->client->nom }}
                                         </a>
                                         @if($facture->client->ville)

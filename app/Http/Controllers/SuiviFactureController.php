@@ -198,7 +198,7 @@ class SuiviFactureController extends Controller
     /**
      * Factures par client
      */
-    public function byClient(Client $client)
+    public function byClient(ClientFacture $client)
     {
         $factures = $client->factures()
                           ->orderBy('date_livraison', 'desc')
