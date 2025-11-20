@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Client;
 use App\Models\ClientFacture;
 use App\Models\SuiviFacture;
+use DB;
 use Illuminate\Http\Request;
 
 class SuiviFactureController extends Controller
@@ -14,7 +15,7 @@ class SuiviFactureController extends Controller
      */
     public function index(Request $request)
     {
-        $query = SuiviFacture::with('client');
+        $query = SuiviFacture::with(['client', 'paiements']);
         $filtre = false;
 
         // Filtres
@@ -37,6 +38,29 @@ class SuiviFactureController extends Controller
             $filtre = true;
         }
 
+        if ($request->has('statut_paiement') && $request->statut_paiement) {
+            if ($request->statut_paiement == 'payé') {
+                $query->whereHas('paiements', function($q) {
+                    $q->selectRaw('suivi_facture_id, SUM(montant) as total_paye')
+                    ->groupBy('suivi_facture_id')
+                    ->havingRaw('total_paye >= suivi_factures.montant');
+                });
+            } elseif ($request->statut_paiement == 'partiel') {
+                $query->whereHas('paiements', function($q) {
+                    $q->selectRaw('suivi_facture_id, SUM(montant) as total_paye')
+                    ->groupBy('suivi_facture_id')
+                    ->havingRaw('total_paye > 0 AND total_paye < suivi_factures.montant');
+                });
+            } elseif ($request->statut_paiement == 'impayé') {
+                $query->whereDoesntHave('paiements')
+                    ->orWhereHas('paiements', function($q) {
+                        $q->selectRaw('suivi_facture_id, SUM(montant) as total_paye')
+                            ->groupBy('suivi_facture_id')
+                            ->havingRaw('total_paye = 0');
+                    });
+            }
+        }
+
         if ($request->has('search') && $request->search) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
@@ -47,6 +71,16 @@ class SuiviFactureController extends Controller
             });
             $filtre = true;
         }
+
+        // Dans SuiviFactureController - méthode index, ajouter ce filtre
+        if ($request->has('avec_retour') && $request->avec_retour !== '') {
+            if ($request->avec_retour == '1') {
+                $query->avecRetour();
+            } else {
+                $query->sansRetour();
+            }
+        }
+
         if($filtre==true)
         {
              $factures = $query->orderBy('date_facture', 'desc')
@@ -56,6 +90,7 @@ class SuiviFactureController extends Controller
         else{
             $factures = $query->orderBy('date_facture', 'desc')
                          ->orderBy('created_at', 'desc')
+                       //  ->paginate(20);
                          ->limit(5000)
                          ->get();
         }
@@ -87,6 +122,9 @@ class SuiviFactureController extends Controller
             'montant' => 'required|numeric|min:0',
             'client_id' => 'required|exists:clients,id',
             'date_facture' =>  'required|date',
+            'montant_retour' => 'nullable|numeric|min:0',
+            'raison_retour' => 'nullable|string|max:500',
+            'date_retour' => 'nullable|date'
         ]);
 
         try {
@@ -131,6 +169,9 @@ class SuiviFactureController extends Controller
             'montant' => 'required|numeric|min:0',
             'client_id' => 'required|exists:clients,id',
             'date_facture' =>  'required|date',
+            'montant_retour' => 'nullable|numeric|min:0|max:' . $suiviFacture->montant,
+            'raison_retour' => 'nullable|string|max:500',
+            'date_retour' => 'nullable|date'
         ]);
 
         try {
@@ -200,11 +241,22 @@ class SuiviFactureController extends Controller
      */
     public function byClient(ClientFacture $client)
     {
-        $factures = $client->factures()
+        $factures = $client->factures()->with('paiements')
                           ->orderBy('date_livraison', 'desc')
                           ->paginate(20);
+         $statistiques = [
+        'montant_total' => $client->factures()->sum('montant'),
+        'montant_paye' => $factures->sum(function($facture) {
+            return $facture->paiements->sum('montant');
+        }),
+        'montant_restant' => $factures->sum(function($facture) {
+            return $facture->montant_restant;
+        }),
+    ];
 
-        return view('suivi-factures.by-client', compact('client', 'factures'));
+
+
+        return view('suivi-factures.by-client', compact('client', 'factures','statistiques'));
     }
 
      public function updateEtat(Request $request, SuiviFacture $suiviFacture)
@@ -272,5 +324,73 @@ class SuiviFactureController extends Controller
             ]);
         }
     }
+
+         /**
+     * Afficher le formulaire d'ajout de retour
+     */
+    public function showRetourForm(SuiviFacture $suiviFacture)
+    {
+        return view('suivi-factures.retour', compact('suiviFacture'));
+    }
+
+    /**
+     * Enregistrer un retour
+     */
+    public function enregistrerRetour(Request $request, SuiviFacture $suiviFacture)
+    {
+        $validated = $request->validate([
+            'montant_retour' => 'required|numeric|min:0|max:' . $suiviFacture->montant,
+            'raison_retour' => 'required|string|max:500',
+            'date_retour' => 'required|date'
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+            $suiviFacture->enregistrerRetour(
+                $validated['montant_retour'],
+                $validated['raison_retour'],
+                $validated['date_retour']
+            );
+
+            DB::commit();
+
+            return redirect()->route('suivi-factures.show', $suiviFacture->id)
+                           ->with('success', 'Retour enregistré avec succès!');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return back()->withErrors([
+                'error' => 'Une erreur est survenue lors de l\'enregistrement du retour: ' . $e->getMessage()
+            ])->withInput();
+        }
+    }
+
+    /**
+     * Annuler un retour
+     */
+    public function annulerRetour(SuiviFacture $suiviFacture)
+    {
+        DB::beginTransaction();
+
+        try {
+            $suiviFacture->annulerRetour();
+
+            DB::commit();
+
+            return redirect()->route('suivi-factures.show', $suiviFacture->id)
+                           ->with('success', 'Retour annulé avec succès!');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return back()->withErrors([
+                'error' => 'Une erreur est survenue lors de l\'annulation du retour: ' . $e->getMessage()
+            ]);
+        }
+    }
+
+
 
 }

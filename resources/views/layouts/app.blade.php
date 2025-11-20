@@ -139,6 +139,14 @@
                             <i class="fas fa-user"></i> Clients Factures
                         </a>
                      </li>
+                     <li class="nav-item">
+                        <a class="nav-link  {{ request()->routeIs('paiements.*') ? 'active' : '' }}" href="{{ route('paiements.index') }}">
+                            <i class="fas fa-money-bill-wave"></i> Paiements
+                        </a>
+                     </li>
+
+                     <!-- Dans layouts/app.blade.php -->
+
 
                    {{--  <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle {{ request()->routeIs('reports.*') ? 'active' : '' }}"

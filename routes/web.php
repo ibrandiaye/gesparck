@@ -5,6 +5,7 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ClientFactureController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FuelEntryController;
+use App\Http\Controllers\PaiementController;
 use App\Http\Controllers\RepairLogController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SuiviFactureController;
@@ -126,6 +127,10 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/{suiviFacture}/marquer-livre', [SuiviFactureController::class, 'marquerLivre'])->name('suivi-factures.marquer-livre');
         Route::post('/{suiviFacture}/marquer-non-livre', [SuiviFactureController::class, 'marquerNonLivre'])->name('suivi-factures.marquer-non-livre');
 
+        Route::get('/{suiviFacture}/retour', [SuiviFactureController::class, 'showRetourForm'])->name('suivi-factures.retour');
+        Route::post('/{suiviFacture}/retour', [SuiviFactureController::class, 'enregistrerRetour'])->name('suivi-factures.enregistrer-retour');
+        Route::post('/{suiviFacture}/annuler-retour', [SuiviFactureController::class, 'annulerRetour'])->name('suivi-factures.annuler-retour');
+
     });
 
     Route::prefix('client-factures')->group(function () {
@@ -141,6 +146,25 @@ Route::middleware(['auth'])->group(function () {
 
 
     });
+
+
+
+    // === PAIEMENTS ROUTES ===
+    Route::prefix('paiements')->group(function () {
+        Route::get('/', [PaiementController::class, 'index'])->name('paiements.index');
+        Route::get('/create', [PaiementController::class, 'create'])->name('paiements.create');
+        Route::post('/', [PaiementController::class, 'store'])->name('paiements.store');
+        Route::get('/{paiement}', [PaiementController::class, 'show'])->name('paiements.show');
+        Route::get('/{paiement}/edit', [PaiementController::class, 'edit'])->name('paiements.edit');
+        Route::put('/{paiement}', [PaiementController::class, 'update'])->name('paiements.update');
+        Route::delete('/{paiement}', [PaiementController::class, 'destroy'])->name('paiements.destroy');
+
+        // Routes supplémentaires
+        Route::get('/facture/{suiviFacture}', [PaiementController::class, 'byFacture'])->name('paiements.by-facture');
+        Route::get('/statistics', [PaiementController::class, 'statistics'])->name('paiements.statistics');
+    });
+
+
 });
 
 
