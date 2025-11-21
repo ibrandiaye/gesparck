@@ -287,7 +287,13 @@
                                 </div>
                                 <div class="col-md-4">
                                     <h5 class="text-{{ $suiviFacture->statut_paiement == 'payé' ? 'success' : 'danger' }}">
-                                        {{ ucfirst($suiviFacture->statut_paiement) }}
+                                        @if ($facture->statut_paiement=="partiel")
+                                            Reste
+                                        @elseif($facture->statut_paiement=="impayé")
+                                            Non payé
+                                        @else
+                                            {{ ucfirst($facture->statut_paiement) }}
+                                        @endif
                                     </h5>
                                     <small class="text-muted">Statut</small>
                                 </div>

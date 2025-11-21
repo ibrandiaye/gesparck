@@ -148,7 +148,13 @@
                                             <!-- Statut et bouton paiement -->
                                             <div class="d-flex align-items-center mt-1">
                                                 <span class="badge bg-{{ $facture->statut_paiement == 'payé' ? 'success' : ($facture->statut_paiement == 'partiel' ? 'warning' : 'danger') }} mr-2">
-                                                    {{ ucfirst($facture->statut_paiement) }}
+                                                   @if ($facture->statut_paiement=="partiel")
+                                                       Reste
+                                                    @elseif($facture->statut_paiement=="impayé")
+                                                        Non payé
+                                                    @else
+                                                        {{ ucfirst($facture->statut_paiement) }}
+                                                    @endif
                                                 </span>
                                                 <button class="btn btn-sm btn-outline-success ajouter-paiement"
                                                         data-facture-id="{{ $facture->id }}"
