@@ -33,9 +33,9 @@
                                     @endif
                                 </div>
                                 <div class="col-md-6">
-                                    <strong>Montant total:</strong> {{ number_format($suiviFacture->montant, 2, ',', ' ') }} €<br>
-                                    <strong>Montant payé:</strong> {{ number_format($suiviFacture->montant_paye, 2, ',', ' ') }} €<br>
-                                    <strong>Montant restant:</strong> {{ number_format($suiviFacture->montant_restant, 2, ',', ' ') }} €
+                                    <strong>Montant total:</strong> {{ number_format($suiviFacture->montant, 2, ',', ' ') }} CFA<br>
+                                    <strong>Montant payé:</strong> {{ number_format($suiviFacture->montant_paye, 2, ',', ' ') }} CFA<br>
+                                    <strong>Montant restant:</strong> {{ number_format($suiviFacture->montant_restant, 2, ',', ' ') }} CFA
                                 </div>
                             </div>
                         </div>
@@ -62,13 +62,13 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="montant_retour">Montant du retour (€) *</label>
+                                            <label for="montant_retour">Montant du retour (CFA) *</label>
                                             <input type="number" name="montant_retour" id="montant_retour"
                                                    class="form-control @error('montant_retour') is-invalid @enderror"
                                                    value="{{ old('montant_retour') }}"
                                                    step="0.01" min="0.01" max="{{ $suiviFacture->montant }}" required>
                                             <small class="form-text text-muted">
-                                                Montant maximum: {{ number_format($suiviFacture->montant, 2, ',', ' ') }} €
+                                                Montant maximum: {{ number_format($suiviFacture->montant, 2, ',', ' ') }} CFA
                                             </small>
                                             @error('montant_retour')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -107,15 +107,15 @@
                                     <div class="row">
                                         <div class="col-md-4">
                                             <strong>Nouveau montant net:</strong><br>
-                                            <span id="nouveau-montant-net" class="font-weight-bold">0,00 €</span>
+                                            <span id="nouveau-montant-net" class="font-weight-bold">0,00 CFA</span>
                                         </div>
                                         <div class="col-md-4">
                                             <strong>Nouveau montant restant:</strong><br>
-                                            <span id="nouveau-montant-restant" class="font-weight-bold">0,00 €</span>
+                                            <span id="nouveau-montant-restant" class="font-weight-bold">0,00 CFA</span>
                                         </div>
                                         <div class="col-md-4">
                                             <strong>Économie pour le client:</strong><br>
-                                            <span id="economie-client" class="text-success font-weight-bold">0,00 €</span>
+                                            <span id="economie-client" class="text-success font-weight-bold">0,00 CFA</span>
                                         </div>
                                     </div>
                                 </div>
@@ -155,9 +155,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const nouveauMontantNet = montantTotal - montantRetour;
         const nouveauMontantRestant = Math.max(0, nouveauMontantNet - montantPaye);
 
-        document.getElementById('nouveau-montant-net').textContent = nouveauMontantNet.toFixed(2).replace('.', ',') + ' €';
-        document.getElementById('nouveau-montant-restant').textContent = nouveauMontantRestant.toFixed(2).replace('.', ',') + ' €';
-        document.getElementById('economie-client').textContent = montantRetour.toFixed(2).replace('.', ',') + ' €';
+        document.getElementById('nouveau-montant-net').textContent = nouveauMontantNet.toFixed(2).replace('.', ',') + ' CFA';
+        document.getElementById('nouveau-montant-restant').textContent = nouveauMontantRestant.toFixed(2).replace('.', ',') + ' CFA';
+        document.getElementById('economie-client').textContent = montantRetour.toFixed(2).replace('.', ',') + ' CFA';
     }
 
     montantRetourInput.addEventListener('input', calculerImpact);

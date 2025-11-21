@@ -99,6 +99,21 @@
                                     @enderror
                                 </div>
                             </div>
+                            <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="montant_retour">Montant du retour (CFA) *</label>
+                                            <input type="number" name="montant_retour" id="montant_retour"
+                                                   class="form-control @error('montant_retour') is-invalid @enderror"
+                                                   value="{{ old('montant_retour') }}"
+                                                    max="{{ $suiviFacture->montant }}" required>
+                                            <small class="form-text text-muted">
+                                                Montant maximum: {{ number_format($suiviFacture->montant, 2, ',', ' ') }} CFA
+                                            </small>
+                                            @error('montant_retour')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
                         </div>
 
                         <div class="form-group text-center mt-4">
