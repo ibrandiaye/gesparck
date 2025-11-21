@@ -34,7 +34,7 @@
                                         <tr>
                                             <td width="40%"><strong>Numéro de facture:</strong></td>
                                             <td>
-                                                <span class="badge badge-dark" style="font-size: 1.1em;">
+                                                <span class="badge bg-dark" style="font-size: 1.1em;">
                                                     {{ $suiviFacture->numero_facture }}
                                                 </span>
                                             </td>
@@ -238,12 +238,12 @@
                                     <tr>
                                         <td>{{ $paiement->date_paiement->format('d/m/Y') }}</td>
                                         <td>
-                                            <span class="badge badge-success">
+                                            <span class="badge bg-success">
                                                 {{ number_format($paiement->montant, 2, ',', ' ') }} CFA
                                             </span>
                                         </td>
                                         <td>
-                                            <span class="badge badge-primary">{{ $paiement->mode_paiement_libelle }}</span>
+                                            <span class="badge bg-primary">{{ $paiement->mode_paiement_libelle }}</span>
                                         </td>
                                         <td>
                                             @if($paiement->reference)
@@ -253,7 +253,7 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <span class="badge badge-{{ $paiement->statut == 'complet' ? 'success' : 'warning' }}">
+                                            <span class="badge bg-{{ $paiement->statut == 'complet' ? 'success' : 'warning' }}">
                                                 {{ $paiement->statut }}
                                             </span>
                                         </td>
