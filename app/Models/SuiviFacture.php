@@ -129,7 +129,7 @@ class SuiviFacture extends Model
 
         if ($montantPaye == 0) {
             return 'impayé';
-        } elseif ($montantPaye < $this->montant) {
+        } elseif ($montantPaye < $this->montant_net) {
             return 'partiel';
         } else {
             return 'payé';

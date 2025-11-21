@@ -190,7 +190,7 @@
                                                 </span>
                                                 <button class="btn btn-sm btn-outline-success ajouter-paiement"
                                                         data-facture-id="{{ $facture->id }}"
-                                                        data-facture-montant="{{ $facture->montant }}"
+                                                        data-facture-montant="{{ $facture->montant - $facture->montant_retour  }}"
                                                         data-facture-restant="{{ $facture->montant_restant }}"
                                                         data-facture-numero="{{ $facture->numero_facture }}"
                                                         data-toggle="tooltip"

@@ -137,7 +137,7 @@ public function store(Request $request)
     try {
         // Vérifier que le montant ne dépasse pas le montant restant
         $facture = SuiviFacture::with('paiements')->findOrFail($validated['suivi_facture_id']);
-        $montantRestant = $facture->montant - $facture->paiements->sum('montant');
+        $montantRestant = $facture->montant - $facture->paiements->sum('montant') - $facture->montant_retour;
 
         if ($validated['montant'] > $montantRestant) {
             return response()->json([
@@ -213,7 +213,7 @@ public function store(Request $request)
             // Vérifier que le nouveau montant ne dépasse pas le montant restant (hors ce paiement)
             $facture = $paiement->facture;
             $autresPaiements = $facture->paiements()->where('id', '!=', $paiement->id)->sum('montant');
-            $montantRestant = $facture->montant - $autresPaiements;
+            $montantRestant = $facture->montant - $autresPaiements -  $facture->montant_retour;
 
             if ($validated['montant'] > $montantRestant) {
                 return back()->withErrors([
