@@ -206,9 +206,9 @@
                                 </div>
                             </div>
                             <div class="d-flex justify-content-between mt-2">
-                                <small>Payé: {{ number_format($suiviFacture->montant_paye, 2, ',', ' ') }} CFA</small>
-                                <small>Restant: {{ number_format($suiviFacture->montant_restant, 2, ',', ' ') }} CFA</small>
-                                <small>Total: {{ number_format($suiviFacture->montant, 2, ',', ' ') }} CFA</small>
+                                <small>Payé: {{ number_format($suiviFacture->montant_paye, 0, ',', ' ') }} CFA</small>
+                                <small>Restant: {{ number_format($suiviFacture->montant_restant, 0, ',', ' ') }} CFA</small>
+                                <small>Total: {{ number_format($suiviFacture->montant, 0, ',', ' ') }} CFA</small>
                             </div>
                         </div>
 
@@ -239,7 +239,7 @@
                                         <td>{{ $paiement->date_paiement->format('d/m/Y') }}</td>
                                         <td>
                                             <span class="badge bg-success">
-                                                {{ number_format($paiement->montant, 2, ',', ' ') }} CFA
+                                                {{ number_format($paiement->montant, 0, ',', ' ') }} CFA
                                             </span>
                                         </td>
                                         <td>
@@ -282,7 +282,7 @@
                                     <small class="text-muted">Nombre de paiements</small>
                                 </div>
                                 <div class="col-md-4">
-                                    <h5 class="text-success">{{ number_format($suiviFacture->montant_paye, 2, ',', ' ') }} CFA</h5>
+                                    <h5 class="text-success">{{ number_format($suiviFacture->montant_paye, 0, ',', ' ') }} CFA</h5>
                                     <small class="text-muted">Total payé</small>
                                 </div>
                                 <div class="col-md-4">
@@ -315,7 +315,7 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <strong>Montant du retour:</strong><br>
-                                <h4 class="text-danger">{{ number_format($suiviFacture->montant_retour, 2, ',', ' ') }} CFA</h4>
+                                <h4 class="text-danger">{{ number_format($suiviFacture->montant_retour, 0, ',', ' ') }} CFA</h4>
                             </div>
                             <div class="col-md-4">
                                 <strong>Date du retour:</strong><br>
@@ -323,7 +323,7 @@
                             </div>
                             <div class="col-md-4">
                                 <strong>Nouveau montant net:</strong><br>
-                                <h4 class="text-success">{{ number_format($suiviFacture->montant_net, 2, ',', ' ') }} CFA</h4>
+                                <h4 class="text-success">{{ number_format($suiviFacture->montant_net, 0, ',', ' ') }} CFA</h4>
                             </div>
                         </div>
                         @if($suiviFacture->raison_retour)
