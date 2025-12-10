@@ -99,16 +99,72 @@
                     @endif
 
                     @if($factures->count() > 0)
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="d-flex align-items-center">
+                            <span class="mr-2">Afficher</span>
+                            <select id="perPageSelect" class="form-control form-control-sm d-inline-block w-auto" onchange="changePerPage(this.value)">
+                                <option value="10" {{ request('per_page') == 10 ? 'selected' : '' }}>10</option>
+                                <option value="25" {{ request('per_page') == 25 ? 'selected' : '' }}>25</option>
+                                <option value="50" {{ request('per_page') == 50 ? 'selected' : (!request()->has('per_page') ? 'selected' : '') }}>50</option>
+                                <option value="100" {{ request('per_page') == 100 ? 'selected' : '' }}>100</option>
+                                <option value="200" {{ request('per_page') == 200 ? 'selected' : '' }}>200</option>
+                                <option value="500" {{ request('per_page') == 500 ? 'selected' : '' }}>500</option>
+                            </select>
+                            <span class="ml-2">entrées</span>
+                        </div>
+                    </div>
                     <div class="table-responsive">
                         <table class="table table-striped table-hover" id="fact_table">
                             <thead class="thead-dark">
                                 <tr>
-                                    <th>Date Facture</th>
-                                    <th>N° Facture</th>
-                                    <th>Client</th>
-                                    <th>Montant</th>
-                                    <th>État Livraison</th>
-                                    <th>Paiement</th>
+                                    <th style="cursor: pointer;" onclick="window.location='{{ request()->fullUrlWithQuery(['sort_by' => 'date_facture', 'order' => request('sort_by') == 'date_facture' && request('order') == 'asc' ? 'desc' : 'asc']) }}'">
+                                        Date Facture 
+                                        @if(request('sort_by') == 'date_facture' || !request('sort_by'))
+                                            <i class="fas fa-sort-{{ request('order', 'desc') == 'asc' ? 'up' : 'down' }}"></i>
+                                        @else
+                                            <i class="fas fa-sort text-muted"></i>
+                                        @endif
+                                    </th>
+                                    <th style="cursor: pointer;" onclick="window.location='{{ request()->fullUrlWithQuery(['sort_by' => 'numero_facture', 'order' => request('sort_by') == 'numero_facture' && request('order') == 'asc' ? 'desc' : 'asc']) }}'">
+                                        N° Facture
+                                        @if(request('sort_by') == 'numero_facture')
+                                            <i class="fas fa-sort-{{ request('order') == 'asc' ? 'up' : 'down' }}"></i>
+                                        @else
+                                            <i class="fas fa-sort text-muted"></i>
+                                        @endif
+                                    </th>
+                                    <th style="cursor: pointer;" onclick="window.location='{{ request()->fullUrlWithQuery(['sort_by' => 'client', 'order' => request('sort_by') == 'client' && request('order') == 'asc' ? 'desc' : 'asc']) }}'">
+                                        Client
+                                        @if(request('sort_by') == 'client')
+                                            <i class="fas fa-sort-{{ request('order') == 'asc' ? 'up' : 'down' }}"></i>
+                                        @else
+                                            <i class="fas fa-sort text-muted"></i>
+                                        @endif
+                                    </th>
+                                    <th style="cursor: pointer;" onclick="window.location='{{ request()->fullUrlWithQuery(['sort_by' => 'montant', 'order' => request('sort_by') == 'montant' && request('order') == 'asc' ? 'desc' : 'asc']) }}'">
+                                        Montant
+                                        @if(request('sort_by') == 'montant')
+                                            <i class="fas fa-sort-{{ request('order') == 'asc' ? 'up' : 'down' }}"></i>
+                                        @else
+                                            <i class="fas fa-sort text-muted"></i>
+                                        @endif
+                                    </th>
+                                    <th style="cursor: pointer;" onclick="window.location='{{ request()->fullUrlWithQuery(['sort_by' => 'etat', 'order' => request('sort_by') == 'etat' && request('order') == 'asc' ? 'desc' : 'asc']) }}'">
+                                        État Livraison
+                                        @if(request('sort_by') == 'etat')
+                                            <i class="fas fa-sort-{{ request('order') == 'asc' ? 'up' : 'down' }}"></i>
+                                        @else
+                                            <i class="fas fa-sort text-muted"></i>
+                                        @endif
+                                    </th>
+                                    <th style="cursor: pointer;" onclick="window.location='{{ request()->fullUrlWithQuery(['sort_by' => 'statut_paiement', 'order' => request('sort_by') == 'statut_paiement' && request('order') == 'asc' ? 'desc' : 'asc']) }}'">
+                                        Paiement
+                                        @if(request('sort_by') == 'statut_paiement')
+                                            <i class="fas fa-sort-{{ request('order') == 'asc' ? 'up' : 'down' }}"></i>
+                                        @else
+                                            <i class="fas fa-sort text-muted"></i>
+                                        @endif
+                                    </th>
                                     <th>Montant Restant</th>
                                     <th>Actions</th>
                                 </tr>
@@ -259,7 +315,7 @@
                     </div>
 
                     <!-- Pagination -->
-                    {{-- <div class="d-flex justify-content-between align-items-center mt-4">
+                    <div class="d-flex justify-content-between align-items-center mt-4">
                         <div class="text-muted">
                             Affichage de {{ $factures->firstItem() }} à {{ $factures->lastItem() }}
                             sur {{ $factures->total() }} factures
@@ -267,7 +323,7 @@
                         <div>
                             {{ $factures->links() }}
                         </div>
-                    </div> --}}
+                    </div>
                     @else
                     <div class="alert alert-info text-center">
                         <i class="fas fa-info-circle"></i> Aucune facture trouvée.
@@ -596,6 +652,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ========== FONCTIONS UTILITAIRES ==========
+    window.changePerPage = function(perPage) {
+        const url = new URL(window.location.href);
+        url.searchParams.set('per_page', perPage);
+        // Remettre la page à 1 quand on change la limite pour éviter d'être hors limites
+        url.searchParams.set('page', 1);
+        window.location.href = url.toString();
+    }
+
     function showAlert(message, type) {
         const alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
         const alert = document.createElement('div');
@@ -616,7 +680,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialiser les tooltips
     $('[data-toggle="tooltip"]').tooltip();
 });
-$('#fact_table').DataTable({
+/*$('#fact_table').DataTable({
         language: {
             url: 'https://cdn.datatables.net/plug-ins/2.3.4/i18n/fr-FR.json',
         },
@@ -624,7 +688,7 @@ $('#fact_table').DataTable({
             order: [[0, 'desc']],
             lengthMenu: [10, 25, 50, 100, 200,500,1000,5000,10000]
 
-    });
+    });*/
 </script>
 @endpush
 
@@ -652,5 +716,10 @@ $('#fact_table').DataTable({
 .paiement-info .progress {
     min-width: 100px;
 }
+img, svg {
+    vertical-align: middle;
+    height: 10px !important;
+}
 </style>
+
 @endpush

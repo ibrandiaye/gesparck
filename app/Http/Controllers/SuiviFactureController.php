@@ -16,26 +16,21 @@ class SuiviFactureController extends Controller
     public function index(Request $request)
     {
         $query = SuiviFacture::with(['client', 'paiements']);
-        $filtre = false;
 
         // Filtres
         if ($request->has('client_id') && $request->client_id) {
             $query->where('client_id', $request->client_id);
-            $filtre = true;
         }
 
         if ($request->has('date_debut') && $request->date_debut) {
             $query->where('date_livraison', '>=', $request->date_debut);
-            $filtre = true;
         }
 
         if ($request->has('date_fin') && $request->date_fin) {
             $query->where('date_livraison', '<=', $request->date_fin);
-            $filtre = true;
         }
         if ($request->has('etat') && $request->etat) {
             $query->where('etat', $request->etat);
-            $filtre = true;
         }
 
         if ($request->has('statut_paiement') && $request->statut_paiement) {
@@ -69,7 +64,6 @@ class SuiviFactureController extends Controller
                       $q->where('nom', 'like', "%{$search}%");
                   });
             });
-            $filtre = true;
         }
 
         // Dans SuiviFactureController - méthode index, ajouter ce filtre
@@ -81,21 +75,34 @@ class SuiviFactureController extends Controller
             }
         }
 
-        if($filtre==true)
-        {
-             $factures = $query->orderBy('date_facture', 'desc')
-                         ->orderBy('created_at', 'desc')
-                         ->get();
-        }
-        else{
-            $factures = $query->orderBy('date_facture', 'desc')
-                         ->orderBy('created_at', 'desc')
-                       //  ->paginate(20);
-                         ->limit(5000)
-                         ->get();
+        // Optimisation : Pagination pour tous les cas
+        $perPage = $request->input('per_page', 50);
+        if (!in_array($perPage, [10, 25, 50, 100, 200, 500])) {
+            $perPage = 50;
         }
 
+        // Gestion du tri
+        $sortBy = $request->input('sort_by', 'date_facture');
+        $order = $request->input('order', 'desc');
+        $validSorts = ['date_facture', 'numero_facture', 'montant', 'etat', 'statut_paiement', 'client'];
 
+        if (in_array($sortBy, $validSorts)) {
+            if ($sortBy === 'client') {
+                $query->join('clients', 'suivi_factures.client_id', '=', 'clients.id')
+                      ->orderBy('clients.nom', $order)
+                      ->select('suivi_factures.*'); 
+            } else {
+                $query->orderBy($sortBy, $order);
+            }
+        } else {
+            // Tri par défaut
+            $query->orderBy('date_facture', 'desc');
+        }
+
+        // Toujours trier par created_at ensuite pour la stabilité
+        $query->orderBy('suivi_factures.created_at', 'desc');
+
+        $factures = $query->paginate($perPage)->withQueryString();
 
         $clients = ClientFacture::orderBy('nom')->get();
 

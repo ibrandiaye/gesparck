@@ -31,6 +31,9 @@
             border: none;
             box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
         }
+         svg ,.w-5 h-5 {
+            display: none;
+        }
     </style>
 </head>
 <body>
