@@ -113,7 +113,7 @@ class DashboardController extends Controller
             foreach ($trips as $key2 => $trip) {
                 if($vehicle->id==$trip->vehicle_id)
                 {
-                    $nbTrajet += $fuelEntrie->nombre_trajets;
+                    $nbTrajet += $fuelEntrie->nombre_trajets ?? 0;
                 }
 
             }
